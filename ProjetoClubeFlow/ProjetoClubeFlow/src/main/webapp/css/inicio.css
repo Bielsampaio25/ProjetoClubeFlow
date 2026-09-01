@@ -1,8 +1,15 @@
+.container {
+  width: min(1240px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+
 .hero {
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: #07120e;
+  background: var(--bg-dark);
+  color: var(--text-light);
 }
 
 .hero-video {
@@ -58,69 +65,279 @@
 .hero .container {
   position: relative;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+  padding: 24px 0 60px;
 }
 
-.hero-content {
-  position: relative;
-  min-height: calc(100vh - 78px);
+.btnEntrar {
+  color: var(--text-light);
+  text-decoration: none;
+  border: 1px solid var(--border-color);
+  padding: 10px 20px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.btnEntrar:hover {
+  background: var(--primary-green);
+  color: var(--bg-dark);
+}
+
+.hero-contenteudo {
+  display: flex;
+  align-items: center;
+  margin: auto 0;
+}
+
+.hero-copy {
+  max-width: 600px;
+}
+
+.hero-frase {
+  color: var(--primary-green);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.hero-copy h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.1;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.hero-titulo {
+  color: var(--primary-green);
+}
+
+.hero-copy p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.btnCriarPerfil,
+.btnCadastro,
+.btnCadastroClube {
+  display: inline-block;
+  background: var(--primary-green);
+  color: var(--bg-dark);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 4px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btnCriarPerfil:hover,
+.btnCadastro:hover,
+.btnCadastroClube:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* COMO FUNCIONA */
+.ComoFunciona {
+  background: var(--bg-dark-secondary);
+  padding: 100px 0;
+}
+
+.ComoFunciona-container {
+  width: min(1240px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.ComoFunciona-frase,
+.Atletas-frase,
+.Clubes-frase {
+  color: var(--primary-green);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.ComoFunciona h2,
+.Atletas h2,
+.Clubes h2 {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.2;
+  margin-bottom: 48px;
+}
+
+.ComoFunciona-cards {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 32px 24px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.card:hover{
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.card .ComoFunciona-frase {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.Atletas {
+  background: var(--bg-dark);
+  padding: 100px 0;
+}
+
+.Atletas-container {
+  width: min(1240px, calc(100% - 48px));
+  margin: 0 auto;
+  display: flex;
   align-items: center;
   gap: 60px;
 }
 
-.hero-copy p {
-  max-width: 590px;
-  font-size: 1.05rem;
-}
-
-.section {
-  padding: 100px 0;
-}
-
-.section-dois {
-  background: #091a13;
-}
-
-.section-dois .container {
-  display: flex;
-  gap: 30px;
-  width: min(1240px, calc(100% - 48px));
-  margin: auto;
-}
-
-.section-dois h2 {
-  color: var(--PRIMARY-GREEN);
-}
-
-[section-dois-content-image],
-[section-dois-content-text] {
+[Atletas-content-image],
+[Atletas-content-text] {
   flex: 1;
 }
 
-[section-dois-content-image] img {
+[Atletas-content-image] img {
   width: 100%;
-  height: 100%;
+  height: auto;
+  border-radius: 8px;
   object-fit: cover;
+  display: block;
 }
 
-@media(max-width:1050px) {
-  .hero-content {
-    grid-template-columns: 1fr;
+[Atletas-content-text] h2 {
+  margin-bottom: 20px;
+}
+
+[Atletas-content-text] > p {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+[Atletas-content-text] ul {
+  display: block;
+  color: var(--text-light);
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 20px;
+}
+
+[Atletas-content-text] ul::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary-green);
+  font-weight: bold;
+}
+
+[Atletas-content-text] .btnCadastro {
+  margin-top: 24px;
+}
+
+.Clubes {
+  background: var(--bg-dark-secondary);
+  padding: 100px 0;
+  text-align: left;
+}
+
+.Clubes-container {
+  width: min(1240px, calc(100% - 48px));
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items:start
+}
+
+.Clubes h2 {
+  margin-bottom: 16px;
+}
+
+.Clubes-container > p {
+  color: var(--text-muted);
+  max-width: 600px;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.opcao {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.opcao:hover{
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 1024px) {
+  .Atletas-container {
+    gap: 40px;
   }
 }
 
-@media(max-width:720px) {
-  .hero-content {
-    gap: 15px;
+@media (max-width: 768px) {
+  .header-container {
+    flex-wrap: wrap;
   }
 
-  .section {
-    padding: 70px 0;
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 16px;
   }
 
-  .section-dois .container {
+  .Atletas-container {
     flex-direction: column;
-    width: min(100% - 28px, 1240px);
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
   }
 }
