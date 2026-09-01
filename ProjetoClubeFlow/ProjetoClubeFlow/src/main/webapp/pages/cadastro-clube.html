@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/colors.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/cadastro-clube.css">
+  <title>Cadastro do Clube · Club Flow</title>
+</head>
+<body>
+  <main class="signup">
+    <!-- Cabeçalho -->
+    <header class="site-header">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark"></span>
+        <span>CLUB <em>FLOW</em></span>
+      </a>
+      <a href="../index.html" class="btn">← Voltar</a>
+    </header>
+
+    <!-- Layout Principal -->
+    <div class="signup-layout">
+      <!-- Coluna Esquerda: Chamada / Copywriter -->
+      <section>
+        <p class="eyebrow">CADASTRO DE CLUBE & INSTITUIÇÃO</p>
+        <h1>
+          Descubra novos<br>
+          <span style="color:var(--lime)">talentos.</span><br>
+          Fortaleça seu<br>
+          <span style="color:var(--lime)">elenco.</span>
+        </h1>
+        <p>
+          Conecte sua instituição à maior rede de atletas e profissionais do futebol. Encontre promessas, gerencie avaliações e expanda o alcance do seu clube.
+        </p>
+      </section>
+
+      <!-- Coluna Direita: Card de Formulário -->
+      <section class="signup-card">
+        <!-- Indicador de Progresso -->
+        <div class="steps">
+          <i class="step active"></i>
+          <i class="step"></i>
+          <i class="step"></i>
+          <i class="step"></i>
+        </div>
+
+        <p class="eyebrow">ETAPA 01 / 04</p>
+        <h2>Dados da Instituição</h2>
+
+        <form style="margin-top:25px">
+          <div class="form-grid">
+            <div class="field full">
+              <label for="nome-clube">Nome Oficial do Clube / Razão Social</label>
+              <input type="text" id="nome-clube" placeholder="Ex: Esporte Clube Futebol" required>
+            </div>
+
+            <div class="field">
+              <label for="cnpj">CNPJ</label>
+              <input type="text" id="cnpj" placeholder="00.000.000/0001-00" required>
+            </div>
+
+            <div class="field">
+              <label for="divisao">Divisão / Liga Principal</label>
+              <select id="divisao" required>
+                <option value="" disabled selected>Selecione a divisão</option>
+                <option value="serie-a">Série A / Primeira Divisão</option>
+                <option value="serie-b">Série B / Segunda Divisão</option>
+                <option value="serie-c">Série C / Terceira Divisão</option>
+                <option value="base">Categorias de Base</option>
+                <option value="amador">Futebol Amador / Liga Regional</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="estado">Estado (UF)</label>
+              <input type="text" id="estado" placeholder="Ex: SP" maxlength="2" required>
+            </div>
+
+            <div class="field">
+              <label for="cidade">Cidade</label>
+              <input type="text" id="cidade" placeholder="São Paulo" required>
+            </div>
+
+            <div class="field full">
+              <label for="email">E-mail Corporativo / Oficial</label>
+              <input type="email" id="email" placeholder="contato@seubrasileiro.com.br" required>
+            </div>
+
+            <div class="field">
+              <label for="responsavel">Nome do Responsável</label>
+              <input type="text" id="responsavel" placeholder="Nome completo" required>
+            </div>
+
+            <div class="field">
+              <label for="cargo">Cargo / Função</label>
+              <input type="text" id="cargo" placeholder="Ex: Diretor de Scout / Gestor" required>
+            </div>
+
+            <div class="field full">
+              <label class="checkbox-label">
+                <input type="checkbox" required>
+                <span>Aceito os <a href="#" style="color:var(--lime)">Termos de Uso</a> e a <a href="#" style="color:var(--lime)">Política de Privacidade</a> do Club Flow</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Ações do Formulário -->
+          <div class="form-actions">
+            <a class="btn" href="../index.html">Cancelar</a>
+            <button type="submit" class="btn primary">Continuar →</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

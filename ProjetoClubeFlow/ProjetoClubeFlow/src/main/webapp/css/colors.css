@@ -1,0 +1,15 @@
+:root {
+  --bg: #07120e;
+  --bg2: #091a13;
+  --card: #0c2118;
+  --card2: #10291f;
+  --lime: #17c73d;
+  --PRIMARY-GREEN: #1D6D12;
+  --paper: #f4f7ed;
+  --muted: #9ca99e;
+  --line: rgba(242, 247, 237, .13);
+  --blue: #78a9ff;
+  --orange: #f0a974;
+  --red: #ff7b7b;
+  --shadow: 0 24px 60px rgba(0, 0, 0, .25);
+}
