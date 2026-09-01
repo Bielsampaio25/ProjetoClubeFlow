@@ -1,11 +1,113 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Perfil Esportivo · Club Flow</title><link rel="stylesheet" href="../css/reset.css">
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Perfil Esportivo</title>
+    <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/colors.css">
-    <link rel="stylesheet" href="../css/style.css"></head>
-<body><div class="app"><aside class="sidebar"><div class="brand"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></div>
-<div class="area-box">ÁREA DO <b>ATLETA</b></div><p class="menu-title">MENU PRINCIPAL</p><nav class="menu"><a class="" href="dashboard.html"><span>⌂</span>Início</a><a class="active" href="perfil-atleta.html"><span>◉</span>Meu perfil</a><a class="" href="desempenho.html"><span>◎</span>Meu desempenho</a><a class="" href="treinos.html"><span>◈</span>Treinos</a><a class="" href="agenda.html"><span>▣</span>Agenda</a><a class="" href="gamificacao.html"><span>★</span>Gamificação</a><a class="" href="evolucao.html"><span>↗</span>Minha evolução</a><a class="" href="clubes-interessados.html"><span>☆</span>Clubes interessados</a><a class="" href="oportunidades.html"><span>✦</span>Oportunidades</a><a class="" href="rede-social-atleta.html"><span>◌</span>Rede social</a></nav>
-<div class="side-actions"><a href="configuracoes.html">⚙ Configurações</a><a href="sair.html">↪ Sair</a></div>
-<a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a></aside>
-<main class="main"><header class="topbar"><div class="breadcrumb">CLUB FLOW / <b>ATLETA</b></div><div class="account"><span>Gabriel Almeida<small style="display:block;color:var(--text-muted)">Atacante · Sub-20</small></span><span class="avatar">GA</span></div></header>
-<section class="page"><div class="page-header"><div><p class="eyebrow">CADASTRO / ETAPA 02</p><h1>Perfil esportivo</h1><p>Defina sua identidade dentro de campo.</p></div></div><article class="card"><div class="form-grid"><div class="field"><label>Posição principal</label><select><option>Atacante</option></select></div><div class="field"><label>Posição secundária</label><select><option>Ponta Direita</option></select></div><div class="field"><label>Pé dominante</label><select><option>Direito</option></select></div><div class="field"><label>Categoria</label><select><option>Sub-20</option></select></div><div class="field"><label>Altura</label><input value="1,78 m"></div><div class="field"><label>Peso</label><input value="72 kg"></div></div><div class="form-actions"><a class="btn" href="cadastro.html">← Voltar</a><a class="btn primary" href="perfil-atleta.html">Continuar →</a></div></article></section></main></div></body></html>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/cadastro.css">
+</head>
+
+<body>
+    <main class="signup">
+
+        <header class="site-header">
+            <a class="brand" href="../index.html">
+                <img src="../assets/logo/logo_ClubeFlow.png" alt="" class="brand-icon">
+            </a>
+            <a href="../index.html" class="btn">← Voltar</a>
+        </header>
+
+        <div class="signup-layout">
+            
+            <section>
+                <p class="eyebrow">CADASTRO DO ATLETA</p>
+                <h1>Mostre seu<br>
+                <span style="color:var(--primary-green)">talento.</span>
+                <br>Encontre sua<br><span
+                        style="color:var(--primary-green)">oportunidade.</span>
+                </h1>
+                <p>Crie um perfil completo para tornar o seu futebol mais fácil de encontrar por clubes, scouts e
+                    profissionais.</p>
+            </section>
+            
+            <section class="signup-card">
+                <div class="steps">
+                    <i class="step"></i>
+                    <i class="step active"></i>
+                    <i class="step"></i>
+                    <i class="step"></i>
+                </div>
+                <p class="eyebrow">ETAPA 02 / 04</p>
+                <h2>Perfil Esportivo</h2>
+                
+                <form action="/perfilEsportivoAtleta" method="POST" class="form-grid" style="margin-top:25px">
+                    
+                    <div class="field">
+                        <label>Posição Principal</label>
+                        <select name="posicaoPrincipal" id="posicaoPrincipal">
+                            <option value="">Selecione sua posição</option>
+                            <option value="Goleiro">Goleiro</option>
+                            <option value="Zagueiro">Zagueiro</option>
+                            <option value="Lateral Direito">Lateral Direito</option>
+                            <option value="Lateral Esquerdo">Lateral Esquerdo</option>
+                            <option value="Volante">Volante</option>
+                            <option value="Meio-campista">Meio-campista</option>
+                            <option value="Meia-atacante">Meia-atacante</option>
+                            <option value="Ponta Direita">Ponta Direita</option>
+                            <option value="Ponta Esquerda">Ponta Esquerda</option>
+                            <option value="Atacante">Atacante</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Posição Secundária</label>
+                        <select name="posicaoSecundaria" id="posicaoSecundaria">
+                            <option value="">Selecione sua posição</option>
+                            <option value="Goleiro">Goleiro</option>
+                            <option value="Zagueiro">Zagueiro</option>
+                            <option value="Lateral Direito">Lateral Direito</option>
+                            <option value="Lateral Esquerdo">Lateral Esquerdo</option>
+                            <option value="Volante">Volante</option>
+                            <option value="Meio-campista">Meio-campista</option>
+                            <option value="Meia-atacante">Meia-atacante</option>
+                            <option value="Ponta Direita">Ponta Direita</option>
+                            <option value="Ponta Esquerda">Ponta Esquerda</option>
+                            <option value="Atacante">Atacante</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Pé Dominante</label>
+                        <div>
+                            <div>Esquerdo</div>
+                            <div>Direito</div>
+                            <div>Ambidestro</div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Altura</label>
+                        <input type="text" placeholder="Ex: 1,78 m" id="altura">
+                    </div>
+                    <div class="field">
+                        <label>Cidade</label>
+                        <input type="text" placeholder="Digite sua cidade" id="cidade">
+                    </div>
+                    <div class="field full-width">
+                        <label>E-mail</label>
+                        <input type="email" placeholder="Digite Seu Email" id="email">
+                    </div>
+                    <div class="termos">
+                        <input type="checkbox" id="termos">Aceito os <span><a href="">Termos de Uso</a></span> e a <span><a href="">Política de Privacidade</a></span></input>
+                    </div>
+                <div class="form-actions">
+                    <a class="btn" href="../index.html">Cancelar</a>
+                    <button type="submit" class="btn">Continuar →</button>
+                </div>
+                 </form>
+            </section>
+    </main>
+</body>
+
+</html>

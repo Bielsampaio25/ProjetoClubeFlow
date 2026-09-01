@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Cadastro do Atleta · Club Flow</title>
+    <title>Cadastro do Atleta</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/colors.css">
     <link rel="stylesheet" href="../css/style.css">
@@ -43,35 +43,38 @@
                 </div>
                 <p class="eyebrow">ETAPA 01 / 04</p>
                 <h2>Dados pessoais</h2>
-                <div class="form-grid" style="margin-top:25px">
+                
+                <form action="/dadosPessoaisAtleta" method="POST" class="form-grid" style="margin-top:25px">
+                    
                     <div class="field">
                         <label>Nome completo</label>
-                        <input type="text" placeholder="Digite Seu Nome">
+                        <input type="text" placeholder="Digite Seu Nome" id="nome">
                     </div>
                     <div class="field">
                         <label>Data de nascimento</label>
-                        <input type="date">
+                        <input type="date" id="dtaNascimento">
                     </div>
                     <div class="field">
                         <label>CPF</label>
-                        <input type="text" placeholder="000.000.000-00">
+                        <input type="text" placeholder="000.000.000-00" id="cpf">
                     </div>
                     <div class="field">
                         <label>Cidade</label>
-                        <input type="text" placeholder="Digite sua cidade">
+                        <input type="text" placeholder="Digite sua cidade" id="cidade">
                     </div>
                     <div class="field full-width">
                         <label>E-mail</label>
-                        <input type="email" placeholder="Digite Seu Email">
+                        <input type="email" placeholder="Digite Seu Email" id="email">
                     </div>
                     <div class="termos">
                         <input type="checkbox" id="termos">Aceito os <span><a href="">Termos de Uso</a></span> e a <span><a href="">Política de Privacidade</a></span></input>
                     </div>
+                <div class="form-actions">
+                    <a class="btn" href="../index.html">Cancelar</a>
+                    <a href="perfil-esportivo.html" class="btn">Continuar →</a>
                 </div>
-                <div class="form-actions"><a class="btn" href="../index.html">Cancelar</a><a class="btn primary"
-                        href="perfil-esportivo.html">Continuar →</a></div>
+                 </form>
             </section>
-        </div>
     </main>
 </body>
 
