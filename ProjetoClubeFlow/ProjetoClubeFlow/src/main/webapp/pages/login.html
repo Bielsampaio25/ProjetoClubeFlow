@@ -4,17 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Entrar · Club Flow</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/colors.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/login.css">
+    <title>Entrar</title>
 </head>
 
 <body>
     <main class="signup">
         <header class="site-header">
-            <a class="brand" href="../index.html"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></a>
+            <a class="brand" href="../index.html"><img src="../assets/logo/logo_ClubeFlow.png" alt="" class="brand-icon"></a>
             <a href="../index.html" class="btn">← Voltar</a>
         </header>
         <div class="signup-layout">
@@ -24,23 +24,20 @@
                 <p>Entre na sua conta para acompanhar sua evolução, oportunidades, talentos e conexões dentro do
                     ecossistema Club Flow.</p>
             </section>
-            <section class="signup-card">
+            <form action="/login" method="POST" class="signup-card">
                 <p class="eyebrow">BEM-VINDO DE VOLTA</p>
                 <h2>Entrar</h2>
-                <div class="field" style="margin-top:25px"><label>E-MAIL</label><input type="email"
-                        placeholder="seu@email.com"></div>
-                <div class="field"><label>SENHA</label><input type="password" placeholder="••••••••"></div>
+                <div class="field" style="margin-top:25px"><label>E-MAIL</label><input type="email" placeholder="seu@email.com" id="usuario"></div>
+                <div class="field"><label>SENHA</label><input type="password" placeholder="Digite sua senha" id="senha"></div>
                 <div
                     style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 22px;font-size:.75rem;color:var(--text-muted)">
                     <a href="#" style="color:var(--primary-green)">Esqueci minha senha</a>
                 </div>
                 <div class="form-actions">
-                    <a class="btn primary" href="dashboard-atleta.html">Entrar como atleta →</a>
-                    <a class="btn" href="dashboard-clube.html">Entrar como clube</a>
+                    <button class="btn primary" id="btnLoginAtleta">Entrar como atleta →</button>
+                    <button class="btn" id="btnLoginClube">Entrar como clube</button>
                 </div>
-                <p style="font-size:.72rem;text-align:center;margin-top:22px">Ainda não possui uma conta? <a
-                        href="cadastro.html" style="color:var(--primary-green)">Criar perfil</a></p>
-            </section>
+            </form>
         </div>
     </main>
 </body>
