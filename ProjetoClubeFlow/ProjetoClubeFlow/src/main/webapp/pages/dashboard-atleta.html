@@ -17,14 +17,18 @@
             <div class="brand"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></div>
             <div class="area-box">ÁREA DO <b>ATLETA</b></div>
             <p class="menu-title">MENU PRINCIPAL</p>
-            <nav class="menu"><a class="active" href="dashboard-atleta.html"><span>⌂</span>Início</a><a class=""
-                    href="perfil.html"><span>◉</span>Meu perfil</a><a class="" href="desempenho.html"><span>◎</span>Meu
-                    desempenho</a><a class=""
-                    href="agenda.html"><span>▣</span>Agenda</a><a class=""
-                    href="gamificacao.html"><span>★</span>Gamificação</a><a class=""
-                    href="clubes-interessados.html"><span>☆</span>Clubes interessados</a><a class=""
-                    href="rede-social.html"><span>◌</span>Rede social</a></nav>
-            <div class="side-actions"><a href="configuracoes.html">⚙ Configurações</a><a href="sair.html">↪ Sair</a>
+            <nav class="menu">
+                <a class="active" href="dashboard-atleta.html"><span>⌂</span>Início</a>
+                <a class="" href="perfil.html"><span>◉</span>Meu perfil</a>
+                <a class="" href="desempenho.html"><span>◎</span>Meu desempenho</a>
+                <a class="" href="agenda.html"><span>▣</span>Agenda</a>
+                <a class="" href="gamificacao.html"><span>★</span>Gamificação</a>
+                <a class="" href="clubes-interessados.html"><span>☆</span>Clubes interessados</a>
+                <a class="" href="oportunidades.html"><span>✦</span>Oportunidades</a>
+                <a class="" href="rede-social.html"><span>◌</span>Rede social</a></nav>
+            <div class="side-actions">
+                <a href="configuracoes.html">⚙ Configurações</a>
+                <a href="sair.html">↪ Sair</a>
             </div>
             <a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a>
         </aside>
@@ -62,22 +66,22 @@
                             <div class="metric"><span class="metric-label">Índice</span><strong id="indice">84</strong><small>+8%</small>
                             </div>
                             <div class="metric"><span class="metric-label">XP</span><strong id="XP">1.240</strong><small>Nível
-                                    18</small></div>
+                                    <span id="nivel">18</span></small></div>
                             <div class="metric"><span class="metric-label">Sequência</span><strong id="sequencia">7</strong><small>jogos
                                     seguidos</small></div>
                         </div>
                     </article>
                     <article class="card">
                         <p class="eyebrow">GAMIFICAÇÃO</p>
-                        <h3>Nível 18</h3>
-                        <p>1.240 XP</p>
-                        <div class="progress"><i style="width:78%"></i></div><small style="color:var(--text-muted)">260 XP
+                        <h3 id="nivel">Nível 18</h3>
+                        <p id="XP">1.240 XP</p>
+                        <div class="progress"><i style="width:78%"></i></div><small style="color:var(--text-muted)"><span id="XPFalta">260</span> XP
                             para o próximo nível</small><a class="btn" style="margin-top:18px"
                             href="gamificacao.html">Ver gamificação</a>
                     </article>
                     <article class="card">
                         <p class="eyebrow">OPORTUNIDADES</p>
-                        <h3>3 novas oportunidades</h3>
+                        <h3><span id="oportunidades">3</span> novas oportunidades</h3>
                         <p>Avaliação para equipe principal, peneira regional e torneio Club Flow.</p><a
                             class="btn primary" href="oportunidades.html">Ver oportunidades</a>
                     </article>
