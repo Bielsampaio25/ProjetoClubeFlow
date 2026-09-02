@@ -1,12 +1,10 @@
-/* Estilos exclusivos desta página */
-
 p {
   margin: 4px 0;
 }
 
 .dashboard-grid {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
 }
 
@@ -15,6 +13,7 @@ p {
   border: 1px solid var(--primary-green);
   padding: 28px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  width: 100%;
 }
 
 .hero-card h1 {
@@ -30,6 +29,62 @@ p {
 
 .grid-3 {
   margin-top: 14px;
+}
+
+.card {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  font: 700 0.72rem "Barlow Condensed", sans-serif;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table td {
+  padding: 16px;
+  font-size: 0.88rem;
+  color: var(--text-light);
+  border-bottom: 1px solid rgba(199, 250, 58, 0.08);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: rgba(199, 250, 58, 0.03);
+}
+
+.table td.rank {
+  font: 800 1.15rem "Barlow Condensed", sans-serif;
+  color: var(--primary-green);
+  width: 50px;
+}
+
+.table b {
+  color: var(--text-light);
+}
+
+@media (max-width: 720px) {
+  .card {
+    padding: 12px;
+  }
+  
+  .table th, .table td {
+    padding: 12px 10px;
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 1050px) {

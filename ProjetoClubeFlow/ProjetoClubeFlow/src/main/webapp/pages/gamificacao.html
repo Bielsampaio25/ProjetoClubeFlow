@@ -17,24 +17,27 @@
             <div class="brand"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></div>
             <div class="area-box">ÁREA DO <b>ATLETA</b></div>
             <p class="menu-title">MENU PRINCIPAL</p>
-            <nav class="menu"><a class="" href="dashboard-atleta.html"><span>⌂</span>Início</a><a class=""
-                    href="perfil.html"><span>◉</span>Meu perfil</a><a class="" href="desempenho.html"><span>◎</span>Meu
-                    desempenho</a><a class="" href="treinos.html"><span>◈</span>Treinos</a><a class=""
-                    href="agenda.html"><span>▣</span>Agenda</a><a class="active"
-                    href="gamificacao.html"><span>★</span>Gamificação</a><a class=""
-                    href="evolucao.html"><span>↗</span>Minha evolução</a><a class=""
-                    href="clubes-interessados.html"><span>☆</span>Clubes interessados</a><a class=""
-                    href="oportunidades.html"><span>✦</span>Oportunidades</a><a class=""
-                    href="rede-social.html"><span>◌</span>Rede social</a></nav>
-            <div class="side-actions"><a href="configuracoes.html">⚙ Configurações</a><a href="sair.html">↪ Sair</a>
+            <nav class="menu">
+                <a class="" href="dashboard-atleta.html"><span>⌂</span>Início</a>
+                <a class="" href="perfil.html"><span>◉</span>Meu perfil</a>
+                <a class="" href="desempenho.html"><span>◎</span>Meu desempenho</a>
+                <a class="" href="agenda.html"><span>▣</span>Agenda</a>
+                <a class="active" href="gamificacao.html"><span>★</span>Gamificação</a>
+                <a class="" href="clubes-interessados.html"><span>☆</span>Clubes interessados</a>
+                <a class="" href="oportunidades.html"><span>✦</span>Oportunidades</a>
+                <a class="" href="rede-social.html"><span>◌</span>Rede social</a></nav>
+            <div class="side-actions">
+                <a href="configuracoes.html">⚙ Configurações</a>
+                <a href="sair.html">↪ Sair</a>
             </div>
             <a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a>
         </aside>
         <main class="main">
             <header class="topbar">
                 <div class="breadcrumb">CLUB FLOW / <b>ATLETA</b></div>
-                <div class="account"><span>Gabriel Almeida<small style="display:block;color:var(--text-muted)">Atacante ·
-                            Sub-20</small></span><span class="avatar">GA</span></div>
+                <div class="account">
+                    <span id="nome">Gabriel Almeida<small style="display:block;color:var(--text-muted)"> <span id="posicao">Atacante</span> · <span id="categoria">Sub-20</span></small></span>
+                    <span class="avatar" id="perfil">GA</span></div>
             </header>
             <section class="page">
                 <div class="page-header">
@@ -47,36 +50,99 @@
                 <div class="dashboard-grid">
                     <article class="hero-card">
                         <p class="eyebrow">NÍVEL ATUAL</p>
-                        <h1>18</h1>
-                        <p>1.240 XP</p>
+                        <h1 id="nivel">18</h1>
+                        <p id="XP">1.240 XP</p>
                         <div class="progress"><i style="width:78%"></i></div>
-                        <p>260 XP para o nível 19.</p>
-                    </article>
-                    <article class="card">
-                        <p class="eyebrow">CONQUISTAS</p>
-                        <h3>12 desbloqueadas</h3>
-                        <p>🏆 Artilheiro<br>🔥 7 jogos consecutivos<br>🎯 Mestre das assistências</p>
+                        <p><span id="XPFalta">260</span> XP para o nível <span id="proximoNivel">19</span>.</p>
                     </article>
                 </div>
                 <article class="card" style="margin-top:18px">
-                    <p class="eyebrow">DESAFIOS</p>
+                    <p class="eyebrow">DESAFIOS DIÁRIOS</p>
                     <div class="grid-3">
                         <div>
-                            <h3>3 treinos</h3>
-                            <p>2/3 concluídos · +120 XP</p>
+                            <h3 id="desafioDiario">Postar 3 vídeos</h3>
+                            <p id="qtdDesafio">2/3 concluídos · +<span id="XPDesafio">120</span> XP</p>
                             <div class="progress"><i style="width:66%"></i></div>
                         </div>
                         <div>
-                            <h3>3 gols</h3>
-                            <p>2/3 concluídos · +180 XP</p>
+                            <h3 id="desafioDiario">Postar uma foto em campo</h3>
+                            <p id="qtdDesafio">2/3 concluídos · +<span id="XPDesafio">180</span> XP</p>
                             <div class="progress"><i style="width:66%"></i></div>
                         </div>
                         <div>
-                            <h3>5 interações</h3>
-                            <p>4/5 concluídas · +80 XP</p>
+                            <h3 id="desafioDiario">Comentar um post de outro atleta</h3>
+                            <p id="qtdDesafio">4/5 concluídas · +<span id="XPDesafio">80</span> XP</p>
                             <div class="progress"><i style="width:80%"></i></div>
                         </div>
                     </div>
+                </article>
+                <article class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ATLETA</th>
+                                <th>CATEGORIA</th>
+                                <th>POSIÇÃO</th>
+                                <th>XP</th>
+                                <th>NÍVEL</th>
+                                <th>DESEMP.</th>
+                                <th>ENGAJ.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="rank">01</td>
+                                <td id="nome"><b>Gabriel Almeida</b></td>
+                                <td id="categoria">Sub-20</td>
+                                <td id="posicao">Atacante</td>
+                                <td id="XP">1.240</td>
+                                <td id="nivel">18</td>
+                                <td id="desempenho">84</td>
+                                <td id="engajamento">92%</td>
+                            </tr>
+                            <tr>
+                                <td class="rank">02</td>
+                                <td><b>Lucas Oliveira</b></td>
+                                <td>Sub-20</td>
+                                <td>Meio-campo</td>
+                                <td>1.180</td>
+                                <td>17</td>
+                                <td>81</td>
+                                <td>89%</td>
+                            </tr>
+                            <tr>
+                                <td class="rank">03</td>
+                                <td><b>João Santos</b></td>
+                                <td>Sub-17</td>
+                                <td>Atacante</td>
+                                <td>1.090</td>
+                                <td>16</td>
+                                <td>82</td>
+                                <td>86%</td>
+                            </tr>
+                            <tr>
+                                <td class="rank">04</td>
+                                <td><b>Pedro Henrique</b></td>
+                                <td>Sub-20</td>
+                                <td>Defensor</td>
+                                <td>1.020</td>
+                                <td>15</td>
+                                <td>79</td>
+                                <td>82%</td>
+                            </tr>
+                            <tr>
+                                <td class="rank">05</td>
+                                <td><b>Matheus Costa</b></td>
+                                <td>Sub-15</td>
+                                <td>Goleiro</td>
+                                <td>980</td>
+                                <td>14</td>
+                                <td>78</td>
+                                <td>80%</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </article>
             </section>
         </main>

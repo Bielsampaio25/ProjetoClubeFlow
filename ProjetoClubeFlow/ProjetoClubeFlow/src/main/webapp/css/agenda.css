@@ -34,16 +34,6 @@
   background: rgba(199, 250, 58, 0.03);
 }
 
-.tag {
-  display: inline-block;
-  padding: 6px 12px;
-  letter-spacing: 0.05em;
-}
-
-.tag.lime {
-  background: rgba(199, 250, 58, 0.05);
-}
-
 @media (max-width: 720px) {
   .card {
     padding: 12px;

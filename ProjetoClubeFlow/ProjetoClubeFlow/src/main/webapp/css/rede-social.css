@@ -8,10 +8,21 @@ p {
   margin: 4px 0 0;
 }
 
+.perfil-actions-container{
+  display: flex;
+  gap: 15px;
+}
+
+.story-row{
+  display: flex;
+  gap: 20px;
+}
+
 .card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-top: 20px;
   transition: border-color 0.2s, transform 0.2s;
 }
 
@@ -23,6 +34,32 @@ p {
   display: inline-block;
   margin-top: 16px;
   letter-spacing: 0.05em;
+}
+
+.timeline{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card-post {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 24px;
+  background: linear-gradient(145deg, rgba(16, 41, 31, .95), rgba(8, 27, 19, .95));
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  transition: border-color .2s ease;
+}
+.card:hover {
+  border-color: rgba(199, 250, 58, .3);
+}
+
+.post-actions{
+  display: flex;
+  gap: 20px;
 }
 
 .tag.lime {

@@ -17,24 +17,27 @@
             <div class="brand"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></div>
             <div class="area-box">ÁREA DO <b>ATLETA</b></div>
             <p class="menu-title">MENU PRINCIPAL</p>
-            <nav class="menu"><a class="" href="dashboard-atleta.html"><span>⌂</span>Início</a><a class=""
-                    href="perfil.html"><span>◉</span>Meu perfil</a><a class="" href="desempenho.html"><span>◎</span>Meu
-                    desempenho</a><a class="" href="treinos.html"><span>◈</span>Treinos</a><a class=""
-                    href="agenda.html"><span>▣</span>Agenda</a><a class=""
-                    href="gamificacao.html"><span>★</span>Gamificação</a><a class=""
-                    href="evolucao.html"><span>↗</span>Minha evolução</a><a class=""
-                    href="clubes-interessados.html"><span>☆</span>Clubes interessados</a><a class=""
-                    href="oportunidades.html"><span>✦</span>Oportunidades</a><a class="active"
-                    href="rede-social.html"><span>◌</span>Rede social</a></nav>
-            <div class="side-actions"><a href="configuracoes.html">⚙ Configurações</a><a href="sair.html">↪ Sair</a>
+            <nav class="menu">
+                <a class="" href="dashboard-atleta.html"><span>⌂</span>Início</a>
+                <a class="" href="perfil.html"><span>◉</span>Meu perfil</a>
+                <a class="" href="desempenho.html"><span>◎</span>Meu desempenho</a>
+                <a class="" href="agenda.html"><span>▣</span>Agenda</a>
+                <a class="" href="gamificacao.html"><span>★</span>Gamificação</a>
+                <a class="active" href="clubes-interessados.html"><span>☆</span>Clubes interessados</a>
+                <a class="" href="oportunidades.html"><span>✦</span>Oportunidades</a>
+                <a class="" href="rede-social.html"><span>◌</span>Rede social</a></nav>
+            <div class="side-actions">
+                <a href="configuracoes.html">⚙ Configurações</a>
+                <a href="sair.html">↪ Sair</a>
             </div>
             <a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a>
         </aside>
         <main class="main">
             <header class="topbar">
                 <div class="breadcrumb">CLUB FLOW / <b>ATLETA</b></div>
-                <div class="account"><span>Gabriel Almeida<small style="display:block;color:var(--text-muted)">Atacante ·
-                            Sub-20</small></span><span class="avatar">GA</span></div>
+                <div class="account">
+                    <span id="nome">Gabriel Almeida<small style="display:block;color:var(--text-muted)"> <span id="posicao">Atacante</span> · <span id="categoria">Sub-20</span></small></span>
+                    <span class="avatar" id="perfil">GA</span></div>
             </header>
             <section class="page">
                 <div class="page-header">
@@ -42,61 +45,65 @@
                         <p class="eyebrow">COMUNIDADE / FUTEBOL</p>
                         <h1>Rede social</h1>
                         <p>Conecte-se com quem vive o futebol.</p>
-                    </div><a class="btn primary" href="#">+ Publicar</a>
+                    </div>
+                    <div class="perfil-actions-container">
+                    <a class="btn primary" href="#">+ Publicar</a>
+                    <a class="btn primary" href="#">Perfil</a>
+                    </div>
                 </div>
                 <div class="story-row">
-                    <div class="story"><span class="avatar">GA</span>
+                    <div class="story"><a class="avatar" id="story">JR</a>
                         <div>Você</div>
                     </div>
-                    <div class="story"><span class="avatar">LF</span>
+                    <div class="story"><a class="avatar">LF</a>
                         <div>Lucas</div>
                     </div>
-                    <div class="story"><span class="avatar">MF</span>
+                    <div class="story"><a class="avatar">MF</a>
                         <div>Marina</div>
                     </div>
-                    <div class="story"><span class="avatar">CA</span>
+                    <div class="story"><a class="avatar">CA</a>
                         <div>Aurora</div>
                     </div>
-                    <div class="story"><span class="avatar">JP</span>
+                    <div class="story"><a class="avatar">JP</a>
                         <div>João</div>
                     </div>
                 </div>
                 <div class="social-layout">
-                    <div>
-                        <article class="card post">
-                            <div class="post-head"><span class="avatar">LF</span>
-                                <div><b>Lucas Ferreira</b><small>Atleta · Meio-campo · Sub-20 · há 2h</small></div>
+                    <div class="timeline">
+                        <article class="card-post">
+                            <div class="post-head">
+                                <span class="avatar">LF</span>
+                                <div>
+                                    <b>Lucas Ferreira</b>
+                                    <small>Atleta · Meio-campo · Sub-20 · há 2h</small>
+                                </div>
                             </div>
                             <p class="post-body">Dia de treino intenso. Foco total na evolução e no próximo jogo.</p>
                             <div class="post-media">TREINO / MOVIMENTO</div>
-                            <div class="post-actions"><span>♡ 24</span><span>💬 6</span><span>↗
-                                    Compartilhar</span><span>🔖 Salvar</span></div>
-                        </article>
-                        <article class="card post">
-                            <div class="post-head"><span class="avatar">CA</span>
-                                <div><b>Clube Aurora ✓</b><small>Clube · há 6h</small></div>
+                            <div class="post-actions">
+                                <span>♡ 24</span>
+                                <span>💬 6</span>
+                                <span>↗ Compartilhar</span>
+                                <span>🔖 Salvar</span>
                             </div>
-                            <p class="post-body">Estamos observando novos nomes para a próxima avaliação. Mostre o seu
-                                jogo na rede Club Flow.</p>
+                        </article>
+                        <article class="card-post">
+                            <div class="post-head">
+                                <span class="avatar">CA</span>
+                                <div>
+                                    <b>Clube Aurora ✓</b>
+                                    <small>Clube · há 6h</small>
+                                </div>
+                            </div>
+                            <p class="post-body">Estamos observando novos nomes para a próxima avaliação. Mostre o seu jogo na rede Club Flow.</p>
                             <div class="post-media">OPORTUNIDADE / SCOUTING</div>
-                            <div class="post-actions"><span>♡ 58</span><span>💬 12</span><span>↗ Compartilhar</span>
+                            <div class="post-actions">
+                                <span>♡ 58</span>
+                                <span>💬 12</span>
+                                <span>↗ Compartilhar</span>
                             </div>
                         </article>
                     </div>
-                    <aside>
-                        <article class="card">
-                            <p class="eyebrow">TENDÊNCIAS</p>
-                            <div class="chips"><span class="tag">#FutebolDeBase</span><span
-                                    class="tag">#Scouting</span><span class="tag">#Sub20</span><span
-                                    class="tag">#Performance</span></div>
-                        </article>
-                        <article class="card" style="margin-top:14px">
-                            <p class="eyebrow">QUEM SEGUIR</p>
-                            <p>João Santos · Atacante</p>
-                            <p>Clube Aurora · Clube</p>
-                            <p>Academia Nova Geração · Escolinha</p>
-                        </article>
-                    </aside>
                 </div>
             </section>
         </main>
