@@ -14,23 +14,33 @@
 <body>
     <div class="app">
         <aside class="sidebar">
-            <div class="brand"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></div>
-            <div class="area-box">ÁREA DO <b>CLUBE</b></div>
+            <div class="brand">
+                <span class="brand-icon"></span><span>CLUB <em>FLOW</em></span>
+            </div>
+            <div class="area-box">
+                ÁREA DO <b>CLUBE</b>
+            </div>
             <p class="menu-title">MENU PRINCIPAL</p>
-            <nav class="menu"><a class="" href="dashboard-clube.html"><span>⌂</span>Painel</a><a class=""
-                    href="ranking.html"><span>★</span>Ranking</a><a class="active"
-                    href="banco-talentos.html"><span>⌕</span>Banco de talentos</a><a class=""
-                    href="rede-social-clube.html"><span>◌</span>Rede social</a><a class=""
-                    href="perfil-clube.html"><span>◉</span>Perfil do clube</a></nav>
-            <div class="side-actions"><a href="configuracoes-clube.html">⚙ Configurações</a><a href="sair.html">↪
-                    Sair</a></div>
+            <nav class="menu">
+                <a class="" href="dashboard-clube.html"><span>⌂</span>Painel</a>
+                <a class="" href="ranking.html"><span>★</span>Ranking</a>
+                <a class="active" href="banco-talentos.html"><span>⌕</span>Banco de talentos</a>
+                <a class="" href="rede-social-clube.html"><span>◌</span>Rede social</a>
+                <a class="" href="perfil-clube.html"><span>◉</span>Perfil do clube</a>
+            </nav>
+            <div class="side-actions">
+                <a href="configuracoes-clube.html">⚙ Configurações</a>
+                <a href="sair.html">↪Sair</a>
+            </div>
             <a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a>
         </aside>
         <main class="main">
             <header class="topbar">
                 <div class="breadcrumb">CLUB FLOW / <b>CLUBE</b></div>
-                <div class="account"><span>Clube Aurora<small style="display:block;color:var(--text-muted)">Gestão do
-                            clube</small></span><span class="avatar">CA</span></div>
+                <div class="account">
+                    <span>Clube Aurora<small style="display:block;color:var(--text-muted)">Gestão do
+                            clube</small></span><span class="avatar">CA</span>
+                </div>
             </header>
             <section class="page">
                 <div class="page-header">
@@ -43,34 +53,97 @@
                 <div class="filter-layout">
                     <aside class="card filters">
                         <p class="eyebrow">FILTROS</p>
-                        <div class="field"><label>Estado</label><select>
-                                <option>São Paulo</option>
-                                <option>Rio de Janeiro</option>
-                                <option>Minas Gerais</option>
-                            </select></div>
-                        <div class="field"><label>Cidade</label><input placeholder="Pesquisar cidade"></div>
-                        <div class="field"><label>Posição</label><select>
-                                <option>Atacante</option>
-                                <option>Meio-campo</option>
-                                <option>Defensor</option>
-                                <option>Goleiro</option>
-                            </select></div>
-                        <div class="field"><label>Categoria</label><select>
-                                <option>Sub-20</option>
-                                <option>Sub-17</option>
-                                <option>Sub-15</option>
-                            </select></div>
-                        <div class="field"><label>Idade</label><input type="range" min="10" max="40" value="20"></div>
-                        <div class="field"><label>Índice mínimo</label><input type="range" min="0" max="100" value="80">
+                        <div class="field">
+                            <label>Estado</label>
+                            <input placeholder="Pesquisar estado" id="estado">
                         </div>
-                        <div class="field"><label>Características técnicas</label>
-                            <div class="filter-options"><span class="filter-option">Velocidade</span><span
-                                    class="filter-option">Finalização</span><span class="filter-option">Passe</span><span
-                                    class="filter-option">Drible</span><span class="filter-option">1x1</span><span
-                                    class="filter-option">Resistência</span></div>
-                        </div><a class="btn primary" style="width:100%;justify-content:center" href="#">Aplicar
-                            filtros</a><a class="btn" style="width:100%;justify-content:center;margin-top:8px"
-                            href="#">Limpar</a>
+                        <div class="field">
+                            <label>Cidade</label>
+                            <input placeholder="Pesquisar cidade" id="cidade">
+                        </div>
+                        <div class="field">
+                            <label>Posição</label>
+                            <select id="posicao">
+                                <option value="atacante">Atacante</option>
+                                <option value="meio-campista">Meio-campo</option>
+                                <option value="defensor">Defensor</option>
+                                <option value="goleiro">Goleiro</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Categoria</label>
+                            <select id="categoria">
+                                <option value="">
+                                    Selecione uma opção
+                                </option>
+
+                                <option value="Sub-11">
+                                    Sub-11
+                                </option>
+
+                                <option value="Sub-13">
+                                    Sub-13
+                                </option>
+
+                                <option value="Sub-15">
+                                    Sub-15
+                                </option>
+
+                                <option value="Sub-17">
+                                    Sub-17
+                                </option>
+
+                                <option value="Sub-20">
+                                    Sub-20
+                                </option>
+
+                                <option value="Sub-23">
+                                    Sub-23
+                                </option>
+
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Idade</label>
+                            <input type="range" min="10" max="40" id="idade">
+                        </div>
+                        <div class="field">
+                            <label>Características técnicas</label>
+
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="velocidade">
+                                    <span>Velocidade</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="finalizacao">
+                                    <span>Finalização</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="passe">
+                                    <span>Passe</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="drible">
+                                    <span>Drible</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="1x1">
+                                    <span>1x1</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="resistencia">
+                                    <span>Resistência</span>
+                                </label>
+                            </div>
+                        </div>
+                        <a class="btn primary" style="width:100%;justify-content:center" href="#">Aplicar filtros</a>
+                        <a class="btn" style="width:100%;justify-content:center;margin-top:8px" href="#">Limpar</a>
                     </aside>
                     <section>
                         <div class="notice" style="margin-bottom:14px">128 atletas encontrados · ordenado por relevância
@@ -79,12 +152,12 @@
                             <article class="card talent">
                                 <div class="talent-avatar">AB</div>
                                 <div>
-                                    <h3>Ana Beatriz Lima</h3>
-                                    <p>Atacante · Sub-20<br>📍 Campinas · 18 anos<br><span class="tag lime">Velocidade ·
+                                    <h3 id="nome">Ana Beatriz Lima</h3>
+                                    <p><span id="posicao">Atacante</span> · <span id="categoria">Sub-20</span><br>📍 <span id="cidade">Campinas</span> · <span id="idade">18</span> anos<br><span class="tag lime" id="caracteristicasTecnicas">Velocidade ·
                                             Drible</span></p>
                                 </div>
                                 <div>
-                                    <div class="score">94</div><a class="btn" href="perfil-talento.html">Ver</a>
+                                    <div class="score" id="score">94</div><a class="btn" href="perfil-talento.html">Ver</a>
                                 </div>
                             </article>
                             <article class="card talent">

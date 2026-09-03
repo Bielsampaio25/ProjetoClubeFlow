@@ -14,23 +14,31 @@
 <body>
     <div class="app">
         <aside class="sidebar">
-            <div class="brand"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></div>
-            <div class="area-box">ÁREA DO <b>CLUBE</b></div>
+            <div class="brand">
+                <span class="brand-icon"></span><span>CLUB <em>FLOW</em></span>
+            </div>
+            <div class="area-box">
+                ÁREA DO <b>CLUBE</b>
+            </div>
             <p class="menu-title">MENU PRINCIPAL</p>
-            <nav class="menu"><a class="active" href="dashboard-clube.html"><span>⌂</span>Painel</a><a class=""
-                    href="ranking.html"><span>★</span>Ranking</a><a class=""
-                    href="banco-talentos.html"><span>⌕</span>Banco de talentos</a><a class=""
-                    href="rede-social-clube.html"><span>◌</span>Rede social</a><a class=""
-                    href="perfil-clube.html"><span>◉</span>Perfil do clube</a></nav>
-            <div class="side-actions"><a href="configuracoes-clube.html">⚙ Configurações</a><a href="sair.html">↪
-                    Sair</a></div>
+            <nav class="menu">
+                <a class="active" href="dashboard-clube.html"><span>⌂</span>Painel</a>
+                <a class="" href="ranking.html"><span>★</span>Ranking</a>
+                <a class="" href="banco-talentos.html"><span>⌕</span>Banco de talentos</a>
+                <a class="" href="rede-social-clube.html"><span>◌</span>Rede social</a>
+                <a class="" href="perfil-clube.html"><span>◉</span>Perfil do clube</a></nav>
+            <div class="side-actions">
+                <a href="configuracoes-clube.html">⚙ Configurações</a>
+                <a href="sair.html">↪Sair</a>
+                </div>
             <a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a>
         </aside>
         <main class="main">
             <header class="topbar">
                 <div class="breadcrumb">CLUB FLOW / <b>CLUBE</b></div>
-                <div class="account"><span>Clube Aurora<small style="display:block;color:var(--text-muted)">Gestão do
-                            clube</small></span><span class="avatar">CA</span></div>
+                <div class="account">
+                    <span>Clube Aurora<small style="display:block;color:var(--text-muted)">Gestão do clube</small></span><span class="avatar">CA</span>
+                        </div>
             </header>
             <section class="page">
                 <div class="page-header">
@@ -41,42 +49,64 @@
                     </div>
                 </div>
                 <div class="stat-grid">
-                    <article class="card metric"><span class="metric-label">Atletas</span><strong>248</strong><small>12
-                            equipes</small></article>
-                    <article class="card metric"><span class="metric-label">Novos talentos</span><strong>32</strong><small>+8
-                            esta semana</small></article>
-                    <article class="card metric"><span class="metric-label">Em destaque</span><strong>12</strong><small>esta
-                            semana</small></article>
-                    <article class="card metric"><span
-                            class="metric-label">Engajamento</span><strong>87%</strong><small>+6%</small></article>
+                    <article class="card metric">
+                        <span class="metric-label">Atletas</span>
+                        <strong id="totalAtletas">248</strong>
+                        </article>
+                    <article class="card metric">
+                        <span class="metric-label">Novos talentos</span>
+                        <strong id="novosTalentos">32</strong>
+                    </article>
+                    <article class="card metric">
+                        <span class="metric-label">Em destaque</span>
+                        <strong id="destaques">12</strong>
+                    </article>
+                    <article class="card metric">
+                        <span class="metric-label">Engajamento</span>
+                        <strong id="engajamento">87%</strong>
+                    </article>
                 </div>
                 <div class="dashboard-grid">
                     <article class="card featured">
                         <p class="eyebrow">ATLETA DESTAQUE DA SEMANA</p>
                         <div class="profile-hero">
-                            <div class="profile-photo">GA</div>
                             <div>
-                                <h2>Gabriel Almeida</h2>
-                                <p>Atacante · Sub-20 · Nível 18</p>
+                                <div class="profile-hero-container">
+                                <div class="profile-photo">GA</div>
+                                <div class="profile-hero-titulo">
+                                <h2 id="nome">Gabriel Almeida</h2>
+                                <p><span id="posiacao">Atacante</span> · <span id="categoria">Sub-20</span> · <span id="nivel">Nível 18</span></p>
+                                </div>
+                                </div>
                                 <div class="grid-3">
-                                    <div class="metric"><span class="metric-label">Índice</span><strong>84</strong></div>
-                                    <div class="metric"><span class="metric-label">Gols</span><strong>18</strong></div>
-                                    <div class="metric"><span class="metric-label">Assist.</span><strong>12</strong></div>
-                                </div><a class="btn primary" href="perfil-talento.html">Ver perfil</a>
+                                    <div class="metric">
+                                        <span class="metric-label">Índice</span>
+                                        <strong>84</strong>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Gols</span>
+                                        <strong id="gols">18</strong>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Assistências</span>
+                                        <strong id="assistencias">12</strong>
+                                    </div>
+                                </div>
+                                <a class="btn primary" href="perfil-talento.html">Ver perfil</a>
                             </div>
                         </div>
                     </article>
                     <article class="card">
                         <p class="eyebrow">MAIS ENGAJADO</p>
-                        <h3>Lucas Oliveira</h3>
-                        <p>2.340 pontos de engajamento</p><span class="tag lime">124 interações</span>
+                        <h3 id="nome">Lucas Oliveira</h3>
+                        <p><span id="XP">2.340</span> de XP</p><span class="tag lime"><span id="curtidas">124</span> curtidas</span>
                     </article>
                     <article class="card">
                         <p class="eyebrow">TOP ATLETAS</p>
-                        <p><b style="color:var(--primary-green)">01</b> Gabriel Almeida · 1.240 XP</p>
-                        <p><b style="color:var(--primary-green)">02</b> Lucas Oliveira · 1.180 XP</p>
-                        <p><b style="color:var(--primary-green)">03</b> João Santos · 1.090 XP</p><a class="btn"
-                            href="ranking.html">Ver ranking completo →</a>
+                        <p><b style="color:var(--primary-green)">01</b> <span id="nome">Gabriel Almeida</span> · <span id="XP">1.240</span> XP</p>
+                        <p><b style="color:var(--primary-green)">02</b> <span id="nome">Lucas Oliveira</span> · <span id="XP">1.180 XP</span></p>
+                        <p><b style="color:var(--primary-green)">03</b> <span id="nome">João Santos</span> · <span id="XP">1.090 XP</span></p>
+                        <a class="btn" href="ranking.html">Ver ranking completo →</a>
                     </article>
                 </div>
             </section>

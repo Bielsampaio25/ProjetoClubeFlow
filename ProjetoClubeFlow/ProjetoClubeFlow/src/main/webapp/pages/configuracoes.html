@@ -17,24 +17,27 @@
             <div class="brand"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></div>
             <div class="area-box">ÁREA DO <b>ATLETA</b></div>
             <p class="menu-title">MENU PRINCIPAL</p>
-            <nav class="menu"><a class="" href="dashboard-atleta.html"><span>⌂</span>Início</a><a class=""
-                    href="perfil.html"><span>◉</span>Meu perfil</a><a class="" href="desempenho.html"><span>◎</span>Meu
-                    desempenho</a><a class="" href="treinos.html"><span>◈</span>Treinos</a><a class=""
-                    href="agenda.html"><span>▣</span>Agenda</a><a class=""
-                    href="gamificacao.html"><span>★</span>Gamificação</a><a class=""
-                    href="evolucao.html"><span>↗</span>Minha evolução</a><a class=""
-                    href="clubes-interessados.html"><span>☆</span>Clubes interessados</a><a class=""
-                    href="oportunidades.html"><span>✦</span>Oportunidades</a><a class=""
-                    href="rede-social.html"><span>◌</span>Rede social</a></nav>
-            <div class="side-actions"><a href="configuracoes.html">⚙ Configurações</a><a href="sair.html">↪ Sair</a>
+            <nav class="menu">
+                <a class="active" href="dashboard-atleta.html"><span>⌂</span>Início</a>
+                <a class="" href="perfil.html"><span>◉</span>Meu perfil</a>
+                <a class="" href="desempenho.html"><span>◎</span>Meu desempenho</a>
+                <a class="" href="agenda.html"><span>▣</span>Agenda</a>
+                <a class="" href="gamificacao.html"><span>★</span>Gamificação</a>
+                <a class="" href="clubes-interessados.html"><span>☆</span>Clubes interessados</a>
+                <a class="" href="oportunidades.html"><span>✦</span>Oportunidades</a>
+                <a class="" href="rede-social.html"><span>◌</span>Rede social</a></nav>
+            <div class="side-actions">
+                <a href="configuracoes.html">⚙ Configurações</a>
+                <a href="sair.html">↪ Sair</a>
             </div>
             <a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a>
         </aside>
         <main class="main">
             <header class="topbar">
                 <div class="breadcrumb">CLUB FLOW / <b>ATLETA</b></div>
-                <div class="account"><span>Gabriel Almeida<small style="display:block;color:var(--text-muted)">Atacante ·
-                            Sub-20</small></span><span class="avatar">GA</span></div>
+                <div class="account">
+                    <span id="nome">Gabriel Almeida<small style="display:block;color:var(--text-muted)"> <span id="posicao">Atacante</span> · <span id="categoria">Sub-20</span></small></span>
+                    <span class="avatar" id="perfil">GA</span></div>
             </header>
             <section class="page">
                 <div class="page-header">
@@ -48,12 +51,14 @@
                     <article class="card">
                         <h3>Conta</h3>
                         <div class="form-grid" style="margin-top:20px">
-                            <div class="field"><label>Nome</label><input value="Gabriel Almeida"></div>
-                            <div class="field"><label>E-mail</label><input value="gabriel@email.com"></div>
-                            <div class="field"><label>Telefone</label><input value="(11) 99999-9999"></div>
-                            <div class="field"><label>Senha</label><input type="password" value="12345678"></div>
+                            <div class="field"><label>Nome</label><input value="Gabriel Almeida" id="nome"></div>
+                            <div class="field"><label>E-mail</label><input value="gabriel@email.com" id="email"></div>
+                            <div class="field"><label>Telefone</label><input value="(11) 99999-9999" id="telefone"></div>
+                            <div class="field"><label>Senha</label><input type="password" value="12345678" id-senha></div>
                         </div>
-                        <div class="form-actions"><a class="btn primary" href="#">Salvar alterações</a></div>
+                        <div class="form-actions">
+                            <button class="btn primary" type="submit">Salvar alterações</button>
+                        </div>
                     </article>
                     <aside class="card">
                         <p class="eyebrow">PRIVACIDADE</p>
