@@ -28,34 +28,50 @@
         </aside>
         <main class="main">
             <header class="topbar">
-                <div class="breadcrumb">CLUB FLOW / <b>CLUBE</b></div>
-                <div class="account"><span>Clube Aurora<small style="display:block;color:var(--text-muted)">Gestão do
-                            clube</small></span><span class="avatar">CA</span></div>
+                <div class="breadcrumb">
+                    CLUB FLOW / <b>CLUBE</b>
+                </div>
+                <div class="account">
+                    <span><span id="nomeClube">Clube Aurora</span><small style="display:block;color:var(--text-muted)" id="responsavel">Gestão do clube</small></span>
+                    <span class="avatar" id="perfil">CA</span>
+                </div>
             </header>
             <section class="page">
                 <div class="page-header">
                     <div>
-                        <p class="eyebrow">CLUBE / ADMINISTRAÇÃO</p>
                         <h1>Configurações</h1>
                         <p>Gerencie informações, usuários, notificações e privacidade.</p>
                     </div>
                 </div>
                 <div class="form-layout">
-                    <article class="card">
+                    <form class="card" action="/alterarPerfilClube" method="POST">
                         <h3>Informações do clube</h3>
                         <div class="form-grid" style="margin-top:20px">
-                            <div class="field"><label>Nome</label><input value="Clube Atlético Horizonte"></div>
-                            <div class="field"><label>Responsável</label><input value="Equipe de Gestão"></div>
-                            <div class="field"><label>Cidade</label><input value="São Paulo"></div>
-                            <div class="field"><label>Estado</label><select>
-                                    <option>São Paulo</option>
-                                </select></div>
-                            <div class="field full-width"><label>Descrição</label><textarea
-                                    rows="4">Clube profissional com categorias de base e estrutura de desenvolvimento.</textarea>
+                            <div class="field">
+                                <label>Nome</label>
+                                <input value="Clube Atlético Horizonte" id="nomeClube">
+                            </div>
+                            <div class="field">
+                                <label>Responsável</label>
+                                <input value="Equipe de Gestão" id="responsavel">
+                            </div>
+                            <div class="field">
+                                <label>Cidade</label>
+                                <input value="São Paulo" id="Cidade">
+                            </div>
+                            <div class="field">
+                                <label>Estado</label>
+                                <input value="São Paulo" id="Estado">
+                            </div>
+                            <div class="field full-width">
+                                <label>Bio</label>
+                                <textarea rows="4" id="bio">Clube profissional com categorias de base e estrutura de desenvolvimento.</textarea>
                             </div>
                         </div>
-                        <div class="form-actions"><a class="btn primary" href="#">Salvar alterações</a></div>
-                    </article>
+                        <div class="form-actions">
+                            <button class="btn primary" type="submit">Salvar alterações</button>
+                        </div>
+                    </form>
                     <aside class="card">
                         <p class="eyebrow">NOTIFICAÇÕES</p>
                         <p>Novos talentos encontrados · <b style="color:var(--primary-green)">ATIVO</b></p>

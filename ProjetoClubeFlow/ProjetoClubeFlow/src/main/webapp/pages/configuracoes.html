@@ -48,18 +48,30 @@
                     </div>
                 </div>
                 <div class="form-layout">
-                    <article class="card">
+                    <form class="card" action="/alterarPerfilAtleta" method="POST">
                         <h3>Conta</h3>
                         <div class="form-grid" style="margin-top:20px">
-                            <div class="field"><label>Nome</label><input value="Gabriel Almeida" id="nome"></div>
-                            <div class="field"><label>E-mail</label><input value="gabriel@email.com" id="email"></div>
-                            <div class="field"><label>Telefone</label><input value="(11) 99999-9999" id="telefone"></div>
-                            <div class="field"><label>Senha</label><input type="password" value="12345678" id-senha></div>
+                            <div class="field">
+                                <label>Nome</label>
+                                <input value="Gabriel Almeida" id="nome">
+                            </div>
+                            <div class="field">
+                                <label>E-mail</label>
+                                <input value="gabriel@email.com" id="email">
+                            </div>
+                            <div class="field">
+                                <label>Telefone</label>
+                                <input value="(11) 99999-9999" id="telefone">
+                            </div>
+                            <div class="field">
+                                <label>Senha</label>
+                                <input type="password" value="12345678" id-senha>
+                            </div>
                         </div>
                         <div class="form-actions">
                             <button class="btn primary" type="submit">Salvar alterações</button>
                         </div>
-                    </article>
+                    </form>
                     <aside class="card">
                         <p class="eyebrow">PRIVACIDADE</p>
                         <p>Perfil público para clubes <b style="color:var(--primary-green)">ATIVADO</b></p>
