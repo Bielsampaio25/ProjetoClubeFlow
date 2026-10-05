@@ -1,17 +1,29 @@
+.steps {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 25px;
+}
+
+.step {
+  flex: 1;
+  height: 5px;
+  background: #1b3328;
+}
+
+.step.active {
+  background: var(--primary-green);
+}
 
 .signup {
     width: min(1690px, calc(100% - 80px));
     min-height: 100vh;
+    background: linear-gradient(circle at 90% 60%, #153d29, transparent 45%), #07120e;
 
     margin: 0 auto;
 
     position: relative;
 }
 
-
-/* =========================================================
-   HEADER
-   ========================================================= */
 
 .site-header {
     height: 78px;
@@ -23,8 +35,6 @@
     border-bottom: 1px solid rgba(190, 255, 210, 0.14);
 }
 
-
-/* Logo */
 
 .brand {
     display: flex;
@@ -44,8 +54,6 @@
     display: block;
 }
 
-
-/* Botão voltar */
 
 .site-header .btn {
     display: flex;
@@ -70,11 +78,6 @@
     transform: translateX(-3px);
 }
 
-
-/* =========================================================
-   LAYOUT DA CONCLUSÃO
-   ========================================================= */
-
 .concluido-layout {
     min-height: calc(100vh - 78px);
 
@@ -85,10 +88,6 @@
     padding: 55px 0 70px;
 }
 
-
-/* =========================================================
-   CARD
-   ========================================================= */
 
 .concluido-card {
     width: min(630px, 100%);
@@ -121,8 +120,6 @@
 }
 
 
-/* Linha verde no topo do card */
-
 .concluido-card::before {
     content: "";
 
@@ -138,60 +135,6 @@
 
     box-shadow: 0 0 12px rgba(182, 255, 0, 0.35);
 }
-
-
-/* =========================================================
-   ETAPAS
-   ========================================================= */
-
-.steps {
-    width: 100%;
-
-    display: flex;
-    gap: 0;
-
-    margin-bottom: 34px;
-}
-
-.step {
-    flex: 1;
-
-    height: 3px;
-
-    background: rgba(190, 255, 210, 0.12);
-
-    display: block;
-}
-
-.step.active {
-    background: var(--cf-lime);
-
-    box-shadow:
-        0 0 10px rgba(182, 255, 0, 0.2);
-}
-
-
-/* =========================================================
-   EYEBROW
-   ========================================================= */
-
-.eyebrow {
-    margin: 0 0 12px;
-
-    color: var(--cf-lime);
-
-    font-size: 11px;
-    font-weight: 700;
-
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
-}
-
-
-/* =========================================================
-   TÍTULO
-   ========================================================= */
 
 .concluido-card h2 {
     margin: 0 0 28px;
@@ -256,7 +199,7 @@
 
     color: var(--paper);
 
-    border: 1px solid var(--cf-lime);
+    border: 1px solid var(--border-color);
 
     font-size: 13px;
     font-weight: 800;
