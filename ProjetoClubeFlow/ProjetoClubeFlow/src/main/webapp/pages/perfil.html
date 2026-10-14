@@ -23,8 +23,7 @@
                 <a class="" href="desempenho.html"><span>◎</span>Meu desempenho</a>
                 <a class="" href="agenda.html"><span>▣</span>Agenda</a>
                 <a class="" href="gamificacao.html"><span>★</span>Gamificação</a>
-                <a class="" href="clubes-interessados.html"><span>☆</span>Clubes interessados</a>
-                <a class="" href="oportunidades.html"><span>✦</span>Oportunidades</a>
+                <a class="" href="oportunidades.html"><span>☆</span>Oportunidades</a>
                 <a class="" href="rede-social.html"><span>◌</span>Rede social</a>
             </nav>
             <div class="side-actions">
@@ -48,30 +47,37 @@
                         <p class="eyebrow">ATLETA / IDENTIDADE</p>
                         <h1>Meu perfil</h1>
                         <p>Seu currículo esportivo digital.</p>
-                    </div><a class="btn primary" href="cadastro.html">Editar perfil</a>
+                    </div><a class="btn primary" href="editar-perfil.html">Editar perfil</a>
                 </div>
 
 
 
                 <article class="card profile-hero">
-                    <div class="foto-perfil-container">
-                        <img id="preview" hidden>
-                        <div class="foto-perfil-content" id="textoUpload">
-                            <label for="foto" class="upload-area">
-                                <img src="../../assets/icons/icone_camera.png" alt="">
-                                <h2>Clique para anexar uma foto</h2>
-                                <p>PNG, JPG ou JPEG</p>
-                            </label>
-                            <input type="file" id="foto" accept="image/*" hidden onclick="habilitarInput()">
+                    <div class="profile-photo-column">
+                        <div class="foto-perfil-container">
+                            <img id="preview" alt="Foto de perfil" hidden>
+
+                            <div class="foto-perfil-content" id="textoUpload">
+                                <label for="foto" class="upload-area">
+                                    <img src="../../assets/icons/icone_camera.png" alt="">
+                                    <h2>Clique para anexar uma foto</h2>
+                                    <p>PNG, JPG ou JPEG</p>
+                                </label>
+
+                                <input type="file" id="foto" accept="image/png, image/jpeg" hidden>
+                            </div>
+                        </div>
+
+                        <div class="btnMudarFoto" id="btnMudarFoto">
+                            <label for="foto">Mudar imagem</label>
                         </div>
                     </div>
-                    <div class="btnMudarFoto" id="btnMudarFoto" hidden>
-                        <label for="foto">Mudar imagem</label>
-                    </div>
 
-                    <div>
+                    <div class="profile-info">
                         <p class="eyebrow">PERFIL ATIVO · 85% COMPLETO</p>
+
                         <h2 id="nome">Gabriel Almeida</h2>
+
                         <p>
                             <span id="posicao">Atacante</span> ·
                             <span id="categoria">Sub-20</span> ·
@@ -86,7 +92,7 @@
                         </div>
 
                         <div class="progress">
-                            <i style="width:85%" id="nivelProgresso"></i>
+                            <i style="width: 85%" id="nivelProgresso"></i>
                         </div>
                     </div>
                 </article>

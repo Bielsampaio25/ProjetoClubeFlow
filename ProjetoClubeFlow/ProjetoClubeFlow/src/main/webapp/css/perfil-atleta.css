@@ -1,25 +1,34 @@
 .profile-hero {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 20px;
-    text-align: center;
+    gap: 30px;
     padding: 30px;
 }
 
+.profile-photo-column {
+    width: 180px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
 .foto-perfil-container {
+    position: relative;
     width: 180px;
     height: 180px;
     flex-shrink: 0;
-    margin: 0 auto;
+    box-sizing: border-box;
     border: 2px dashed rgba(255, 255, 255, .35);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     cursor: pointer;
     transition: .25s;
-    overflow: hidden;
 }
 
 .foto-perfil-container:hover {
@@ -28,52 +37,65 @@
 }
 
 .foto-perfil-container #preview {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+    pointer-events: none;
 }
 
 .foto-perfil-content {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-area {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 8px;
     text-align: center;
-    padding: 15px;
-}
-
-.upload-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
     cursor: pointer;
 }
 
-.foto-perfil-content img {
-    width: 42px;
-    opacity: .8;
+.upload-area img {
+    width: 32px;
+    height: auto;
+    pointer-events: none;
 }
 
-.foto-perfil-content h2 {
+.upload-area h2 {
+    width: 100%;
+    margin: 0;
     color: #FFF;
     font-family: "Montserrat", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.3;
+    text-align: center;
 }
 
-.foto-perfil-content p {
+.upload-area p {
+    width: 100%;
+    margin: 0;
     color: rgba(255, 255, 255, .6);
     font-family: "Montserrat", sans-serif;
-    font-size: 12px;
+    font-size: 11px;
+    text-align: center;
 }
 
 .btnMudarFoto {
     display: flex;
     justify-content: center;
-    margin-top: -10px;
+    width: 100%;
 }
 
 .btnMudarFoto label {
@@ -83,6 +105,7 @@
     border-radius: 6px;
     cursor: pointer;
     font-family: "Montserrat", sans-serif;
+    text-align: center;
     transition: .2s;
 }
 
@@ -90,24 +113,24 @@
     background: var(--accent-green-ligth);
 }
 
-.profile-hero > div:last-child {
-    width: 100%;
+.profile-info {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
 }
 
-.profile-hero .eyebrow,
-.profile-hero h2,
-.profile-hero p {
+.profile-info .eyebrow,
+.profile-info h2,
+.profile-info p {
     margin: 0;
 }
 
 .profile-meta {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 8px;
 }
 
@@ -121,10 +144,23 @@
     display: block;
 }
 
-@media (max-width: 720px) {
+.foto-perfil-container #preview[hidden],
+.btnMudarFoto[hidden],
+#foto[hidden],
+#textoUpload[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
     .profile-hero {
+        flex-direction: column;
+        align-items: center;
         padding: 20px 15px;
-        gap: 18px;
+        gap: 24px;
+    }
+
+    .profile-photo-column {
+        width: 150px;
     }
 
     .foto-perfil-container {
@@ -132,15 +168,21 @@
         height: 150px;
     }
 
-    .profile-hero > div:last-child {
-        min-width: 0;
+    .profile-info {
+        width: 100%;
+        align-items: center;
+        text-align: center;
     }
 
-    .profile-hero > div:last-child > p {
+    .profile-info > p {
         line-height: 1.8;
     }
 
     .profile-meta {
-        gap: 6px;
+        justify-content: center;
+    }
+
+    .progress {
+        max-width: 100%;
     }
 }

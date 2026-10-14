@@ -1,25 +1,26 @@
-const inputPerfil = document.getElementById("perfil");
-const fotoPerfil = document.getElementById("fotoPerfil");
-const iniciais = document.getElementById("iniciais");
+const inputFoto = document.getElementById("foto");
+const btnMudarFoto = document.getElementById("btnMudarFoto");
+const preview = document.getElementById("preview");
+const textoUpload = document.getElementById("textoUpload");
 
-inputPerfil.addEventListener("change", function () {
+inputFoto.addEventListener("change", function () {
+
     const arquivo = this.files[0];
 
     if (!arquivo) return;
 
-    if (!arquivo.type.startsWith("image/")) {
-        alert("Selecione uma imagem válida.");
-        this.value = "";
-        return;
-    }
-
     const leitor = new FileReader();
 
-    leitor.onload = function (evento) {
-        fotoPerfil.src = evento.target.result;
-        fotoPerfil.hidden = false;
-        iniciais.hidden = true;
+    leitor.onload = function (e) {
+
+        preview.src = e.target.result;
+        preview.hidden = false;
+
+        textoUpload.style.display = "none";
+        
+        btnMudarFoto.hidden = false;
     };
 
     leitor.readAsDataURL(arquivo);
+
 });
