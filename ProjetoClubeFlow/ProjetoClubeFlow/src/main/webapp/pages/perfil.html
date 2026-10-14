@@ -25,7 +25,8 @@
                 <a class="" href="gamificacao.html"><span>★</span>Gamificação</a>
                 <a class="" href="clubes-interessados.html"><span>☆</span>Clubes interessados</a>
                 <a class="" href="oportunidades.html"><span>✦</span>Oportunidades</a>
-                <a class="" href="rede-social.html"><span>◌</span>Rede social</a></nav>
+                <a class="" href="rede-social.html"><span>◌</span>Rede social</a>
+            </nav>
             <div class="side-actions">
                 <a href="configuracoes.html">⚙ Configurações</a>
                 <a href="sair.html">↪ Sair</a>
@@ -36,8 +37,10 @@
             <header class="topbar">
                 <div class="breadcrumb">CLUB FLOW / <b>ATLETA</b></div>
                 <div class="account">
-                    <span id="nome">Gabriel Almeida<small style="display:block;color:var(--text-muted)"> <span id="posicao">Atacante</span> · <span id="categoria">Sub-20</span></small></span>
-                    <span class="avatar" id="perfil">GA</span></div>
+                    <span id="nome">Gabriel Almeida<small style="display:block;color:var(--text-muted)"> <span
+                                id="posicao">Atacante</span> · <span id="categoria">Sub-20</span></small></span>
+                    <span class="avatar" id="perfil">GA</span>
+                </div>
             </header>
             <section class="page">
                 <div class="page-header">
@@ -47,48 +50,46 @@
                         <p>Seu currículo esportivo digital.</p>
                     </div><a class="btn primary" href="cadastro.html">Editar perfil</a>
                 </div>
-                
 
 
-<article class="card profile-hero">
-    <div class="profile-photo">
-        <img id="fotoPerfil" src="" alt="Foto de perfil" hidden>
 
-        <span id="iniciais">GA</span>
+                <article class="card profile-hero">
+                    <div class="foto-perfil-container">
+                        <img id="preview" hidden>
+                        <div class="foto-perfil-content" id="textoUpload">
+                            <label for="foto" class="upload-area">
+                                <img src="../../assets/icons/icone_camera.png" alt="">
+                                <h2>Clique para anexar uma foto</h2>
+                                <p>PNG, JPG ou JPEG</p>
+                            </label>
+                            <input type="file" id="foto" accept="image/*" hidden onclick="habilitarInput()">
+                        </div>
+                    </div>
+                    <div class="btnMudarFoto" id="btnMudarFoto" hidden>
+                        <label for="foto">Mudar imagem</label>
+                    </div>
 
-        <label for="perfil" class="photo-overlay">
-            📷 Alterar foto
-        </label>
+                    <div>
+                        <p class="eyebrow">PERFIL ATIVO · 85% COMPLETO</p>
+                        <h2 id="nome">Gabriel Almeida</h2>
+                        <p>
+                            <span id="posicao">Atacante</span> ·
+                            <span id="categoria">Sub-20</span> ·
+                            <span id="ranking">#10</span> · São Paulo - SP
+                        </p>
 
-        <input
-            type="file"
-            id="perfil"
-            accept="image/*"
-            class="profile-file-input"
-        >
-    </div>
+                        <div class="profile-meta">
+                            <span class="tag lime" id="peDominante">Direito</span>
+                            <span class="tag" id="altura">1,78 m</span>
+                            <span class="tag" id="peso">72 kg</span>
+                            <span class="tag" id="nivel">Nível 18</span>
+                        </div>
 
-    <div>
-        <p class="eyebrow">PERFIL ATIVO · 85% COMPLETO</p>
-        <h2 id="nome">Gabriel Almeida</h2>
-        <p>
-            <span id="posicao">Atacante</span> ·
-            <span id="categoria">Sub-20</span> ·
-            <span id="ranking">#10</span> · São Paulo - SP
-        </p>
-
-        <div class="profile-meta">
-            <span class="tag lime" id="peDominante">Direito</span>
-            <span class="tag" id="altura">1,78 m</span>
-            <span class="tag" id="peso">72 kg</span>
-            <span class="tag" id="nivel">Nível 18</span>
-        </div>
-
-        <div class="progress">
-            <i style="width:85%" id="nivelProgresso"></i>
-        </div>
-    </div>
-</article>
+                        <div class="progress">
+                            <i style="width:85%" id="nivelProgresso"></i>
+                        </div>
+                    </div>
+                </article>
 
                 <div class="grid-3" style="margin-top:18px">
                     <article class="card">

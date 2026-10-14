@@ -1,82 +1,146 @@
-
 .profile-hero {
-    display: grid;
-    grid-template-columns: 150px 1fr;
-    gap: 26px;
-    align-items: center;
-}
-
-.profile-photo {
-    position: relative;
-    width: 150px;
-    height: 180px;
-    background: linear-gradient(145deg, #173d2b, #0b2017);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    font: 800 3.2rem "Barlow Condensed", sans-serif;
-    color: var(--primary-green);
+    gap: 20px;
+    text-align: center;
+    padding: 30px;
 }
 
-.profile-photo img:not([hidden]) {
+.foto-perfil-container {
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    margin: 0 auto;
+    border: 2px dashed rgba(255, 255, 255, .35);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .25s;
+    overflow: hidden;
+}
+
+.foto-perfil-container:hover {
+    border-color: var(--accent-green);
+    background: rgba(193, 91, 4, .08);
+}
+
+.foto-perfil-container #preview {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 50%;
 }
 
-.photo-overlay {
-    position: absolute;
-    inset: auto 0 0;
-    padding: 12px 4px;
-    background: rgba(0, 0, 0, 0.75);
-    color: #fff;
-    font: 500 0.8rem Arial, sans-serif;
+.foto-perfil-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
     text-align: center;
+    padding: 15px;
+}
+
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.25s;
 }
 
-.profile-photo:hover .photo-overlay,
-.profile-photo:focus-within .photo-overlay {
-    opacity: 1;
+.foto-perfil-content img {
+    width: 42px;
+    opacity: .8;
 }
 
-.profile-file-input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
+.foto-perfil-content h2 {
+    color: #FFF;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.foto-perfil-content p {
+    color: rgba(255, 255, 255, .6);
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+}
+
+.btnMudarFoto {
+    display: flex;
+    justify-content: center;
+    margin-top: -10px;
+}
+
+.btnMudarFoto label {
+    padding: 8px 18px;
+    background: var(--accent-green);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    transition: .2s;
+}
+
+.btnMudarFoto label:hover {
+    background: var(--accent-green-ligth);
+}
+
+.profile-hero > div:last-child {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-hero .eyebrow,
+.profile-hero h2,
+.profile-hero p {
+    margin: 0;
 }
 
 .profile-meta {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
-    margin: 14px 0;
 }
 
-@media (hover: none) {
-    .photo-overlay {
-        opacity: 1;
-    }
+.progress {
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
 }
 
-
-
-@media (max-width: 1050px) {
-  .grid-3 {
-    grid-template-columns: 1fr;
-  }
+.progress i {
+    display: block;
 }
 
 @media (max-width: 720px) {
-  .profile-hero {
-    grid-template-columns: 1fr;
-  }
+    .profile-hero {
+        padding: 20px 15px;
+        gap: 18px;
+    }
+
+    .foto-perfil-container {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-hero > div:last-child {
+        min-width: 0;
+    }
+
+    .profile-hero > div:last-child > p {
+        line-height: 1.8;
+    }
+
+    .profile-meta {
+        gap: 6px;
+    }
 }
