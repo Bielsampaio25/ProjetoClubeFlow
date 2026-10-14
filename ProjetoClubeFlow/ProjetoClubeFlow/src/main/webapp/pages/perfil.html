@@ -47,17 +47,49 @@
                         <p>Seu currículo esportivo digital.</p>
                     </div><a class="btn primary" href="cadastro.html">Editar perfil</a>
                 </div>
-                <article class="card profile-hero">
-                    <div class="profile-photo" id="perfil">GA</div>
-                    <div>
-                        <p class="eyebrow">PERFIL ATIVO · 85% COMPLETO</p>
-                        <h2 id="nome">Gabriel Almeida</h2>
-                        <p><span id="posicao">Atacante</span> · <span id="categoria">Sub-20</span> · <span id="ranking">#10</span> · São Paulo - SP</p>
-                        <div class="profile-meta"><span class="tag lime" id="peDominante">Direito</span><span class="tag" id="altura">1,78
-                                m</span><span class="tag" id="peso">72 kg</span><span class="tag" id="nivel">Nível 18</span></div>
-                        <div class="progress"><i style="width:85%" id="nivelProgresso"></i></div>
-                    </div>
-                </article>
+                
+
+
+<article class="card profile-hero">
+    <div class="profile-photo">
+        <img id="fotoPerfil" src="" alt="Foto de perfil" hidden>
+
+        <span id="iniciais">GA</span>
+
+        <label for="perfil" class="photo-overlay">
+            📷 Alterar foto
+        </label>
+
+        <input
+            type="file"
+            id="perfil"
+            accept="image/*"
+            class="profile-file-input"
+        >
+    </div>
+
+    <div>
+        <p class="eyebrow">PERFIL ATIVO · 85% COMPLETO</p>
+        <h2 id="nome">Gabriel Almeida</h2>
+        <p>
+            <span id="posicao">Atacante</span> ·
+            <span id="categoria">Sub-20</span> ·
+            <span id="ranking">#10</span> · São Paulo - SP
+        </p>
+
+        <div class="profile-meta">
+            <span class="tag lime" id="peDominante">Direito</span>
+            <span class="tag" id="altura">1,78 m</span>
+            <span class="tag" id="peso">72 kg</span>
+            <span class="tag" id="nivel">Nível 18</span>
+        </div>
+
+        <div class="progress">
+            <i style="width:85%" id="nivelProgresso"></i>
+        </div>
+    </div>
+</article>
+
                 <div class="grid-3" style="margin-top:18px">
                     <article class="card">
                         <p class="eyebrow">BIO</p>
@@ -72,6 +104,7 @@
                 </div>
             </section>
         </main>
+        <script src="../js/perfil.js"></script>
     </div>
 </body>
 
