@@ -49,10 +49,38 @@
                         <p>Conecte-se com quem vive o futebol.</p>
                     </div>
                     <div class="perfil-actions-container">
-                        <a class="btn primary" href="#">+ Publicar</a>
+                        <a class="btn primary"  id="fazerPublicacao">+ Publicar</a>
                         <a class="btn primary" href="#">Perfil</a>
                     </div>
                 </div>
+
+                <dialog id="Publicacao">
+                <h2>Qual o tipo de publicação?</h2>
+                <div>
+                    <a class="btn primary" id="publicarFeed">Feed</a>
+                    <a class="btn primary" id="publicarStory">Story</a>
+                </div>
+                <div></div>
+                <button id="fecharPublicacao">Fechar</button>
+                </dialog>
+                
+                <dialog id="Feed">
+                <h2>Qual o tipo de publicação?</h2>
+                <div>
+                    <h2>Feed</h2>
+                </div>
+                <div></div>
+                <button id="fecharFeed">Fechar</button>
+                </dialog>
+                
+                <dialog id="Story">
+                <h2>Qual o tipo de publicação?</h2>
+                <div>
+                    <h2>Story</h2>
+                </div>
+                <div></div>
+                <button id="fecharStory">Fechar</button>
+                </dialog>
 
                 <div class="story-row">
                     <div class="story">
@@ -137,7 +165,7 @@
                 </div>
             </section>
         </main>
-        <script src="../js/story.js"></script>
+        <script src="../js/rede-social.js"></script>
     </div>
 </body>
 
