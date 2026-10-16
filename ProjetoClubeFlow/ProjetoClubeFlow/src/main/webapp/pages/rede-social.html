@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../css/colors.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/rede-social.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,opsz,wght@0..1,20..48,100..700&display=block" rel="stylesheet">
+
 </head>
 
 <body>
@@ -49,37 +51,66 @@
                         <p>Conecte-se com quem vive o futebol.</p>
                     </div>
                     <div class="perfil-actions-container">
-                        <a class="btn primary"  id="fazerPublicacao">+ Publicar</a>
+                        <a class="btn primary" id="fazerPublicacao">+ Publicar</a>
                         <a class="btn primary" href="#">Perfil</a>
                     </div>
                 </div>
 
                 <dialog id="Publicacao">
-                <h2>Qual o tipo de publicação?</h2>
-                <div>
-                    <a class="btn primary" id="publicarFeed">Feed</a>
-                    <a class="btn primary" id="publicarStory">Story</a>
-                </div>
-                <div></div>
-                <button id="fecharPublicacao">Fechar</button>
+                    <h2>Qual o tipo de publicação?</h2>
+                    <div>
+                        <a class="btn primary" id="publicarFeed">Feed</a>
+                        <a class="btn primary" id="publicarStory">Story</a>
+                    </div>
+                    <div></div>
+                    <button id="fecharPublicacao" class="btn">Fechar</button>
                 </dialog>
-                
-                <dialog id="Feed">
-                <h2>Qual o tipo de publicação?</h2>
-                <div>
-                    <h2>Feed</h2>
-                </div>
-                <div></div>
-                <button id="fecharFeed">Fechar</button>
+
+
+                <dialog id="Feed" class="dialog-feed">
+                    <h2>Nova publicação</h2>
+
+                    <form id="formFeed">
+                        <label for="arquivoFeed" class="upload-feed">
+                            <span>＋</span>
+                            <strong>Adicionar foto ou vídeo</strong>
+                            <small>Selecione um arquivo do seu dispositivo</small>
+                        </label>
+
+                        <input type="file" id="arquivoFeed" accept="image/*,video/*" multiple hidden>
+
+                        <div id="previewFeed" class="preview-feed">
+                            <p>Nenhum arquivo selecionado</p>
+                        </div>
+
+                        <label for="legendaFeed">Legenda</label>
+                        <textarea id="legendaFeed" placeholder="Escreva uma legenda..." rows="3"
+                            maxlength="2200"></textarea>
+
+                        <div class="acoes-feed">
+                            <button type="button" id="removerArquivo" class="btn">
+                                Remover arquivo
+                            </button>
+
+                            <button type="button" id="fecharFeed" class="btn">
+                                Fechar
+                            </button>
+
+                            <button type="submit" class="btn primary">
+                                Publicar
+                            </button>
+                        </div>
+                    </form>
                 </dialog>
-                
+
+
                 <dialog id="Story">
-                <h2>Qual o tipo de publicação?</h2>
-                <div>
-                    <h2>Story</h2>
-                </div>
-                <div></div>
-                <button id="fecharStory">Fechar</button>
+                    <h2>Qual o tipo de publicação?</h2>
+                    <div>
+                        <h2>Story</h2>
+                    </div>
+                    <div></div>
+                    <button id="fecharStory">Fechar</button>
                 </dialog>
 
                 <div class="story-row">
@@ -126,42 +157,7 @@
                 </div>
 
                 <div class="social-layout">
-                    <div class="timeline">
-                        <article class="card-post">
-                            <div class="post-head">
-                                <a class="avatar">LF</a>
-                                <div>
-                                    <b>Lucas Ferreira</b>
-                                    <small>Atleta · Meio-campo · Sub-20 · há 2h</small>
-                                </div>
-                            </div>
-                            <p class="post-body">Dia de treino intenso. Foco total na evolução e no próximo jogo.</p>
-                            <div class="post-media">TREINO / MOVIMENTO</div>
-                            <div class="post-actions">
-                                <span>♡ 24</span>
-                                <span>💬 6</span>
-                                <span>↗ Compartilhar</span>
-                                <span>🔖 Salvar</span>
-                            </div>
-                        </article>
-                        <article class="card-post">
-                            <div class="post-head">
-                                <span class="avatar">CA</span>
-                                <div>
-                                    <b>Clube Aurora ✓</b>
-                                    <small>Clube · há 6h</small>
-                                </div>
-                            </div>
-                            <p class="post-body">Estamos observando novos nomes para a próxima avaliação. Mostre o seu
-                                jogo na rede Club Flow.</p>
-                            <div class="post-media">OPORTUNIDADE / SCOUTING</div>
-                            <div class="post-actions">
-                                <span>♡ 58</span>
-                                <span>💬 12</span>
-                                <span>↗ Compartilhar</span>
-                            </div>
-                        </article>
-                    </div>
+                    <div class="timeline" id="timeline"></div>
                 </div>
             </section>
         </main>
