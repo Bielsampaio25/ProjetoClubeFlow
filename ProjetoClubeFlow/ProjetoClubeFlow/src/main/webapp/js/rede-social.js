@@ -342,7 +342,7 @@ function criarPublicacao(arquivos, legenda) {
     btnCurtida.append(iconeCurtida, textoCurtida);
 
     const btnComentarios = document.createElement("div");
-    btnComentarios.id= "btnComentarios";
+    btnComentarios.id = "btnComentarios";
 
     const iconeComentarios = document.createElement("span");
     iconeComentarios.classList.add("material-symbols-outlined");
@@ -357,6 +357,56 @@ function criarPublicacao(arquivos, legenda) {
 
     btnComentarios.addEventListener("click", () => {
         Comentarios.showModal();
+    });
+
+    const dialogComentarios = document.getElementById("Comentarios");
+    const voltarComentarios = document.getElementById("voltarComentarios");
+
+    voltarComentarios.addEventListener("click", () => {
+        dialogComentarios.close();
+    });
+
+    const btnCompartilhar = document.createElement("button");
+    btnCompartilhar.type = "button";
+    btnCompartilhar.classList.add("btn-compartilhar");
+
+    const iconeCompartilhar = document.createElement("span");
+    iconeCompartilhar.classList.add("material-symbols-outlined");
+    iconeCompartilhar.textContent = "share";
+
+    const textoCompartilhar = document.createElement("span");
+    textoCompartilhar.textContent = "Compartilhar";
+
+    btnCompartilhar.append(iconeCompartilhar, textoCompartilhar);
+
+    btnCompartilhar.addEventListener("click", async () => {
+        const dadosCompartilhamento = {
+            title: "Club Flow",
+            text: `Gabriel Sampaio publicou no Club Flow: ${legenda || "Confira esta publicação!"}`,
+            url: window.location.href
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(dadosCompartilhamento);
+            } else if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(
+                    `${dadosCompartilhamento.text}\n${dadosCompartilhamento.url}`
+                );
+
+                alert("Link copiado! Você já pode compartilhar.");
+            } else {
+                prompt(
+                    "Copie o texto para compartilhar:",
+                    `${dadosCompartilhamento.text}\n${dadosCompartilhamento.url}`
+                );
+            }
+        } catch (erro) {
+            if (erro.name !== "AbortError") {
+                console.error("Erro ao compartilhar:", erro);
+                alert("Não foi possível compartilhar a publicação.");
+            }
+        }
     });
 
     const descricao = document.createElement("small");
@@ -405,13 +455,8 @@ function criarPublicacao(arquivos, legenda) {
 
     acoes.appendChild(btnCurtida);
     acoes.appendChild(btnComentarios);
-    ["↗ Compartilhar", "🔖 Salvar"].forEach((texto) => {
-        const acao = document.createElement("span");
-        acao.textContent = texto;
-        acoes.appendChild(acao);
-        acoes.appendChild(btnApagarPublicacao);
-    });
-
+    acoes.appendChild(btnCompartilhar);
+    acoes.appendChild(btnApagarPublicacao);
     artigo.appendChild(acoes);
 
     return artigo;

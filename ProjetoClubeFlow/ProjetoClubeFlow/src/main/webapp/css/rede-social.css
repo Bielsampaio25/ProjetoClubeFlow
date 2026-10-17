@@ -479,6 +479,89 @@ dialog::backdrop {
     font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
+
+#btnComentarios {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#Comentarios {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    color: white;
+    background: #10251b;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    width: min(500px, calc(100% - 32px));
+    max-height: 80vh;
+    box-sizing: border-box;
+}
+
+#Comentarios[open] {
+    display: flex;
+}
+
+#Comentarios input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #081a12;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 11px 12px;
+    outline: none;
+}
+
+#enviarComentario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#enviarComentario input {
+    flex: 1;
+    min-width: 0;
+}
+
+#Comentarios::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+#voltarComentarios {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#voltarComentarios .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.btn-compartilhar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.btn-compartilhar {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+    padding: 6px;
+}
+
+.btn-compartilhar .material-symbols-outlined {
+    font-size: 22px;
+}
+
 @media (max-width: 720px) {
     .post-media {
         aspect-ratio: 3 / 4;
