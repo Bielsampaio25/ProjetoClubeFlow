@@ -1,4 +1,3 @@
-
 const stories = document.querySelectorAll(".story .avatar");
 const storyModal = document.getElementById("storyModal");
 const fecharStory = document.getElementById("fecharStory");
@@ -342,6 +341,24 @@ function criarPublicacao(arquivos, legenda) {
 
     btnCurtida.append(iconeCurtida, textoCurtida);
 
+    const btnComentarios = document.createElement("div");
+    btnComentarios.id= "btnComentarios";
+
+    const iconeComentarios = document.createElement("span");
+    iconeComentarios.classList.add("material-symbols-outlined");
+    iconeComentarios.textContent = "comment";
+
+    const textoComentarios = document.createElement("span");
+    textoComentarios.textContent = "Comentários";
+
+    btnComentarios.append(iconeComentarios, textoComentarios);
+
+    const Comentarios = document.getElementById("Comentarios");
+
+    btnComentarios.addEventListener("click", () => {
+        Comentarios.showModal();
+    });
+
     const descricao = document.createElement("small");
     descricao.classList.add("post-hora");
 
@@ -387,7 +404,8 @@ function criarPublicacao(arquivos, legenda) {
     acoes.classList.add("post-actions");
 
     acoes.appendChild(btnCurtida);
-    ["💬 0", "↗ Compartilhar", "🔖 Salvar"].forEach((texto) => {
+    acoes.appendChild(btnComentarios);
+    ["↗ Compartilhar", "🔖 Salvar"].forEach((texto) => {
         const acao = document.createElement("span");
         acao.textContent = texto;
         acoes.appendChild(acao);
