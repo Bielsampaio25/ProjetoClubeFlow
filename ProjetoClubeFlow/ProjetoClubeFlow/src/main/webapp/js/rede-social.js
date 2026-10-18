@@ -359,6 +359,74 @@ function criarPublicacao(arquivos, legenda) {
         Comentarios.showModal();
     });
 
+
+
+    
+const sessaoComentarios = document.getElementById("sessaoComentarios");
+const btnEnviarComentarios = document.getElementById("btnEnviarComentarios");
+const inputComentarios = document.getElementById("inputComentarios");
+
+btnEnviarComentarios.addEventListener("click", () => {
+    const textoComentario = inputComentarios.value.trim();
+
+    if (textoComentario === "") {
+        return;
+    }
+
+    const comentario = document.createElement("div");
+    comentario.classList.add("comentario");
+
+    const texto = document.createElement("p");
+    texto.classList.add("texto-comentario");
+    texto.textContent = textoComentario;
+
+    const acoesComentario = document.createElement("div");
+    acoesComentario.classList.add("acoes-comentario");
+
+    const btnCurtidaComentario = document.createElement("button");
+    btnCurtidaComentario.type = "button";
+    btnCurtidaComentario.classList.add("btn-curtida-comentario");
+
+    const iconeCurtidaComentario = document.createElement("span");
+    iconeCurtidaComentario.classList.add("material-symbols-outlined");
+    iconeCurtidaComentario.textContent = "favorite_border";
+
+    btnCurtidaComentario.appendChild(iconeCurtidaComentario);
+
+    btnCurtidaComentario.addEventListener("click", () => {
+        const curtido = btnCurtidaComentario.classList.toggle("curtido");
+
+        iconeCurtidaComentario.textContent = curtido
+            ? "favorite"
+            : "favorite_border";
+    });
+
+    const btnApagar = document.createElement("button");
+    btnApagar.type = "button";
+    btnApagar.classList.add("btn-apagar-comentario");
+
+    const iconeApagar = document.createElement("span");
+    iconeApagar.classList.add("material-symbols-outlined");
+    iconeApagar.textContent = "delete";
+
+    btnApagar.appendChild(iconeApagar);
+
+    btnApagar.addEventListener("click", () => {
+        comentario.remove();
+    });
+
+    acoesComentario.appendChild(btnCurtidaComentario);
+    acoesComentario.appendChild(btnApagar);
+
+    comentario.appendChild(texto);
+    comentario.appendChild(acoesComentario);
+
+    sessaoComentarios.appendChild(comentario);
+
+    inputComentarios.value = "";
+});
+
+
     const dialogComentarios = document.getElementById("Comentarios");
     const voltarComentarios = document.getElementById("voltarComentarios");
 

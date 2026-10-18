@@ -504,31 +504,108 @@ dialog::backdrop {
     display: flex;
 }
 
-#Comentarios input {
+
+
+#sessaoComentarios {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     width: 100%;
-    box-sizing: border-box;
-    background: #081a12;
-    color: var(--text-light);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 11px 12px;
-    outline: none;
 }
+
+.comentario {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    overflow-wrap: anywhere;
+}
+
+.texto-comentario {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    color: var(--text-light);
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.acoes-comentario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-curtida-comentario,
+.btn-apagar-comentario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-curtida-comentario {
+    color: var(--text-light);
+}
+
+.btn-curtida-comentario.curtido {
+    color: #ff3040;
+}
+
+.btn-apagar-comentario {
+    color: #ff4d4d;
+}
+
+.btn-curtida-comentario:hover,
+.btn-apagar-comentario:hover {
+    transform: scale(1.1);
+}
+
+.btn-apagar-comentario .material-symbols-outlined {
+    font-size: 22px;
+}
+
+
+.btn-curtida-comentario .material-symbols-outlined {
+    font-variation-settings: "FILL" 0;
+    font-size: 22px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-curtida-comentario.curtido .material-symbols-outlined {
+    font-variation-settings: "FILL" 1;
+}
+
 
 #enviarComentario {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
 }
 
-#enviarComentario input {
+#inputComentarios {
     flex: 1;
     min-width: 0;
+    padding: 11px 12px;
+    background: #081a12;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
 }
 
-#Comentarios::backdrop {
-    background: rgba(0, 0, 0, 0.7);
+#inputComentarios:focus {
+    border-color: var(--primary-green);
 }
+
 
 #voltarComentarios {
     display: inline-flex;
