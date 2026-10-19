@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Perfil do clube · Club Flow</title>
+
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/perfil-atleta-social.css">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-icon"></span>
+                <span>CLUB <em>FLOW</em></span>
+            </div>
+
+            <div class="area-box">ÁREA DO <b>CLUBE</b></div>
+            <p class="menu-title">MENU PRINCIPAL</p>
+
+            <nav class="menu">
+                <a href="dashboard-clube.html"><span>⌂</span>Painel</a>
+                <a href="ranking.html"><span>★</span>Ranking</a>
+                <a href="banco-talentos.html"><span>⌕</span>Banco de talentos</a>
+                <a class="active" href="rede-social-clube.html"><span>◌</span>Rede social</a>
+                <a href="perfil-clube.html"><span>◉</span>Perfil do clube</a>
+            </nav>
+
+            <div class="side-actions">
+                <a href="configuracoes-clube.html">⚙ Configurações</a>
+                <a href="sair.html">↪ Sair</a>
+            </div>
+
+            <a class="help-box" href="suporte.html">
+                <b>Precisa de ajuda?</b>
+                Fale com o suporte
+            </a>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="breadcrumb">CLUB FLOW / <b>REDE SOCIAL</b></div>
+
+                <div class="account">
+                    <span class="account-info">
+                        <span id="nomeCabecalho">Clube Exemplo</span>
+                        <small id="tipoCabecalho">Clube de futebol</small>
+                    </span>
+
+                    <img
+                        class="account-photo"
+                        id="fotoCabecalho"
+                        src="../../assets/images/avatar-padrao.png"
+                        alt="Escudo do clube">
+                </div>
+            </header>
+
+            <section class="page">
+                <div class="page-header">
+                    <div>
+                        <p class="eyebrow">COMUNIDADE / CLUBE</p>
+                        <h1>Perfil do clube</h1>
+                        <p>Conheça a instituição, acompanhe as novidades e veja as publicações.</p>
+                    </div>
+
+                    <a class="btn primary" href="rede-social-clube.html">
+                        Voltar à rede social
+                    </a>
+                </div>
+
+                <section class="social-profile card">
+                    <div class="profile-content">
+                        <div class="social-avatar-wrap">
+                            <img
+                                id="fotoClube"
+                                class="social-avatar"
+                                src="../../assets/images/avatar-padrao.png"
+                                alt="Escudo do clube">
+                        </div>
+
+                        <div class="identity">
+                            <div class="name-line">
+                                <h2 id="nomeClube">Clube Exemplo</h2>
+                            </div>
+
+                            <p class="username" id="usuarioClube">@clubeexemplo</p>
+
+                            <p class="athlete-description" id="descricaoClube">
+                                Informações, novidades e oportunidades do clube.
+                            </p>
+
+                            <div class="profile-details">
+                                <span>Modalidade: <b id="modalidadeClube">Futebol</b></span>
+                                <span>Categoria: <b id="categoriaClube">Não informada</b></span>
+                                <span>Localização: <b id="cidadeClube">Não informada</b></span>
+                            </div>
+
+                            <div class="profile-tags">
+                                <span class="tag lime" id="statusClube">Clube ativo</span>
+                            </div>
+
+                            <div class="social-numbers">
+                                <div>
+                                    <strong id="totalPublicacoes">0</strong>
+                                    <span>Publicações</span>
+                                </div>
+
+                                <div>
+                                    <strong id="totalSeguidores">0</strong>
+                                    <span>Seguidores</span>
+                                </div>
+
+                                <div>
+                                    <strong id="totalAtletas">0</strong>
+                                    <span>Atletas no elenco</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <button class="btn follow-btn" id="btnSeguir" type="button">
+                                + Acompanhar clube
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="social-layout">
+                    <aside class="profile-sidebar">
+                        <article class="card about-card">
+                            <p class="eyebrow">IDENTIDADE INSTITUCIONAL</p>
+                            <h3>Sobre o clube</h3>
+
+                            <p class="about-text" id="sobreClube">
+                                Conheça a história, os objetivos e o trabalho desenvolvido pelo clube.
+                            </p>
+
+                            <div class="about-item">
+                                <span>Nome</span>
+                                <strong id="sobreNomeClube">Clube Exemplo</strong>
+                            </div>
+
+                            <div class="about-item">
+                                <span>Modalidade</span>
+                                <strong id="sobreModalidade">Futebol</strong>
+                            </div>
+
+                            <div class="about-item">
+                                <span>Categoria</span>
+                                <strong id="sobreCategoria">Não informada</strong>
+                            </div>
+
+                            <div class="about-item">
+                                <span>Localização</span>
+                                <strong id="sobreCidade">Não informada</strong>
+                            </div>
+                        </article>
+                    </aside>
+
+                    <section class="feed-section">
+                        <div class="feed-heading">
+                            <div>
+                                <p class="eyebrow">ATIVIDADE RECENTE</p>
+                                <h2>Publicações do clube</h2>
+                            </div>
+
+                            <span class="feed-filter">Feed do clube</span>
+                        </div>
+
+                        <div id="feedClube" class="athlete-feed"></div>
+
+                        <p id="feedVazio" class="empty-feed" hidden>
+                            Este clube ainda não fez publicações.
+                        </p>
+                    </section>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/perfil-clube-social.js"></script>
+</body>
+
+</html>
