@@ -11,10 +11,10 @@ public class atletaDAO {
     public boolean cadastrarDadosPessoais(atletaModel atletaModel) {
         // Corrigido: adicionado VALUES (...) e mapeamento correto de todos os campos
         String sql = "INSERT INTO Atletas "
-        + "(nome, cpf, cidade, estado, email, telefone, senha, "
+        + "(nome, cpf, data_nascimento, cidade, estado, email, telefone, senha, "
         + "posicao_principal, posicao_secundaria, pe_dominante, "
         + "altura, peso, categoria, numero_camisa, nivel_atual) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -29,11 +29,11 @@ public class atletaDAO {
             ps.setString(9, atletaModel.getPosicaoPrincipal());
             ps.setString(10, atletaModel.getPosicaoSecundaria());
             ps.setString(11, atletaModel.getPeDominante());
-            ps.setString(11, atletaModel.getAltura());
-            ps.setString(11, atletaModel.getPeso());
-            ps.setString(11, atletaModel.getCategoria());
-            ps.setInt(11, atletaModel.getNumeroCamisa());
-            ps.setString(11, atletaModel.getNivelAtual());
+            ps.setString(12, atletaModel.getAltura());
+            ps.setString(13, atletaModel.getPeso());
+            ps.setString(14, atletaModel.getCategoria());
+            ps.setInt(15, atletaModel.getNumeroCamisa());
+            ps.setString(16, atletaModel.getNivelAtual());
 
             ps.executeUpdate();
             System.out.println("Atleta cadastrado no banco de dados");
