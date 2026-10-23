@@ -11,8 +11,10 @@ public class atletaDAO {
     public boolean cadastrarDadosPessoais(atletaModel atletaModel) {
         // Corrigido: adicionado VALUES (...) e mapeamento correto de todos os campos
         String sql = "INSERT INTO Atletas "
-                + "(nome, cpf, cidade, estado, email, telefone, senha) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        + "(nome, cpf, cidade, estado, email, telefone, senha, "
+        + "posicao_principal, posicao_secundaria, pe_dominante, "
+        + "altura, peso, categoria, numero_camisa, nivel_atual) "
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 

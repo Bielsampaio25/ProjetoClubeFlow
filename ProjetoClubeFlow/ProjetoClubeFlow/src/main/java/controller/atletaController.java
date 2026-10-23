@@ -36,6 +36,8 @@ public class atletaController extends HttpServlet {
             atleta.setEmail(request.getParameter("email"));
             atleta.setTelefone(request.getParameter("telefone"));
             atleta.setSenha(request.getParameter("senha"));
+            
+            System.out.println("atleta salvo no model");
 
             if (dao.cadastrarDadosPessoais(atleta)) {
                 response.sendRedirect(
