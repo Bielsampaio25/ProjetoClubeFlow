@@ -1,0 +1,561 @@
+.profile-hero {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px;
+    padding: 30px;
+}
+
+.profile-photo-column {
+    width: 180px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.foto-perfil-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border: 2px dashed rgba(255, 255, 255, .35);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.foto-perfil-container:hover {
+    border-color: var(--accent-green);
+    background: rgba(193, 91, 4, .08);
+}
+
+.foto-perfil-container #preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.foto-perfil-content {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.upload-area img {
+    width: 32px;
+    height: auto;
+    pointer-events: none;
+}
+
+.upload-area h2 {
+    width: 100%;
+    margin: 0;
+    color: #FFF;
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.upload-area p {
+    width: 100%;
+    margin: 0;
+    color: rgba(255, 255, 255, .6);
+    font-family: "Montserrat", sans-serif;
+    font-size: 11px;
+    text-align: center;
+}
+
+.btnMudarFoto {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.btnMudarFoto label {
+    padding: 8px 18px;
+    background: var(--accent-green);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    text-align: center;
+    transition: .2s;
+}
+
+.btnMudarFoto label:hover {
+    background: var(--accent-green-ligth);
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.profile-info .eyebrow,
+.profile-info h2,
+.profile-info p {
+    margin: 0;
+}
+
+.profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.progress {
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
+}
+
+.progress i {
+    display: block;
+}
+
+.foto-perfil-container #preview[hidden],
+.btnMudarFoto[hidden],
+#foto[hidden],
+#textoUpload[hidden] {
+    display: none !important;
+}
+
+.card-edicao {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    width: 100%;
+    min-width: 0;
+    padding: 28px;
+    box-sizing: border-box;
+    background: linear-gradient(145deg, rgba(16, 41, 31, .95), rgba(8, 27, 19, .95));
+    border: 1px solid var(--border-color);
+}
+
+.foto-coluna {
+    width: 160px;
+    flex: 0 0 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.foto-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+    border: 2px dashed var(--border-color);
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 27, 19, .7);
+    transition: border-color .2s ease, background .2s ease;
+}
+
+.foto-container:hover {
+    border-color: var(--primary-green);
+    background: rgba(199, 250, 58, .04);
+}
+
+.foto-container>img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+}
+
+.foto-container>img[hidden],
+.foto-container label[hidden],
+#removerFoto[hidden] {
+    display: none !important;
+}
+
+.foto-container label {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.camera-icon {
+    color: var(--primary-green);
+    font-size: 30px;
+    line-height: 1;
+}
+
+.foto-container strong {
+    color: var(--text-light);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.foto-container small {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.dados-atleta {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.dados-atleta>.eyebrow {
+    margin: 0 0 8px;
+}
+
+.dados-atleta h2 {
+    margin: 0;
+    font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+}
+
+.dados-atleta .descricao {
+    margin: 8px 0 0;
+    font-size: .82rem;
+}
+
+.form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 16px;
+    width: 100%;
+    margin-top: 24px;
+}
+
+.form-grid label {
+    display: flex;
+    flex: 1 1 calc(50% - 16px);
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--text-light);
+    font-size: .76rem;
+    font-weight: 600;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    outline: none;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    font-family: "DM Sans", Arial, sans-serif;
+    font-size: .84rem;
+    box-sizing: border-box;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.form-grid input::placeholder,
+ .form-grid textarea::placeholder{
+    color: var(--text-muted);
+    opacity: .8;
+}
+
+.form-grid input:focus,
+.form-grid select:focus,
+.form-grid textarea:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 2px rgba(199, 250, 58, .1);
+}
+
+.form-grid select option {
+    background: var(--bg-dark);
+    color: var(--text-light);
+}
+
+.acoes {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.acoes button,
+.foto-coluna>button,
+.page-header>a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 11px 18px;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.acoes button[type="submit"] {
+    background: var(--accent-green);
+    color: var(--bg-dark);
+    border-color: var(--accent-green);
+}
+
+.acoes button[type="submit"]:hover {
+    background: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.acoes button[type="button"],
+.foto-coluna>button,
+.page-header>a.btn {
+    background: transparent;
+    color: var(--text-light);
+}
+
+.acoes button[type="button"]:hover,
+.foto-coluna>button:hover,
+.page-header>a.btn:hover {
+    border-color: var(--primary-green);
+    color: var(--primary-green);
+}
+
+.acoes button:focus-visible,
+.foto-coluna>button:focus-visible,
+.page-header>a.btn:focus-visible {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 3px;
+}
+
+.foto-coluna>button {
+    width: 100%;
+    font-size: .7rem;
+    padding: 10px 12px;
+}
+
+#mensagem {
+    margin: 14px 0 0;
+    font-size: .8rem;
+}
+
+#mensagem:empty {
+    display: none;
+}
+
+#mensagem.erro {
+    color: #ff8585;
+}
+
+#mensagem.sucesso {
+    color: var(--primary-green);
+}
+
+.form-grid textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-grid textarea::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+.form-grid textarea::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+    border-radius: 0;
+    cursor: default;
+}
+
+.form-grid textarea::-webkit-scrollbar-thumb:hover {
+    background: #d9ff70;
+}
+
+.form-grid textarea::-webkit-scrollbar-button {
+    background: var(--bg-dark);
+    height: 12px;
+}
+
+.form-grid textarea::-webkit-scrollbar-corner {
+    background: var(--bg-dark);
+}
+
+@media (max-width: 1050px) {
+    .main .page {
+        padding: 24px;
+    }
+
+    .card-edicao {
+        gap: 20px;
+        padding: 22px;
+    }
+
+    .foto-coluna {
+        width: 125px;
+        flex-basis: 125px;
+    }
+
+    .foto-container {
+        width: 120px;
+        height: 120px;
+    }
+
+    .form-grid {
+        gap: 16px 12px;
+    }
+
+    .form-grid label {
+        flex-basis: calc(50% - 12px);
+    }
+}
+
+@media (max-width: 720px) {
+    .main .page {
+        padding: 20px 14px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .page-header h1 {
+        font-size: clamp(2.4rem, 9vw, 3.5rem);
+    }
+
+    .card-edicao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 24px;
+        padding: 20px 16px;
+    }
+
+    .foto-coluna {
+        width: 100%;
+        flex-basis: auto;
+    }
+
+    .foto-container {
+        width: 140px;
+        height: 140px;
+    }
+
+    .dados-atleta {
+        width: 100%;
+    }
+
+    .dados-atleta h2 {
+        font-size: 2rem;
+    }
+
+    .form-grid {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .form-grid label {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .acoes {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .acoes button {
+        width: 100%;
+    }
+
+    .page-header>a.btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-hero {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 15px;
+        gap: 24px;
+    }
+
+    .profile-photo-column {
+        width: 150px;
+    }
+
+    .foto-perfil-container {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-info {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-info>p {
+        line-height: 1.8;
+    }
+
+    .profile-meta {
+        justify-content: center;
+    }
+
+    .progress {
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cadastro do Atleta</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/perfil-esportivo.css">
+</head>
+
+<body>
+    <main class="signup">
+
+        <header class="site-header">
+            <a class="brand" href="../index.html">
+                <img src="../assets/logo/logo_ClubeFlow.png" alt="" class="brand-icon">
+            </a>
+            <a href="../index.html" class="btn">← Voltar</a>
+        </header>
+
+        <div class="signup-layout">
+            
+            <section>
+                <p class="eyebrow">CADASTRO DO ATLETA</p>
+                <h1>Mostre seu<br>
+                <span style="color:var(--primary-green)">talento.</span>
+                <br>Encontre sua<br><span
+                        style="color:var(--primary-green)">oportunidade.</span>
+                </h1>
+                <p>Crie um perfil completo para tornar o seu futebol mais fácil de encontrar por clubes, scouts e
+                    profissionais.</p>
+            </section>
+            
+            <section class="signup-card">
+                <div class="steps">
+                    <i class="step"></i>
+                    <i class="step active"></i>
+                    <i class="step"></i>
+                </div>
+                <p class="eyebrow">ETAPA 02 / 03</p>
+                <h2>Dados pessoais</h2>
+                
+                <form action="/dadosEsportivoAtleta" method="POST" class="form-grid" style="margin-top:25px">
+                    
+                    <div class="field">
+                        <label>Posição Principal</label>
+                        <select name="posicaoPrincipal" id="posicaoPrincipal">
+                            <option value="">Selecione uma opção</option>
+                            <option value="Goleiro">Goleiro</option>
+                            <option value="Zagueiro">Zagueiro</option>
+                            <option value="Lateral">Lateral</option>
+                            <option value="Volante">Volante</option>
+                            <option value="Meio-Campista">Meio-Campista</option>
+                            <option value="Ponta">Ponta</option>
+                            <option value="Atacante">Atacante</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Posição Secundária</label>
+                        <select name="posicaoSecundaria" id="posicaoSecundaria">
+                            <option value="">Selecione uma opção</option>
+                            <option value="Goleiro">Goleiro</option>
+                            <option value="Zagueiro">Zagueiro</option>
+                            <option value="Lateral">Lateral</option>
+                            <option value="Volante">Volante</option>
+                            <option value="Meio-Campista">Meio-Campista</option>
+                            <option value="Ponta">Ponta</option>
+                            <option value="Atacante">Atacante</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Pé Dominante</label>
+                        <select name="peDominante" id="peDominante">
+                            <option value="">Selecione uma opção</option>
+                            <option value="Direito">Direito</option>
+                            <option value="Esquerdo">Esquerdo</option>
+                            <option value="Ambidestro">Ambidestro</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Altura</label>
+                        <input type="text" id="altura" placeholder="Ex: 1,78 m">
+                    </div>
+                    <div class="field">
+                        <label>Peso</label>
+                        <input type="text" placeholder="Ex: 72 kg" id="peso">
+                    </div>
+                    <div class="field">
+                        <label>Categoria</label>
+                        <select name="categoria" id="categoria">
+                            <option value="">Selecione uma opção</option>
+                            <option value="Sub11">Sub-11</option>
+                            <option value="Sub13">Sub-13</option>
+                            <option value="Sub15">Sub-15</option>
+                            <option value="Sub17">Sub-17</option>
+                            <option value="Sub20">Sub-20</option>
+                            <option value="Profissional">Profissional</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Número Da Camisa</label>
+                        <input type="number" placeholder="Digite o número" id="numeroCamisa">
+                    </div>
+                    <div class="field">
+                        <label>Nivel Atual</label>
+                        <select name="nivelAtual" id="nivelAtual">
+                            <option value="">Selecione uma opção</option>
+                            <option value="Amador">Amador</option>
+                            <option value="Semiprofissional">Semiprofissional</option>
+                            <option value="Base">Base</option>
+                            <option value="Profissional">Profissional</option>
+                        </select>
+                    </div>
+                <div class="form-actions">
+                    <a class="btn" href="../index.html">Cancelar</a>
+                    <button type="submit" class="btn"><a href="perfil-esportivo.html">Continuar →<a></button>
+                </div>
+                 </form>
+            </section>
+    </main>
+</body>
+
+</html>

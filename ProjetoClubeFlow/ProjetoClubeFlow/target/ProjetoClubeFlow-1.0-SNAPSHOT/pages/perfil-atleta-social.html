@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Perfil do atleta · Club Flow</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/perfil-atleta-social.css">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-icon"></span>
+                <span>CLUB <em>FLOW</em></span>
+            </div>
+
+            <div class="area-box">ÁREA DO <b>ATLETA</b></div>
+            <p class="menu-title">MENU PRINCIPAL</p>
+
+            <nav class="menu">
+                <a href="dashboard-atleta.html"><span>⌂</span>Início</a>
+                <a href="perfil.html"><span>◉</span>Meu perfil</a>
+                <a href="desempenho.html"><span>◎</span>Meu desempenho</a>
+                <a href="agenda.html"><span>▣</span>Agenda</a>
+                <a href="gamificacao.html"><span>★</span>Gamificação</a>
+                <a href="oportunidades.html"><span>☆</span>Oportunidades</a>
+                <a class="active" href="rede-social.html"><span>◌</span>Rede social</a>
+            </nav>
+
+            <div class="side-actions">
+                <a href="configuracoes.html">⚙ Configurações</a>
+                <a href="sair.html">↪ Sair</a>
+            </div>
+
+            <a class="help-box" href="suporte.html">
+                <b>Precisa de ajuda?</b>
+                Fale com o suporte
+            </a>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="breadcrumb">CLUB FLOW / <b>REDE SOCIAL</b></div>
+
+                <div class="account">
+                    <span class="account-info">
+                        <span id="nomeCabecalho">Gabriel Almeida</span>
+                        <small id="posicaoCabecalho">Atacante · Sub-20</small>
+                    </span>
+                    <img class="account-photo" id="fotoCabecalho" src="../../assets/images/avatar-padrao.png"
+                        alt="Foto do atleta">
+                </div>
+            </header>
+
+            <section class="page">
+                <div class="page-header">
+                    <div>
+                        <p class="eyebrow">COMUNIDADE / ATLETA</p>
+                        <h1>Perfil do atleta</h1>
+                        <p>Conheça a trajetória esportiva e acompanhe as publicações.</p>
+                    </div>
+                </div>
+
+                <section class="social-profile card">
+                    <div class="profile-content">
+                        <div class="social-avatar-wrap">
+                            <img id="fotoAtleta" class="social-avatar" src="../../assets/images/avatar-padrao.png"
+                                alt="Foto do atleta">
+                        </div>
+
+                        <div class="identity">
+                            <div class="name-line">
+                                <h2 id="nomeAtleta">Gabriel Almeida</h2>
+                            </div>
+
+                            <p class="username" id="usuarioAtleta">@gabrielalmeida</p>
+
+                            <p class="athlete-description" id="bioAtleta">
+                                Atacante com perfil ofensivo, velocidade e boa capacidade de finalização.
+                                Em busca de novas oportunidades para evoluir no futebol.
+                            </p>
+
+                            <div class="profile-details">
+                                <span><b id="posicaoAtleta">Atacante</b></span>
+                                <span><b id="categoriaAtleta">Sub-20</b></span>
+                                <span><b id="cidadeAtleta">São Paulo - SP</b></span>
+                                <span>Pé dominante: <b id="peAtleta">Direito</b></span>
+                            </div>
+
+                            <div class="profile-tags">
+                                <span class="tag" id="alturaAtleta">1,78 m</span>
+                                <span class="tag" id="pesoAtleta">72 kg</span>
+                                <span class="tag lime" id="nivelAtleta">Nível 18</span>
+                                <span class="tag" id="rankingAtleta">#10</span>
+                            </div>
+
+                            <div class="social-numbers">
+                                <div>
+                                    <strong id="totalPublicacoes">0</strong>
+                                    <span>Publicações</span>
+                                </div>
+                                <div>
+                                    <strong id="totalSeguidores">128</strong>
+                                    <span>Seguidores</span>
+                                </div>
+                                <div>
+                                    <strong id="totalSeguindo">86</strong>
+                                    <span>Seguindo</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <button class="btn follow-btn" id="btnSeguir" type="button">
+                                + Seguir
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="social-layout">
+                    <aside class="profile-sidebar">
+                        <article class="card about-card">
+                            <p class="eyebrow">IDENTIDADE ESPORTIVA</p>
+                            <h3>Sobre o atleta</h3>
+
+                            <p class="about-text" id="sobreAtleta">
+                                Apaixonado por futebol e comprometido com a evolução técnica,
+                                física e tática dentro e fora de campo.
+                            </p>
+
+                            <div class="about-item">
+                                <span>Posição</span>
+                                <strong id="sobrePosicao">Atacante</strong>
+                            </div>
+
+                            <div class="about-item">
+                                <span>Categoria</span>
+                                <strong id="sobreCategoria">Sub-20</strong>
+                            </div>
+
+                            <div class="about-item">
+                                <span>Altura</span>
+                                <strong id="sobreAltura">1,78 m</strong>
+                            </div>
+
+                            <div class="about-item">
+                                <span>Peso</span>
+                                <strong id="sobrePeso">72 kg</strong>
+                            </div>
+
+                            <div class="about-item">
+                                <span>Pé dominante</span>
+                                <strong id="sobrePe">Direito</strong>
+                            </div>
+
+                            <div class="about-item">
+                                <span>Ranking</span>
+                                <strong id="sobreRanking">#10</strong>
+                            </div>
+                        </article>
+                    </aside>
+
+                    <section class="feed-section">
+                        <div class="feed-heading">
+                            <div>
+                                <p class="eyebrow">ATIVIDADE RECENTE</p>
+                                <h2>Publicações</h2>
+                            </div>
+
+                            <span class="feed-filter">Feed do atleta</span>
+                        </div>
+
+                        <div id="feedAtleta" class="athlete-feed"></div>
+
+                        <p id="feedVazio" class="empty-feed" hidden>
+                            Este atleta ainda não fez publicações.
+                        </p>
+                    </section>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/perfil-atleta-social.js"></script>
+</body>
+
+</html>

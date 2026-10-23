@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rede Social · Club Flow</title>
+
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/rede-social.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,opsz,wght@0..1,20..48,100..700&display=block"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-icon"></span>
+                <span>CLUB <em>FLOW</em></span>
+            </div>
+
+            <div class="area-box">
+                ÁREA DO <b>CLUBE</b>
+            </div>
+
+            <p class="menu-title">MENU PRINCIPAL</p>
+
+            <nav class="menu">
+                <a href="dashboard-clube.html"><span>⌂</span>Painel</a>
+                <a href="ranking.html"><span>★</span>Ranking</a>
+                <a href="banco-talentos.html"><span>⌕</span>Banco de talentos</a>
+                <a class="active" href="rede-social-clube.html"><span>◌</span>Rede social</a>
+                <a href="perfil-clube.html"><span>◉</span>Perfil do clube</a>
+            </nav>
+
+            <div class="side-actions">
+                <a href="configuracoes-clube.html">⚙ Configurações</a>
+                <a href="sair.html">↪ Sair</a>
+            </div>
+
+            <a class="help-box" href="suporte.html">
+                <b>Precisa de ajuda?</b>
+                Fale com o suporte
+            </a>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="breadcrumb">CLUB FLOW / <b>CLUBE</b></div>
+
+                <div class="account">
+                    <span id="nomeClube">
+                        Nome do clube
+                        <small style="display: block; color: var(--text-muted)">
+                            Perfil oficial
+                        </small>
+                    </span>
+
+                    <a href="perfil-clube.html" class="avatar" id="perfilClube"
+                        aria-label="Abrir perfil do clube">CL</a>
+                </div>
+            </header>
+
+            <section class="page">
+                <div class="page-header">
+                    <div>
+                        <p class="eyebrow">COMUNIDADE / CLUBE</p>
+                        <h1>Rede social</h1>
+                        <p>Compartilhe novidades, conquistas e momentos do clube.</p>
+                    </div>
+
+                    <div class="perfil-actions-container">
+                        <a href="#" class="btn primary" id="fazerPublicacao">+ Publicar</a>
+                    </div>
+                </div>
+
+                <dialog id="Publicacao">
+                    <h2>Qual o tipo de publicação?</h2>
+
+                    <div>
+                        <button type="button" class="btn primary" id="publicarFeed">Feed</button>
+                        <button type="button" class="btn primary" id="publicarStory">Story</button>
+                    </div>
+
+                    <button type="button" id="fecharPublicacao" class="btn">Fechar</button>
+                </dialog>
+
+                <dialog id="Feed" class="dialog-feed">
+                    <h2>Nova publicação do clube</h2>
+
+                    <form id="formFeed">
+                        <label for="arquivoFeed" class="upload-feed">
+                            <span>＋</span>
+                            <strong>Adicionar foto ou vídeo</strong>
+                            <small>Selecione um arquivo do seu dispositivo</small>
+                        </label>
+
+                        <input type="file" id="arquivoFeed" accept="image/*,video/*" multiple hidden>
+
+                        <div id="previewFeed" class="preview-feed">
+                            <p>Nenhum arquivo selecionado</p>
+                        </div>
+
+                        <label for="legendaFeed">Legenda</label>
+
+                        <textarea
+                            id="legendaFeed"
+                            placeholder="Compartilhe uma novidade do clube..."
+                            rows="3"
+                            maxlength="2200"></textarea>
+
+                        <div class="acoes-feed">
+                            <button type="button" id="removerArquivo" class="btn">
+                                Remover arquivo
+                            </button>
+
+                            <button type="button" id="fecharFeed" class="btn">
+                                Fechar
+                            </button>
+
+                            <button type="submit" class="btn primary">
+                                Publicar
+                            </button>
+                        </div>
+                    </form>
+                </dialog>
+
+                <dialog id="Story">
+                    <h2>Adicionar Story do clube</h2>
+
+                    <label for="arquivoStory" class="selecionar-story">
+                        Selecionar foto ou vídeo
+                    </label>
+
+                    <input type="file" id="arquivoStory" accept="image/*,video/*" multiple hidden>
+
+                    <div id="previewStory"></div>
+
+                    <div class="acoes-story">
+                        <button type="button" id="fecharStory" class="btn">Cancelar</button>
+
+                        <button type="button" id="btnpublicarStory" class="btn primary" disabled>
+                            Publicar Story
+                        </button>
+                    </div>
+                </dialog>
+
+                <dialog id="visualizarStory">
+                    <button type="button" id="fecharVisualizacaoStory" aria-label="Fechar visualização">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+
+                    <div class="story-navegacao">
+                        <button type="button" id="storyAnterior" aria-label="Story anterior">‹</button>
+
+                        <div id="conteudoVisualizarStory"></div>
+
+                        <button type="button" id="storyProximo" aria-label="Próximo story">›</button>
+                    </div>
+
+                    <button type="button" id="excluirStory" class="btn-excluir-story">
+                        <span class="material-symbols-outlined">delete</span>
+                        Excluir story
+                    </button>
+
+                    <p id="contadorStory"></p>
+                </dialog>
+
+                <dialog id="Comentarios">
+                    <a href="#" id="voltarComentarios">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Voltar
+                    </a>
+
+                    <h2>Comentários</h2>
+
+                    <div id="sessaoComentarios"></div>
+
+                    <div id="enviarComentario">
+                        <input
+                            type="text"
+                            id="inputComentarios"
+                            placeholder="Escreva um comentário...">
+
+                        <button type="button" class="btn" id="btnEnviarComentarios">
+                            Enviar
+                        </button>
+                    </div>
+                </dialog>
+
+                <section class="stories-clube" aria-label="Stories dos clubes">
+                    <div class="story-row" id="listaStories">
+                        <div class="story" id="meuStory">
+                            <button type="button" class="avatar" id="abrirCriacaoStory">
+                                <span class="material-symbols-outlined">add</span>
+                            </button>
+
+                            <div>Story do clube</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="social-layout" aria-label="Publicações do clube">
+                    <div class="timeline" id="timeline"></div>
+                </section>
+            </section>
+        </main>
+
+        <div class="story-modal" id="storyModal">
+            <div class="story-janela">
+                <button
+                    type="button"
+                    class="fechar-story"
+                    id="fecharStoryModal"
+                    aria-label="Fechar">
+                    &times;
+                </button>
+
+                <div class="story-progresso">
+                    <div></div>
+                </div>
+
+                <div class="story-usuario" id="storyUsuario"></div>
+
+                <div class="story-corpo">
+                    Story de <span id="storyNome"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/rede-social-clube.js"></script>
+</body>
+
+</html>

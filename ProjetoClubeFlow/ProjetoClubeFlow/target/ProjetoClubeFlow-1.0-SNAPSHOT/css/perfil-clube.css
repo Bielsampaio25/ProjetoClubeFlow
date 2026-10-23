@@ -1,0 +1,73 @@
+/* Estilos exclusivos desta página */
+
+.profile-hero {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 26px;
+  align-items: center;
+}
+
+.profile-photo {
+  width: 150px;
+  height: 180px;
+  background: linear-gradient(145deg, #173d2b, #0b2017);
+  border: 1px solid var(--border-color);
+  display: grid;
+  place-items: center;
+  font: 800 3.2rem "Barlow Condensed", sans-serif;
+  color: var(--primary-green);
+}
+
+.profile-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.chips {
+  margin-top: 14px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.card.metric {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card.metric .metric-label {
+  font: 700 0.68rem "Barlow Condensed", sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.card.metric strong {
+  font: 800 2.5rem/1 "Barlow Condensed", sans-serif;
+  color: var(--text-light);
+  display: block;
+}
+
+@media (max-width: 1050px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .profile-hero {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}

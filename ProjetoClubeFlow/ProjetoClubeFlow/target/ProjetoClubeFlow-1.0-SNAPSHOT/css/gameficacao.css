@@ -1,0 +1,133 @@
+p {
+  margin: 4px 0;
+}
+
+.dashboard-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hero-card {
+  background: linear-gradient(135deg, rgba(22, 71, 47, 0.9), rgba(8, 23, 17, 0.95));
+  border: 1px solid var(--primary-green);
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hero-card h1 {
+  font-size: clamp(3.5rem, 7vw, 5.5rem);
+  color: var(--primary-green);
+  line-height: 0.85;
+  margin: 8px 0;
+}
+
+.progress {
+  margin: 12px 0;
+}
+
+.grid-3 {
+  margin-top: 14px;
+}
+
+.card {
+  margin-top: 20px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.table-container {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-green) var(--bg-dark);
+}
+
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--primary-green);
+  border-radius: 0;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #d9ff70;
+}
+
+.table {
+  width: 100%;
+  min-width: 750px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  font: 700 0.72rem "Barlow Condensed", sans-serif;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 16px;
+  font-size: 0.88rem;
+  color: var(--text-light);
+  border-bottom: 1px solid rgba(199, 250, 58, 0.08);
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: rgba(199, 250, 58, 0.03);
+}
+
+.table td.rank {
+  font: 800 1.15rem "Barlow Condensed", sans-serif;
+  color: var(--primary-green);
+  width: 50px;
+}
+
+.table b {
+  color: var(--text-light);
+}
+
+@media (max-width: 720px) {
+  .card {
+    padding: 12px;
+  }
+
+  .table th,
+  .table td {
+    padding: 12px 10px;
+    font-size: 0.8rem;
+  }
+
+  .table-container::-webkit-scrollbar {
+    height: 6px;
+  }
+}
+
+@media (max-width: 1050px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,27 @@
+:root {
+  /* Cores Principais / Brand */
+  --primary-green: #c7fa3a;
+  --accent-green: #16472f;
+  --accent-green-ligth: #226c49;
+
+  /* Superfícies e Backgrounds */
+  --bg-dark: #07120e;
+  --bg-dark-secondary: #091a13;
+  --card-bg: rgba(255, 255, 255, 0.03);
+
+  /* Tipografia */
+  --text-light: #ffffff;
+  --text-muted: #a0b0a8;
+
+  /* Bordas e Divisores */
+  --border-color: rgba(199, 250, 58, 0.2);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+
+  /* Overlays e Transparências */
+  --hero-overlay-dark: rgba(7, 18, 14, 0.90);
+  --hero-overlay-mid: rgba(7, 18, 14, 0.72);
+  --hero-overlay-light: rgba(7, 18, 14, 0.48);
+  --accent-green-alpha: rgba(22, 71, 47, 0.45);
+  --grid-line-primary: rgba(199, 250, 58, 0.05);
+  --grid-line-secondary: rgba(199, 250, 58, 0.03);
+}

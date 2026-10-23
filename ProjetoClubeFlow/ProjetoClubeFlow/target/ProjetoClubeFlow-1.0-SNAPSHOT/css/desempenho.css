@@ -1,0 +1,45 @@
+/* Estilos exclusivos desta página */
+
+.card.metric {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card.metric .metric-label {
+  font: 700 0.68rem "Barlow Condensed", sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.card.metric strong {
+  font: 800 2.5rem/1 "Barlow Condensed", sans-serif;
+  color: var(--text-light);
+  display: block;
+}
+
+.card.metric small {
+  font-size: 0.72rem;
+  color: var(--primary-green);
+  margin-top: 6px;
+  display: block;
+}
+
+.progress {
+  margin-top: 8px;
+}
+
+@media (max-width: 1050px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}

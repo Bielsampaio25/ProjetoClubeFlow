@@ -1,0 +1,77 @@
+/* Estilos exclusivos desta página */
+
+.brand {
+  padding-top: 30px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 17px;
+}
+
+.field label {
+  font: 700 0.67rem "Barlow Condensed", sans-serif;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.field input {
+  width: 100%;
+  background: #081a12;
+  color: var(--text-light);
+  border: 1px solid var(--border-color);
+  padding: 11px 12px;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--primary-green);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+.signup {
+  min-height: 100vh;
+  padding: 0 5vw;
+  background: radial-gradient(circle at 90% 60%, #153d29, transparent 45%), #07120e;
+}
+
+.signup-layout {
+  min-height: calc(100vh - 78px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+}
+
+.signup-card {
+  background: rgba(9, 26, 19, 0.9);
+  border: 1px solid var(--border-color);
+  padding: 30px;
+  max-width: 650px;
+}
+
+@media (max-width: 1050px) {
+  .signup-layout {
+    grid-template-columns: 1fr;
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+  }
+}

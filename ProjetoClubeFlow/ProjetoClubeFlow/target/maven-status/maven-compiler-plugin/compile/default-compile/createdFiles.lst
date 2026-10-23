@@ -1,1 +1,4 @@
 connection\ConnectionFactory.class
+models\atletaModel.class
+controller\atletaController.class
+dao\atletaDAO.class

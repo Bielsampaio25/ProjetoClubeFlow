@@ -1,0 +1,134 @@
+/* Estilos exclusivos desta página */
+
+.signup {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 30%, rgba(22, 71, 47, 0.35), transparent 70%), var(--bg-dark);
+}
+
+.site-header {
+  padding: 28px 34px;
+}
+
+.signup-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 34px 80px;
+}
+
+.eyebrow {
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  line-height: 0.92;
+  margin: 0 0 16px;
+}
+
+h2 {
+  font-size: 1.8rem;
+}
+
+p {
+  line-height: 1.6;
+  margin: 0;
+}
+
+.signup-card {
+  background: linear-gradient(145deg, rgba(16, 41, 31, 0.95), rgba(8, 27, 19, 0.95));
+  border: 1px solid var(--border-color);
+  padding: 36px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.field label {
+  font: 700 0.7rem "Barlow Condensed", sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.field input, .field textarea {
+  background: #081a12;
+  border: 1px solid var(--border-color);
+  padding: 12px 14px;
+  color: var(--text-light);
+  font-size: 0.88rem;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus, .field textarea:focus {
+  border-color: var(--primary-green);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.btn {
+  padding: 12px 24px;
+  font: 700 0.85rem "Barlow Condensed", sans-serif;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+}
+
+.btn.primary {
+  background: var(--primary-green);
+  color: #07120e;
+  border-color: var(--primary-green);
+}
+
+.btn.primary:hover {
+  background: #d8ff54;
+  color: #07120e;
+}
+
+@media (max-width: 900px) {
+  .signup-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 20px 20px 60px;
+  }
+  
+  .signup-card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 540px) {
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}

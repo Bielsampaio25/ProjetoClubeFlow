@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Banco de Talentos · Club Flow</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/banco-talentos.css">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-icon"></span><span>CLUB <em>FLOW</em></span>
+            </div>
+            <div class="area-box">
+                ÁREA DO <b>CLUBE</b>
+            </div>
+            <p class="menu-title">MENU PRINCIPAL</p>
+            <nav class="menu">
+                <a class="" href="dashboard-clube.html"><span>⌂</span>Painel</a>
+                <a class="" href="ranking.html"><span>★</span>Ranking</a>
+                <a class="active" href="banco-talentos.html"><span>⌕</span>Banco de talentos</a>
+                <a class="" href="rede-social-clube.html"><span>◌</span>Rede social</a>
+                <a class="" href="perfil-clube.html"><span>◉</span>Perfil do clube</a>
+            </nav>
+            <div class="side-actions">
+                <a href="configuracoes-clube.html">⚙ Configurações</a>
+                <a href="sair.html">↪Sair</a>
+            </div>
+            <a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a>
+        </aside>
+        <main class="main">
+            <header class="topbar">
+                <div class="breadcrumb">CLUB FLOW / <b>CLUBE</b></div>
+                <div class="account">
+                    <span>Clube Aurora<small style="display:block;color:var(--text-muted)">Gestão do
+                            clube</small></span><span class="avatar">CA</span>
+                </div>
+            </header>
+            <section class="page">
+                <div class="page-header">
+                    <div>
+                        <p class="eyebrow">CLUBE / SCOUTING</p>
+                        <h1>Banco de talentos</h1>
+                        <p>Encontre atletas de acordo com as necessidades do clube.</p>
+                    </div>
+                </div>
+                <div class="filter-layout">
+                    <aside class="card filters">
+                        <p class="eyebrow">FILTROS</p>
+                        <div class="field">
+                            <label>Estado</label>
+                            <input placeholder="Pesquisar estado" id="estado">
+                        </div>
+                        <div class="field">
+                            <label>Cidade</label>
+                            <input placeholder="Pesquisar cidade" id="cidade">
+                        </div>
+                        <div class="field">
+                            <label>Posição</label>
+                            <select id="posicao">
+                                <option value="atacante">Atacante</option>
+                                <option value="meio-campista">Meio-campo</option>
+                                <option value="defensor">Defensor</option>
+                                <option value="goleiro">Goleiro</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Categoria</label>
+                            <select id="categoria">
+                                <option value="">
+                                    Selecione uma opção
+                                </option>
+
+                                <option value="Sub-11">
+                                    Sub-11
+                                </option>
+
+                                <option value="Sub-13">
+                                    Sub-13
+                                </option>
+
+                                <option value="Sub-15">
+                                    Sub-15
+                                </option>
+
+                                <option value="Sub-17">
+                                    Sub-17
+                                </option>
+
+                                <option value="Sub-20">
+                                    Sub-20
+                                </option>
+
+                                <option value="Sub-23">
+                                    Sub-23
+                                </option>
+
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Idade</label>
+                            <input type="range" min="10" max="40" id="idade">
+                        </div>
+                        <div class="field">
+                            <label>Características técnicas</label>
+
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="velocidade">
+                                    <span>Velocidade</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="finalizacao">
+                                    <span>Finalização</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="passe">
+                                    <span>Passe</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="drible">
+                                    <span>Drible</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="1x1">
+                                    <span>1x1</span>
+                                </label>
+
+                                <label class="filter-option">
+                                    <input type="checkbox" name="caracteristicas" value="resistencia">
+                                    <span>Resistência</span>
+                                </label>
+                            </div>
+                        </div>
+                        <a class="btn primary" style="width:100%;justify-content:center" href="#">Aplicar filtros</a>
+                        <a class="btn" style="width:100%;justify-content:center;margin-top:8px" href="#">Limpar</a>
+                    </aside>
+                    <section>
+                        <div class="notice" style="margin-bottom:14px">128 atletas encontrados · ordenado por relevância
+                        </div>
+                        <div class="talent-grid">
+                            <article class="card talent">
+                                <div class="talent-avatar">AB</div>
+                                <div>
+                                    <h3 id="nome">Ana Beatriz Lima</h3>
+                                    <p><span id="posicao">Atacante</span> · <span id="categoria">Sub-20</span><br>📍 <span id="cidade">Campinas</span> · <span id="idade">18</span> anos<br><span class="tag lime" id="caracteristicasTecnicas">Velocidade ·
+                                            Drible</span></p>
+                                </div>
+                                <div>
+                                    <div class="score" id="score">94</div><a class="btn" href="perfil-talento.html">Ver</a>
+                                </div>
+                            </article>
+                            <article class="card talent">
+                                <div class="talent-avatar">MS</div>
+                                <div>
+                                    <h3>Miguel Santos</h3>
+                                    <p>Meio-campo · Sub-17<br>📍 Niterói · 16 anos<br><span class="tag lime">Passe ·
+                                            Drible</span></p>
+                                </div>
+                                <div>
+                                    <div class="score">89</div><a class="btn" href="perfil-talento.html">Ver</a>
+                                </div>
+                            </article>
+                            <article class="card talent">
+                                <div class="talent-avatar">LM</div>
+                                <div>
+                                    <h3>Luiza Martins</h3>
+                                    <p>Defensora · Sub-20<br>📍 Santos · 19 anos<br><span
+                                            class="tag lime">Resistência</span></p>
+                                </div>
+                                <div>
+                                    <div class="score">87</div><a class="btn" href="perfil-talento.html">Ver</a>
+                                </div>
+                            </article>
+                            <article class="card talent">
+                                <div class="talent-avatar">CH</div>
+                                <div>
+                                    <h3>Caio Henrique</h3>
+                                    <p>Goleiro · Sub-20<br>📍 Belo Horizonte · 18 anos<br><span
+                                            class="tag lime">1x1</span></p>
+                                </div>
+                                <div>
+                                    <div class="score">86</div><a class="btn" href="perfil-talento.html">Ver</a>
+                                </div>
+                            </article>
+                            <article class="card talent">
+                                <div class="talent-avatar">PA</div>
+                                <div>
+                                    <h3>Pedro Augusto</h3>
+                                    <p>Atacante · Sub-17<br>📍 Sorocaba · 16 anos<br><span
+                                            class="tag lime">Finalização</span></p>
+                                </div>
+                                <div>
+                                    <div class="score">82</div><a class="btn" href="perfil-talento.html">Ver</a>
+                                </div>
+                            </article>
+                            <article class="card talent">
+                                <div class="talent-avatar">SR</div>
+                                <div>
+                                    <h3>Sofia Ribeiro</h3>
+                                    <p>Meio-campo · Sub-15<br>📍 Curitiba · 14 anos<br><span class="tag lime">Passe ·
+                                            Velocidade</span></p>
+                                </div>
+                                <div>
+                                    <div class="score">84</div><a class="btn" href="perfil-talento.html">Ver</a>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

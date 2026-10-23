@@ -1,0 +1,42 @@
+/* Estilos exclusivos desta página */
+
+h3 {
+  margin-top: 6px;
+}
+
+p {
+  margin: 4px 0 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.tag {
+  display: inline-block;
+  margin-top: 16px;
+  letter-spacing: 0.05em;
+}
+
+.tag.lime {
+  background: rgba(199, 250, 58, 0.05);
+}
+
+@media (max-width: 1050px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard-atleta.css">
+    <title>Painel do Atleta · Club Flow</title>
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand"><span class="brand-icon"></span><span>CLUB <em>FLOW</em></span></div>
+            <div class="area-box">ÁREA DO <b>ATLETA</b></div>
+            <p class="menu-title">MENU PRINCIPAL</p>
+            <nav class="menu">
+                <a class="active" href="dashboard-atleta.html"><span>⌂</span>Início</a>
+                <a class="" href="perfil.html"><span>◉</span>Meu perfil</a>
+                <a class="" href="desempenho.html"><span>◎</span>Meu desempenho</a>
+                <a class="" href="agenda.html"><span>▣</span>Agenda</a>
+                <a class="" href="gamificacao.html"><span>★</span>Gamificação</a>
+                <a class="" href="oportunidades.html"><span>✦</span>Oportunidades</a>
+                <a class="" href="rede-social.html"><span>◌</span>Rede social</a></nav>
+            <div class="side-actions">
+                <a href="configuracoes.html">⚙ Configurações</a>
+                <a href="sair.html">↪ Sair</a>
+            </div>
+            <a class="help-box" href="suporte.html"><b>Precisa de ajuda?</b>Fale com o suporte</a>
+        </aside>
+        <main class="main">
+            <header class="topbar">
+                <div class="breadcrumb">CLUB FLOW / <b>ATLETA</b></div>
+                <div class="account">
+                    <span id="nome">Gabriel Almeida<small style="display:block;color:var(--text-muted)"> <span id="posicao">Atacante</span> · <span id="categoria">Sub-20</span></small></span>
+                    <span class="avatar" id="perfil">GA</span></div>
+            </header>
+            <section class="page">
+                <div class="page-header">
+                    <div>
+                        <p class="eyebrow">ATLETA / VISÃO GERAL</p>
+                        <h1>Painel</h1>
+                        <p>Acompanhe seu momento, evolução e próximas oportunidades.</p>
+                    </div><a class="btn primary" href="perfil.html">Ver meu perfil ↗</a>
+                </div>
+                <div class="stat-grid">
+                    <article class="card metric"><span class="metric-label">Gols</span><strong id="gols">18</strong><small>+4 este
+                            mês</small></article>
+                    <article class="card metric"><span class="metric-label">Assistências</span><strong id="assistencias">12</strong><small>+2
+                            este mês</small></article>
+                    <article class="card metric"><span class="metric-label">Jogos</span><strong id="jogos">24</strong><small>+3 este
+                            mês</small></article>
+                    <article class="card metric"><span class="metric-label">Nota média</span><strong id="nota">8,4</strong><small>+0,6
+                            este mês</small></article>
+                </div>
+                <div class="dashboard-grid">
+                    <article class="card featured">
+                        <p class="eyebrow">DESTAQUE</p>
+                        <h2>Seu momento<br><span style="color:var(--primary-green)">está em alta.</span></h2>
+                        <p>Você aumentou seu índice de desempenho e manteve uma sequência de 7 jogos.</p>
+                        <div class="grid-3" style="margin-top:20px">
+                            <div class="metric"><span class="metric-label">Índice</span><strong id="indice">84</strong><small>+8%</small>
+                            </div>
+                            <div class="metric"><span class="metric-label">XP</span><strong id="XP">1.240</strong><small>Nível
+                                    <span id="nivel">18</span></small></div>
+                            <div class="metric"><span class="metric-label">Sequência</span><strong id="sequencia">7</strong><small>jogos
+                                    seguidos</small></div>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <p class="eyebrow">GAMIFICAÇÃO</p>
+                        <h3 id="nivel">Nível 18</h3>
+                        <p id="XP">1.240 XP</p>
+                        <div class="progress"><i style="width:78%"></i></div><small style="color:var(--text-muted)"><span id="XPFalta">260</span> XP
+                            para o próximo nível</small><a class="btn" style="margin-top:18px"
+                            href="gamificacao.html">Ver gamificação</a>
+                    </article>
+                    <article class="card">
+                        <p class="eyebrow">OPORTUNIDADES</p>
+                        <h3><span id="oportunidades">3</span> novas oportunidades</h3>
+                        <p>Avaliação para equipe principal, peneira regional e torneio Club Flow.</p><a
+                            class="btn primary" href="oportunidades.html">Ver oportunidades</a>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,36 +1,93 @@
 package controller;
 
+import java.io.IOException;
+
 import dao.atletaDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import models.atletaModel;
 
-@WebServlet("/dadosPessoaisAtleta")
+@WebServlet(urlPatterns = {
+    "/dadosPessoaisAtleta",
+    "/dadosEsportivoAtleta"
+})
 public class atletaController extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
             throws ServletException, IOException {
-        atletaModel atletaModel = new atletaModel();
 
-        atletaModel.setNome(request.getParameter("nome"));
-        atletaModel.setData_nascimento(request.getParameter("dtaNascimento"));
-        atletaModel.setCidade(request.getParameter("cidade"));
-        atletaModel.setEstado(request.getParameter("estado"));
-        atletaModel.setCpf(request.getParameter("cpf"));
-        atletaModel.setEmail(request.getParameter("email"));
-        atletaModel.setTelefone(request.getParameter("telefone"));
-        atletaModel.setSenha(request.getParameter("senha"));
+        atletaDAO dao = new atletaDAO();
+        atletaModel atleta = new atletaModel();
 
-        atletaDAO atletaDAO = new atletaDAO();
+        String caminho = request.getServletPath();
+        
+        if ("/dadosPessoaisAtleta".equals(caminho)) {
 
-        if (atletaDAO.cadastrarDadosPessoais(atletaModel)) {
-            response.sendRedirect(request.getContextPath() + "/pages/dashboard-atleta.html");
-        }else {
-            response.sendRedirect(request.getContextPath() + "/pages/cadastro.html");
+            atleta.setNome(request.getParameter("nome"));
+            atleta.setData_nascimento(request.getParameter("dtaNascimento"));
+            atleta.setCidade(request.getParameter("cidade"));
+            atleta.setEstado(request.getParameter("estado"));
+            atleta.setCpf(request.getParameter("cpf"));
+            atleta.setEmail(request.getParameter("email"));
+            atleta.setTelefone(request.getParameter("telefone"));
+            atleta.setSenha(request.getParameter("senha"));
+
+            if (dao.cadastrarDadosPessoais(atleta)) {
+                response.sendRedirect(
+                    request.getContextPath() + "/pages/perfil-esportivo.html"
+                );
+            } else {
+                response.sendRedirect(
+                    request.getContextPath() + "/pages/cadastro.html"
+                );
+            }
+
+        } else if ("/dadosEsportivoAtleta".equals(caminho)) {
+
+            atleta.setPosicaoPrincipal(
+                request.getParameter("posicaoPrincipal")
+            );
+            atleta.setPosicaoSecundaria(
+                request.getParameter("posicaoSecundaria")
+            );
+            atleta.setPeDominante(
+                request.getParameter("peDominante")
+            );
+            atleta.setAltura(
+                request.getParameter("altura")
+            );
+            atleta.setPeso(
+                request.getParameter("peso")
+            );
+            atleta.setCategoria(
+                request.getParameter("categoria")
+            );
+
+            String numero = request.getParameter("numeroCamisa");
+
+            if (numero != null && !numero.isBlank()) {
+                atleta.setNumeroCamisa(Integer.parseInt(numero));
+            }
+
+            atleta.setNivelAtual(
+                request.getParameter("nivelAtual")
+            );
+
+            if (dao.cadastrarDadosPessoais(atleta)) {
+                response.sendRedirect(
+                    request.getContextPath() + "/pages/cadastro-concluido.html"
+                );
+            } else {
+                response.sendRedirect(
+                    request.getContextPath() + "/pages/cadastro.html"
+                );
+            }
+
         }
     }
 }

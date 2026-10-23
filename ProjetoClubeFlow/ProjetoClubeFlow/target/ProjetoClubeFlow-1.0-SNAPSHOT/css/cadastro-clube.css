@@ -1,0 +1,131 @@
+/* Estilos exclusivos desta página */
+
+.brand {
+  padding-top: 30px;
+}
+
+.steps {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 25px;
+}
+
+.step {
+  flex: 1;
+  height: 5px;
+  background: #1b3328;
+}
+
+.step.active {
+  background: var(--primary-green);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 17px;
+}
+
+.field label {
+  font: 700 0.67rem "Barlow Condensed", sans-serif;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.field input, .field select {
+  width: 100%;
+  background: #081a12;
+  color: var(--text-light);
+  border: 1px solid var(--border-color);
+  padding: 11px 12px;
+  outline: none;
+  color-scheme: dark;
+}
+
+.field select {
+  cursor: pointer;
+}
+
+.field input:focus, .field select:focus {
+  border-color: var(--primary-green);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-transform: none;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 400;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+  accent-color: var(--primary-green);
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+.signup {
+  min-height: 100vh;
+  padding: 0 5vw;
+  background: radial-gradient(circle at 90% 60%, #153d29, transparent 45%), #07120e;
+}
+
+.signup-layout {
+  min-height: calc(100vh - 78px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+}
+
+.signup-card {
+  background: rgba(9, 26, 19, 0.9);
+  border: 1px solid var(--border-color);
+  padding: 30px;
+  max-width: 650px;
+}
+
+@media (max-width: 1050px) {
+  .signup-layout {
+    grid-template-columns: 1fr;
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn, .form-actions button {
+    width: 100%;
+  }
+}

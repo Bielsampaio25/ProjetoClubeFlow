@@ -1,0 +1,79 @@
+/* Estilos exclusivos desta página */
+
+.signup {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 30%, rgba(22, 71, 47, 0.35), transparent 70%), var(--bg-dark);
+}
+
+.site-header {
+  padding: 28px 34px;
+}
+
+.signup-layout {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px 80px;
+  text-align: center;
+}
+
+.signup-layout section {
+  max-width: 460px;
+  width: 100%;
+  background: linear-gradient(145deg, rgba(16, 41, 31, 0.95), rgba(8, 27, 19, 0.95));
+  border: 1px solid var(--border-color);
+  padding: 48px 36px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eyebrow {
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  line-height: 0.9;
+  margin: 0 0 16px;
+}
+
+p {
+  margin: 0 0 28px;
+}
+
+.btn {
+  padding: 14px 28px;
+  font: 700 0.88rem "Barlow Condensed", sans-serif;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.btn.primary {
+  background: var(--primary-green);
+  color: #07120e;
+}
+
+.btn.primary:hover {
+  background: #d8ff54;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(199, 250, 58, 0.2);
+}
+
+@media (max-width: 720px) {
+  .site-header {
+    padding: 20px;
+  }
+  
+  .signup-layout {
+    padding: 20px;
+  }
+  
+  .signup-layout section {
+    padding: 32px 20px;
+  }
+}
