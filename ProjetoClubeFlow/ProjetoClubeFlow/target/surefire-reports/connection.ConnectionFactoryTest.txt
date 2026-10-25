@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: connection.ConnectionFactoryTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.630 s -- in connection.ConnectionFactoryTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.038 s -- in connection.ConnectionFactoryTest

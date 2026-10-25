@@ -1,6 +1,9 @@
 com\mycompany\projetoclubeflow\JakartaRestConfiguration.class
 connection\ConnectionFactory.class
+controller\clubeController.class
 models\atletaModel.class
 controller\atletaController.class
+dao\clubeDAO.class
 dao\atletaDAO.class
+models\clubeModel.class
 com\mycompany\projetoclubeflow\resources\JakartaEE11Resource.class
