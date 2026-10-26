@@ -24,18 +24,17 @@
                 <p>Entre na sua conta para acompanhar sua evolução, oportunidades, talentos e conexões dentro do
                     ecossistema Club Flow.</p>
             </section>
-            <form action="/login" method="POST" class="signup-card">
+            <form action="../login" method="POST" class="signup-card">
                 <p class="eyebrow">BEM-VINDO DE VOLTA</p>
                 <h2>Entrar</h2>
-                <div class="field" style="margin-top:25px"><label>E-MAIL</label><input type="email" placeholder="seu@email.com" id="usuario"></div>
-                <div class="field"><label>SENHA</label><input type="password" placeholder="Digite sua senha" id="senha"></div>
+                <div class="field" style="margin-top:25px"><label>E-MAIL</label><input type="email" placeholder="seu@email.com" name="email" id="email"></div>
+                <div class="field"><label>SENHA</label><input type="password" placeholder="Digite sua senha" name="senha" id="senha"></div>
                 <div
                     style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 22px;font-size:.75rem;color:var(--text-muted)">
                     <a href="#" style="color:var(--primary-green)">Esqueci minha senha</a>
                 </div>
                 <div class="form-actions">
-                    <a class="btn primary" type="submit" id="btnLoginAtleta" href="dashboard-atleta.html">Entrar como atleta →</a>
-                    <a class="btn" type="submit" id="btnLoginClube" href="dashboard-clube.html">Entrar como clube</a>
+                    <button class="btn primary" type="submit">Entrar →</button>
                 </div>
             </form>
         </div>

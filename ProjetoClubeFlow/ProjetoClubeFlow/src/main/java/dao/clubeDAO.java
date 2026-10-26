@@ -12,8 +12,8 @@ public class clubeDAO {
 
         String sql = "INSERT INTO Clubes "
                 + "(nome_clube, cnpj, divisao, cidade, estado, "
-                + "email_corporativo, nome_responsavel, cargo) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                + "email_corporativo, nome_responsavel, cargo, senha) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -26,6 +26,7 @@ public class clubeDAO {
             stmt.setString(6, clube.getEmail_corporativo());
             stmt.setString(7, clube.getNome_responsavel());
             stmt.setString(8, clube.getCargo());
+            stmt.setString(9, clube.getSenha());
 
             stmt.executeUpdate();
 

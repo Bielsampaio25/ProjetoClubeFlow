@@ -24,6 +24,7 @@ public class clubeController extends HttpServlet {
         clube.setEmail_corporativo(request.getParameter("emailCorporativo"));
         clube.setNome_responsavel(request.getParameter("responsavel"));
         clube.setCargo(request.getParameter("cargo"));
+        clube.setSenha(request.getParameter("senha"));
 
         clubeDAO clubeDAO = new clubeDAO();
 

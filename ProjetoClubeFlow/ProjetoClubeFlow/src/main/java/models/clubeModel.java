@@ -9,6 +9,7 @@ public class clubeModel {
     private String email_corporativo;
     private String nome_responsavel;
     private String cargo;
+    private String senha;
 
     public String getNome() {
         return nome;
@@ -72,5 +73,13 @@ public class clubeModel {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
-    }       
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 }
