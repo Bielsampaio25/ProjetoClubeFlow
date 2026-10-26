@@ -1,3 +1,4 @@
+controller\perfilAtletaController.class
 models\loginModel.class
 connection\ConnectionFactory.class
 controller\clubeController.class
@@ -9,4 +10,5 @@ models\clubeModel.class
 com\mycompany\projetoclubeflow\resources\JakartaEE11Resource.class
 com\mycompany\projetoclubeflow\JakartaRestConfiguration.class
 controller\loginController.class
+dao\perfilAtletaDAO.class
 dao\atletaDAO.class
