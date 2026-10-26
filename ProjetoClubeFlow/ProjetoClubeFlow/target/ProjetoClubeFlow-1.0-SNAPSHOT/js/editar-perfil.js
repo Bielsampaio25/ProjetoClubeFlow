@@ -1,3 +1,4 @@
+
 const inputFoto = document.getElementById("foto");
 const previewFoto = document.getElementById("previewFoto");
 const uploadArea = document.getElementById("uploadArea");
@@ -6,9 +7,10 @@ const removerFoto = document.getElementById("removerFoto");
 const formPerfil = document.getElementById("formPerfil");
 const mensagem = document.getElementById("mensagem");
 const nomeAtleta = document.getElementById("nomeAtleta");
+const campoSenha = document.getElementById("senha");
 
 const campos = {
-    nome: "nome",
+    nome: "nomeInput",
     cpf: "cpf",
     dataNascimento: "dtaNascimento",
     cidade: "cidade",
@@ -29,32 +31,34 @@ const campos = {
 let fotoAtual = "";
 let removerFotoAtual = false;
 
+async function requisitarPerfil() {
+    const resposta = await fetch("../perfilAtleta", {
+        method: "GET",
+        headers: {
+            Accept: "application/json"
+        },
+        credentials: "same-origin",
+        cache: "no-store"
+    });
+
+    const atleta = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            atleta.mensagem || "Não foi possível carregar o perfil."
+        );
+    }
+
+    return atleta;
+}
+
 async function carregarPerfil() {
     mensagem.textContent = "Carregando perfil...";
 
     try {
-        const resposta = await fetch("../perfilAtleta", {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            },
-            credentials: "same-origin",
-            cache: "no-store"
-        });
+        const atleta = await requisitarPerfil();
 
-        if (!resposta.ok) {
-            if (resposta.status === 401 || resposta.status === 403) {
-                throw new Error("Sua sessão expirou ou você não tem permissão para acessar este perfil.");
-            }
-
-            throw new Error(
-                `Erro ao carregar o perfil. Código: ${resposta.status}`
-            );
-        }
-
-        const atleta = await resposta.json();
-
-        console.log("Dados recebidos do servlet:", atleta);
+        console.log("Perfil retornado pelo servidor:", atleta);
 
         Object.entries(campos).forEach(([propriedade, id]) => {
             const campo = document.getElementById(id);
@@ -66,14 +70,13 @@ async function carregarPerfil() {
 
             const valor = atleta[propriedade];
 
-            if (valor !== null && valor !== undefined) {
-                if (campo.type === "date" && valor) {
-                    campo.value = String(valor).substring(0, 10);
-                } else {
-                    campo.value = valor;
-                }
-            } else {
-                campo.value = "";
+            campo.value =
+                valor === null || valor === undefined
+                    ? ""
+                    : String(valor);
+
+            if (campo.type === "date" && campo.value) {
+                campo.value = campo.value.substring(0, 10);
             }
         });
 
@@ -82,15 +85,16 @@ async function carregarPerfil() {
         fotoAtual = atleta.fotoPerfil || "";
         mostrarFoto(fotoAtual);
 
-        document.getElementById("senha").value = "";
+        campoSenha.value = "";
 
-        document.querySelectorAll(".form-grid textarea").forEach(textarea => {
-            textarea.style.height = "44px";
-            textarea.style.height = `${textarea.scrollHeight}px`;
-        });
+        ajustarTextareas();
 
         mensagem.textContent = "";
 
+        console.log(
+            "Nome carregado no campo:",
+            document.getElementById("nome")?.value
+        );
     } catch (erro) {
         console.error("Erro ao carregar perfil:", erro);
         mensagem.textContent = erro.message;
@@ -109,6 +113,13 @@ function mostrarFoto(origem) {
         uploadArea.hidden = false;
         removerFoto.hidden = true;
     }
+}
+
+function ajustarTextareas() {
+    document.querySelectorAll(".form-grid textarea").forEach(textarea => {
+        textarea.style.height = "44px";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+    });
 }
 
 inputFoto.addEventListener("change", function () {
@@ -143,7 +154,9 @@ inputFoto.addEventListener("change", function () {
     leitor.readAsDataURL(arquivo);
 });
 
-removerFoto.addEventListener("click", function () {
+removerFoto.addEventListener("click", function (evento) {
+    evento.preventDefault();
+
     inputFoto.value = "";
     mostrarFoto("");
     removerFotoAtual = true;
@@ -163,11 +176,24 @@ formPerfil.addEventListener("submit", async function (evento) {
 
     Object.entries(campos).forEach(([propriedade, id]) => {
         const campo = document.getElementById(id);
+
+        if (!campo) {
+            console.error(`Campo HTML não encontrado ao salvar: ${id}`);
+            return;
+        }
+
         dados[propriedade] = campo.value.trim();
     });
 
-    dados.senha = document.getElementById("senha").value;
+    dados.senha = campoSenha.value;
     dados.removerFoto = removerFotoAtual;
+
+    console.log("Dados que serão enviados:", dados);
+
+    if (!dados.nome || !dados.email) {
+        mensagem.textContent = "Nome e e-mail são obrigatórios.";
+        return;
+    }
 
     const arquivoFoto = inputFoto.files[0];
     const corpo = new FormData();
@@ -189,32 +215,70 @@ formPerfil.addEventListener("submit", async function (evento) {
 
         const resultado = await resposta.json();
 
+        console.log("Resposta ao salvar:", resultado);
+
         if (!resposta.ok) {
             throw new Error(
                 resultado.mensagem || "Não foi possível salvar o perfil."
             );
         }
 
+        if (!resultado.sucesso) {
+            throw new Error(
+                resultado.mensagem || "O perfil não foi atualizado."
+            );
+        }
+
         mensagem.textContent =
             resultado.mensagem || "Perfil atualizado com sucesso!";
 
-        nomeAtleta.textContent = dados.nome || "Perfil do atleta";
-
-        if (resultado.fotoPerfil !== undefined) {
-            fotoAtual = resultado.fotoPerfil || "";
-            mostrarFoto(fotoAtual);
-        } else if (arquivoFoto) {
-            mostrarFoto(previewFoto.src);
-        } else if (removerFotoAtual) {
-            mostrarFoto("");
-        }
-
         inputFoto.value = "";
-        document.getElementById("senha").value = "";
+        campoSenha.value = "";
         removerFotoAtual = false;
 
+        const atletaAtualizado = await requisitarPerfil();
+
+        Object.entries(campos).forEach(([propriedade, id]) => {
+            const campo = document.getElementById(id);
+
+            if (!campo) {
+                return;
+            }
+
+            const valor = atletaAtualizado[propriedade];
+
+            campo.value =
+                valor === null || valor === undefined
+                    ? ""
+                    : String(valor);
+
+            if (campo.type === "date" && campo.value) {
+                campo.value = campo.value.substring(0, 10);
+            }
+        });
+
+        nomeAtleta.textContent =
+            atletaAtualizado.nome || "Perfil do atleta";
+
+        fotoAtual = atletaAtualizado.fotoPerfil || "";
+
+        if (!arquivoFoto && !dados.removerFoto) {
+            mostrarFoto(fotoAtual);
+        } else if (dados.removerFoto) {
+            mostrarFoto("");
+        } else if (arquivoFoto) {
+            mostrarFoto(previewFoto.src);
+        }
+
+        ajustarTextareas();
+
+        console.log("Perfil consultado novamente:", atletaAtualizado);
+        console.log(
+            "Nome confirmado no formulário:",
+            document.getElementById("nome")?.value
+        );
     } catch (erro) {
-        console.error("Erro ao salvar perfil:", erro);
+        console.error("Erro ao salvar ou confirmar perfil:", erro);
         mensagem.textContent = erro.message;
     }
 });
