@@ -196,4 +196,40 @@ public class atletaDAO {
 
         ps.setBigDecimal(indice, numero);
     }
+
+    public boolean atualizarFoto(int id, byte[] foto) {
+        String sql = "UPDATE Atletas SET foto_perfil = ? WHERE id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBytes(1, foto);
+            stmt.setInt(2, id);
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public byte[] buscarFoto(int id) {
+        String sql = "SELECT foto_perfil FROM Atletas WHERE id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBytes("foto_perfil");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

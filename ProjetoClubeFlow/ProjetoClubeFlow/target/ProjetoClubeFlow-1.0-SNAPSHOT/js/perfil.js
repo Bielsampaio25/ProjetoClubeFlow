@@ -1,3 +1,4 @@
+
 console.log("perfil.js foi carregado");
 
 const inputFoto = document.getElementById("foto");
@@ -6,13 +7,18 @@ const textoUpload = document.getElementById("textoUpload");
 const btnMudarFoto = document.getElementById("btnMudarFoto");
 const mensagemFoto = document.getElementById("mensagemFoto");
 
+const URL_PERFIL = "../perfilAtleta";
+const URL_FOTO = "../fotoPerfilAtleta";
+const TAMANHO_MAXIMO = 5 * 1024 * 1024;
+
 let fotoTemporaria = null;
+let carregamentoFoto = 0;
 
 async function carregarPerfil() {
     console.log("Iniciando carregamento do perfil...");
 
     try {
-        const resposta = await fetch("../perfilAtleta", {
+        const resposta = await fetch(URL_PERFIL, {
             method: "GET",
             headers: {
                 Accept: "application/json"
@@ -122,10 +128,6 @@ async function carregarPerfil() {
 
         atualizarAvatar(atleta.nome);
 
-        if (!fotoTemporaria) {
-            mostrarFoto(atleta.fotoPerfil || "");
-        }
-
         console.log("Perfil atualizado com sucesso.");
 
     } catch (erro) {
@@ -142,6 +144,8 @@ async function carregarPerfil() {
             "Não foi possível carregar os dados."
         );
     }
+
+    await carregarFotoSalva();
 }
 
 function atualizarTexto(id, valor, padrao = "Não informado") {
@@ -230,52 +234,187 @@ function mostrarFoto(origem) {
     }
 }
 
+function mostrarMensagem(mensagem) {
+    if (mensagemFoto) {
+        mensagemFoto.textContent = mensagem;
+    }
+}
+
+function validarArquivo(arquivo) {
+    const tiposPermitidos = ["image/png", "image/jpeg"];
+
+    if (!tiposPermitidos.includes(arquivo.type)) {
+        mostrarMensagem("Selecione uma imagem PNG ou JPG.");
+        return false;
+    }
+
+    if (arquivo.size > TAMANHO_MAXIMO) {
+        mostrarMensagem("A imagem deve ter no máximo 5 MB.");
+        return false;
+    }
+
+    if (arquivo.size === 0) {
+        mostrarMensagem("O arquivo selecionado está vazio.");
+        return false;
+    }
+
+    return true;
+}
+
+async function enviarFoto(arquivo) {
+    const formulario = new FormData();
+    formulario.append("foto", arquivo);
+
+    try {
+        mostrarMensagem("Salvando foto...");
+
+        if (btnMudarFoto) {
+            btnMudarFoto.disabled = true;
+        }
+
+        const resposta = await fetch(URL_FOTO, {
+            method: "POST",
+            body: formulario,
+            credentials: "same-origin",
+            cache: "no-store"
+        });
+
+        if (!resposta.ok) {
+            if (resposta.status === 401) {
+                throw new Error(
+                    "Sua sessão expirou ou o ID do atleta não foi encontrado na sessão."
+                );
+            }
+
+            if (resposta.status === 413) {
+                throw new Error("A imagem excede o tamanho permitido pelo servidor.");
+            }
+
+            const detalhe = await resposta.text();
+
+            throw new Error(
+                detalhe || `Falha ao salvar a foto. HTTP ${resposta.status}.`
+            );
+        }
+
+        mostrarMensagem("Foto salva com sucesso!");
+
+        fotoTemporaria = null;
+
+        await carregarFotoSalva();
+
+    } catch (erro) {
+        console.error("Erro ao enviar foto:", erro);
+
+        mostrarMensagem(erro.message || "Não foi possível salvar a foto.");
+
+    } finally {
+        if (btnMudarFoto) {
+            btnMudarFoto.disabled = false;
+        }
+
+        if (inputFoto) {
+            inputFoto.value = "";
+        }
+    }
+}
+
+async function carregarFotoSalva() {
+    const chamadaAtual = ++carregamentoFoto;
+
+    try {
+        const resposta = await fetch(URL_FOTO, {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store"
+        });
+
+        if (chamadaAtual !== carregamentoFoto) {
+            return;
+        }
+
+        if (resposta.status === 404) {
+            fotoTemporaria = null;
+            mostrarFoto("");
+            return;
+        }
+
+        if (!resposta.ok) {
+            if (resposta.status === 401) {
+                console.warn("Sessão não autenticada para carregar a foto.");
+                return;
+            }
+
+            throw new Error(
+                `Não foi possível carregar a foto. HTTP ${resposta.status}.`
+            );
+        }
+
+        const tipo = resposta.headers.get("content-type") || "";
+
+        if (!tipo.startsWith("image/")) {
+            throw new Error("O servidor não retornou um arquivo de imagem.");
+        }
+
+        const imagem = await resposta.blob();
+
+        if (chamadaAtual !== carregamentoFoto) {
+            return;
+        }
+
+        if (fotoTemporaria) {
+            return;
+        }
+
+        const urlNova = URL.createObjectURL(imagem);
+        const urlAnterior = preview?.dataset.urlTemporaria;
+
+        if (preview) {
+            preview.dataset.urlTemporaria = urlNova;
+        }
+
+        mostrarFoto(urlNova);
+
+        if (urlAnterior) {
+            URL.revokeObjectURL(urlAnterior);
+        }
+
+    } catch (erro) {
+        console.error("Erro ao carregar foto salva:", erro);
+    }
+}
+
+if (btnMudarFoto && inputFoto) {
+    btnMudarFoto.addEventListener("click", () => {
+        inputFoto.click();
+    });
+}
+
 if (inputFoto) {
-    inputFoto.addEventListener("change", function () {
+    inputFoto.addEventListener("change", async function () {
         const arquivo = this.files[0];
 
         if (!arquivo) {
             return;
         }
 
-        if (!["image/png", "image/jpeg"].includes(arquivo.type)) {
-            if (mensagemFoto) {
-                mensagemFoto.textContent =
-                    "Selecione uma imagem PNG ou JPG.";
-            }
-
-            this.value = "";
-            return;
-        }
-
-        if (arquivo.size > 5 * 1024 * 1024) {
-            if (mensagemFoto) {
-                mensagemFoto.textContent =
-                    "A imagem deve ter no máximo 5 MB.";
-            }
-
+        if (!validarArquivo(arquivo)) {
             this.value = "";
             return;
         }
 
         const leitor = new FileReader();
 
-        leitor.onload = function (evento) {
+        leitor.onload = async function (evento) {
             fotoTemporaria = evento.target.result;
 
             mostrarFoto(fotoTemporaria);
 
-            if (mensagemFoto) {
-                mensagemFoto.textContent =
-                    "Foto visualizada. Para salvá-la permanentemente, é necessário implementar o envio ao servidor.";
-            }
+            await enviarFoto(arquivo);
         };
 
         leitor.onerror = function () {
-            if (mensagemFoto) {
-                mensagemFoto.textContent =
-                    "Não foi possível visualizar a imagem.";
-            }
+            mostrarMensagem("Não foi possível ler a imagem selecionada.");
         };
 
         leitor.readAsDataURL(arquivo);

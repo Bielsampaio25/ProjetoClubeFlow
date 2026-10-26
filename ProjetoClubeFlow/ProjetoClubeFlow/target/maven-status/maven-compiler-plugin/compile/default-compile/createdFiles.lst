@@ -3,6 +3,7 @@ models\loginModel.class
 connection\ConnectionFactory.class
 controller\clubeController.class
 models\atletaModel.class
+controller\fotoPerfilController.class
 controller\atletaController.class
 dao\clubeDAO.class
 dao\loginDAO.class
