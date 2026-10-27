@@ -37,9 +37,9 @@
             <header class="topbar">
                 <div class="breadcrumb">CLUB FLOW / <b>ATLETA</b></div>
                 <div class="account">
-                    <span id="nomeAtleta">Gabriel Almeida<small style="display:block;color:var(--text-muted)"> <span
-                                id="posicao">Atacante</span> · <span id="categoria">Sub-20</span></small></span>
-                    <span class="avatar" id="perfil">GA</span>
+                    <span id="nomeCabecalho"><small style="display:block;color:var(--text-muted)"> <span
+                                id="posicaoCabecalho"></span> · <span id="categoriaCabecalho"></span></small></span>
+                    <span class="avatar" id="perfil"></span>
                 </div>
             </header>
             <section class="page">
@@ -165,13 +165,13 @@
 
                                 <label>
                                     Altura (m)
-                                    <input type="number" id="altura" min="1" max="2.5" step="0.01"
+                                    <input type="text" id="altura" 
                                         placeholder="Ex.: 1.78" required>
                                 </label>
 
                                 <label>
                                     Peso (kg)
-                                    <input type="number" id="peso" min="30" max="250" step="0.1" placeholder="Ex.: 72"
+                                    <input type="text" id="peso" placeholder="Ex.: 72"
                                         required>
                                 </label>
 

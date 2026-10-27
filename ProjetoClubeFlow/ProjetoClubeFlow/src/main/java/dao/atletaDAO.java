@@ -1,3 +1,4 @@
+
 package dao;
 
 import connection.ConnectionFactory;
@@ -23,9 +24,7 @@ public class atletaDAO {
         try (Connection conn = ConnectionFactory.getConnection()) {
 
             if (conn == null) {
-                System.out.println(
-                        "ERRO: conexão com o banco indisponível."
-                );
+                System.out.println("ERRO: conexão com o banco indisponível.");
                 return -1;
             }
 
@@ -37,14 +36,10 @@ public class atletaDAO {
 
                 String dataNascimento = atleta.getData_nascimento();
 
-                if (dataNascimento == null
-                        || dataNascimento.isBlank()) {
+                if (dataNascimento == null || dataNascimento.isBlank()) {
                     ps.setNull(3, Types.DATE);
                 } else {
-                    ps.setDate(
-                            3,
-                            java.sql.Date.valueOf(dataNascimento)
-                    );
+                    ps.setDate(3, java.sql.Date.valueOf(dataNascimento));
                 }
 
                 ps.setString(4, atleta.getCidade());
@@ -56,39 +51,20 @@ public class atletaDAO {
                 int linhasAfetadas = ps.executeUpdate();
 
                 if (linhasAfetadas == 0) {
-                    System.out.println(
-                            "ERRO: nenhum registro pessoal foi inserido."
-                    );
                     return -1;
                 }
 
                 try (ResultSet rs = ps.getGeneratedKeys()) {
-
                     if (rs.next()) {
-                        int idAtleta = rs.getInt(1);
-
-                        System.out.println(
-                                "Dados pessoais cadastrados. ID: "
-                                + idAtleta
-                        );
-
-                        return idAtleta;
+                        return rs.getInt(1);
                     }
                 }
-
-                System.out.println(
-                        "ERRO: não foi possível recuperar o ID do atleta."
-                );
 
                 return -1;
             }
 
         } catch (SQLException | IllegalArgumentException e) {
-
-            System.out.println(
-                    "ERRO ao cadastrar os dados pessoais."
-            );
-
+            System.out.println("ERRO ao cadastrar os dados pessoais.");
             e.printStackTrace();
             return -1;
         }
@@ -108,22 +84,13 @@ public class atletaDAO {
                 + "nivel_atual = ? "
                 + "WHERE id = ?";
 
-        System.out.println(
-                "Iniciando atualização esportiva do atleta ID: "
-                + idAtleta
-        );
-
         try (Connection conn = ConnectionFactory.getConnection()) {
 
             if (conn == null) {
-                System.out.println(
-                        "ERRO: conexão com o banco indisponível."
-                );
                 return false;
             }
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
                 ps.setString(1, atleta.getPosicaoPrincipal());
                 ps.setString(2, atleta.getPosicaoSecundaria());
                 ps.setString(3, atleta.getPeDominante());
@@ -142,42 +109,19 @@ public class atletaDAO {
                 ps.setString(8, atleta.getNivelAtual());
                 ps.setInt(9, idAtleta);
 
-                int linhasAfetadas = ps.executeUpdate();
-
-                if (linhasAfetadas > 0) {
-                    System.out.println(
-                            "Dados esportivos atualizados. ID: "
-                            + idAtleta
-                    );
-                    System.out.println(
-                            "Linhas afetadas: " + linhasAfetadas
-                    );
-                    return true;
-                }
-
-                System.out.println(
-                        "ATENÇÃO: nenhuma linha foi alterada para o ID "
-                        + idAtleta
-                );
-
-                return false;
+                return ps.executeUpdate() > 0;
             }
 
         } catch (SQLException | IllegalArgumentException e) {
-
-            System.out.println(
-                    "ERRO ao atualizar os dados esportivos."
-            );
-
+            System.out.println("ERRO ao atualizar os dados esportivos.");
             e.printStackTrace();
             return false;
         }
     }
 
     private void definirDecimal(
-            PreparedStatement ps,
-            int indice,
-            String valor) throws SQLException {
+            PreparedStatement ps, int indice, String valor)
+            throws SQLException {
 
         if (valor == null || valor.isBlank()) {
             ps.setNull(indice, Types.DECIMAL);
@@ -192,20 +136,42 @@ public class atletaDAO {
                 .trim()
                 .replace(",", ".");
 
-        BigDecimal numero = new BigDecimal(valorNormalizado);
+        ps.setBigDecimal(indice, new BigDecimal(valorNormalizado));
+    }
 
-        ps.setBigDecimal(indice, numero);
+    public int buscarIdPorEmail(String email) {
+
+        String sql = "SELECT id FROM Atletas WHERE email = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 
     public boolean atualizarFoto(int id, byte[] foto) {
+
         String sql = "UPDATE Atletas SET foto_perfil = ? WHERE id = ?";
 
-        try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            stmt.setBytes(1, foto);
-            stmt.setInt(2, id);
+            ps.setBytes(1, foto);
+            ps.setInt(2, id);
 
-            return stmt.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -214,13 +180,15 @@ public class atletaDAO {
     }
 
     public byte[] buscarFoto(int id) {
+
         String sql = "SELECT foto_perfil FROM Atletas WHERE id = ?";
 
-        try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
+            ps.setInt(1, id);
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getBytes("foto_perfil");
                 }
@@ -231,5 +199,22 @@ public class atletaDAO {
         }
 
         return null;
+    }
+
+    public boolean removerFoto(int id) {
+
+        String sql = "UPDATE Atletas SET foto_perfil = NULL WHERE id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

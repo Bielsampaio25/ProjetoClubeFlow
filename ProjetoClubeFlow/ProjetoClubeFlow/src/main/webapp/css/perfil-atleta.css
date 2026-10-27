@@ -12,7 +12,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
 }
 
 .foto-perfil-container {
@@ -21,19 +20,13 @@
     height: 180px;
     flex-shrink: 0;
     box-sizing: border-box;
-    border: 2px dashed rgba(255, 255, 255, .35);
+    border: 2px solid rgba(255, 255, 255, .2);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    cursor: pointer;
-    transition: .25s;
-}
-
-.foto-perfil-container:hover {
-    border-color: var(--accent-green);
-    background: rgba(193, 91, 4, .08);
+    background: rgba(255, 255, 255, .04);
 }
 
 .foto-perfil-container #preview {
@@ -43,74 +36,22 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    pointer-events: none;
 }
 
-.foto-perfil-content {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.foto-perfil-container #preview[hidden] {
+    display: none !important;
 }
 
-.upload-area {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.upload-area img {
-    width: 32px;
-    height: auto;
-    pointer-events: none;
-}
-
-.upload-area h2 {
-    width: 100%;
-    margin: 0;
-    color: #FFF;
-    font-family: "Montserrat", sans-serif;
-    font-size: 13px;
-    line-height: 1.3;
-    text-align: center;
-}
-
-.upload-area p {
-    width: 100%;
-    margin: 0;
+#fotoSemCadastro {
+    padding: 15px;
     color: rgba(255, 255, 255, .6);
     font-family: "Montserrat", sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     text-align: center;
 }
 
-.btnMudarFoto {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.btnMudarFoto label {
-    padding: 8px 18px;
-    background: var(--accent-green);
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: "Montserrat", sans-serif;
-    text-align: center;
-    transition: .2s;
-}
-
-.btnMudarFoto label:hover {
-    background: var(--accent-green-ligth);
+#fotoSemCadastro[hidden] {
+    display: none !important;
 }
 
 .profile-info {
@@ -142,13 +83,6 @@
 
 .progress i {
     display: block;
-}
-
-.foto-perfil-container #preview[hidden],
-.btnMudarFoto[hidden],
-#foto[hidden],
-#textoUpload[hidden] {
-    display: none !important;
 }
 
 @media (max-width: 600px) {

@@ -1,4 +1,4 @@
-
+console.log("ARQUIVO editar-perfil.js EXECUTADO");
 const inputFoto = document.getElementById("foto");
 const previewFoto = document.getElementById("previewFoto");
 const uploadArea = document.getElementById("uploadArea");
@@ -45,8 +45,8 @@ async function requisitarPerfil() {
 
     if (!resposta.ok) {
         throw new Error(
-            atleta.mensagem || "Não foi possível carregar o perfil."
-        );
+                atleta.mensagem || "Não foi possível carregar o perfil."
+                );
     }
 
     return atleta;
@@ -59,6 +59,12 @@ async function carregarPerfil() {
         const atleta = await requisitarPerfil();
 
         console.log("Perfil retornado pelo servidor:", atleta);
+        console.table(
+                Object.entries(atleta).map(([propriedade, valor]) => ({
+                propriedade,
+                valor: valor == null ? "" : String(valor)
+            }))
+                );
 
         Object.entries(campos).forEach(([propriedade, id]) => {
             const campo = document.getElementById(id);
@@ -71,13 +77,13 @@ async function carregarPerfil() {
             const valor = atleta[propriedade];
 
             campo.value =
-                valor === null || valor === undefined
+                    valor === null || valor === undefined
                     ? ""
                     : String(valor);
 
             if (campo.type === "date" && campo.value) {
                 campo.value = campo.value.substring(0, 10);
-            }
+        }
         });
 
         nomeAtleta.textContent = atleta.nome || "Perfil do atleta";
@@ -92,9 +98,9 @@ async function carregarPerfil() {
         mensagem.textContent = "";
 
         console.log(
-            "Nome carregado no campo:",
-            document.getElementById("nome")?.value
-        );
+                "Nome carregado no campo:",
+                document.getElementById("nomeInput")?.value
+                );
     } catch (erro) {
         console.error("Erro ao carregar perfil:", erro);
         mensagem.textContent = erro.message;
@@ -219,18 +225,18 @@ formPerfil.addEventListener("submit", async function (evento) {
 
         if (!resposta.ok) {
             throw new Error(
-                resultado.mensagem || "Não foi possível salvar o perfil."
-            );
+                    resultado.mensagem || "Não foi possível salvar o perfil."
+                    );
         }
 
         if (!resultado.sucesso) {
             throw new Error(
-                resultado.mensagem || "O perfil não foi atualizado."
-            );
+                    resultado.mensagem || "O perfil não foi atualizado."
+                    );
         }
 
         mensagem.textContent =
-            resultado.mensagem || "Perfil atualizado com sucesso!";
+                resultado.mensagem || "Perfil atualizado com sucesso!";
 
         inputFoto.value = "";
         campoSenha.value = "";
@@ -248,17 +254,17 @@ formPerfil.addEventListener("submit", async function (evento) {
             const valor = atletaAtualizado[propriedade];
 
             campo.value =
-                valor === null || valor === undefined
+                    valor === null || valor === undefined
                     ? ""
                     : String(valor);
 
             if (campo.type === "date" && campo.value) {
                 campo.value = campo.value.substring(0, 10);
-            }
+        }
         });
 
         nomeAtleta.textContent =
-            atletaAtualizado.nome || "Perfil do atleta";
+                atletaAtualizado.nome || "Perfil do atleta";
 
         fotoAtual = atletaAtualizado.fotoPerfil || "";
 
@@ -274,9 +280,9 @@ formPerfil.addEventListener("submit", async function (evento) {
 
         console.log("Perfil consultado novamente:", atletaAtualizado);
         console.log(
-            "Nome confirmado no formulário:",
-            document.getElementById("nome")?.value
-        );
+                "Nome carregado no campo:",
+                document.getElementById("nomeInput")?.value
+                );
     } catch (erro) {
         console.error("Erro ao salvar ou confirmar perfil:", erro);
         mensagem.textContent = erro.message;

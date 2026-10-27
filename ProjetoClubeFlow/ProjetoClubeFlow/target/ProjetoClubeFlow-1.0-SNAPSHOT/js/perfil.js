@@ -1,22 +1,15 @@
-
 console.log("perfil.js foi carregado");
-
-const inputFoto = document.getElementById("foto");
-const preview = document.getElementById("preview");
-const textoUpload = document.getElementById("textoUpload");
-const btnMudarFoto = document.getElementById("btnMudarFoto");
-const mensagemFoto = document.getElementById("mensagemFoto");
 
 const URL_PERFIL = "../perfilAtleta";
 const URL_FOTO = "../fotoPerfilAtleta";
-const TAMANHO_MAXIMO = 5 * 1024 * 1024;
 
-let fotoTemporaria = null;
-let carregamentoFoto = 0;
+const preview = document.getElementById("preview");
+const fotoSemCadastro = document.getElementById("fotoSemCadastro");
+const avatar = document.getElementById("perfil");
+
+let urlFotoTemporaria = null;
 
 async function carregarPerfil() {
-    console.log("Iniciando carregamento do perfil...");
-
     try {
         const resposta = await fetch(URL_PERFIL, {
             method: "GET",
@@ -27,11 +20,9 @@ async function carregarPerfil() {
             cache: "no-store"
         });
 
-        console.log("Status da requisição:", resposta.status);
+        const tipoConteudo = resposta.headers.get("content-type") || "";
 
-        const tipoConteudo = resposta.headers.get("content-type");
-
-        if (!tipoConteudo || !tipoConteudo.includes("application/json")) {
+        if (!tipoConteudo.includes("application/json")) {
             const texto = await resposta.text();
 
             throw new Error(
@@ -42,8 +33,6 @@ async function carregarPerfil() {
 
         const atleta = await resposta.json();
 
-        console.log("Dados recebidos do servidor:", atleta);
-
         if (!resposta.ok) {
             throw new Error(
                 atleta.mensagem || "Não foi possível carregar o perfil."
@@ -51,7 +40,7 @@ async function carregarPerfil() {
         }
 
         atualizarTexto("nomePerfil", atleta.nome, "Atleta");
-        atualizarTexto("nomeCabecalho", atleta.nome, "Atleta");
+        atualizarNomeCabecalho(atleta.nome);
 
         atualizarTexto(
             "posicao",
@@ -128,24 +117,21 @@ async function carregarPerfil() {
 
         atualizarAvatar(atleta.nome);
 
-        console.log("Perfil atualizado com sucesso.");
+        await carregarFotoSalva();
+
+        console.log("Perfil carregado com sucesso.");
 
     } catch (erro) {
         console.error("Erro ao carregar perfil:", erro);
 
-        atualizarTexto(
-            "nomePerfil",
-            "Erro ao carregar perfil"
-        );
-
+        atualizarTexto("nomePerfil", "Erro ao carregar perfil");
+        atualizarNomeCabecalho("Erro ao carregar perfil");
         atualizarTexto(
             "bio",
             erro.message,
             "Não foi possível carregar os dados."
         );
     }
-
-    await carregarFotoSalva();
 }
 
 function atualizarTexto(id, valor, padrao = "Não informado") {
@@ -156,12 +142,30 @@ function atualizarTexto(id, valor, padrao = "Não informado") {
         return;
     }
 
-    const texto =
-        valor === null || valor === undefined
-            ? ""
-            : String(valor).trim();
+    const texto = valor === null || valor === undefined
+        ? ""
+        : String(valor).trim();
 
     elemento.textContent = texto || padrao;
+}
+
+function atualizarNomeCabecalho(nome) {
+    const elemento = document.getElementById("nomeCabecalho");
+
+    if (!elemento) {
+        return;
+    }
+
+    const texto = String(nome || "").trim() || "Atleta";
+
+    if (elemento.firstChild && elemento.firstChild.nodeType === Node.TEXT_NODE) {
+        elemento.firstChild.nodeValue = texto + "\n";
+    } else {
+        elemento.insertBefore(
+            document.createTextNode(texto + "\n"),
+            elemento.firstChild
+        );
+    }
 }
 
 function formatarMedida(valor, unidade) {
@@ -198,10 +202,7 @@ function formatarNivel(valor) {
 }
 
 function atualizarAvatar(nome) {
-    const avatar = document.getElementById("perfil");
-
     if (!avatar) {
-        console.warn("Elemento do avatar não encontrado.");
         return;
     }
 
@@ -214,114 +215,15 @@ function atualizarAvatar(nome) {
         .slice(0, 2)
         .map(parte => parte.charAt(0).toUpperCase())
         .join("") || "AT";
-}
 
-function mostrarFoto(origem) {
-    if (!preview || !textoUpload || !btnMudarFoto) {
-        return;
-    }
-
-    if (origem) {
-        preview.src = origem;
-        preview.hidden = false;
-        textoUpload.hidden = true;
-        btnMudarFoto.hidden = false;
-    } else {
-        preview.removeAttribute("src");
-        preview.hidden = true;
-        textoUpload.hidden = false;
-        btnMudarFoto.hidden = true;
-    }
-}
-
-function mostrarMensagem(mensagem) {
-    if (mensagemFoto) {
-        mensagemFoto.textContent = mensagem;
-    }
-}
-
-function validarArquivo(arquivo) {
-    const tiposPermitidos = ["image/png", "image/jpeg"];
-
-    if (!tiposPermitidos.includes(arquivo.type)) {
-        mostrarMensagem("Selecione uma imagem PNG ou JPG.");
-        return false;
-    }
-
-    if (arquivo.size > TAMANHO_MAXIMO) {
-        mostrarMensagem("A imagem deve ter no máximo 5 MB.");
-        return false;
-    }
-
-    if (arquivo.size === 0) {
-        mostrarMensagem("O arquivo selecionado está vazio.");
-        return false;
-    }
-
-    return true;
-}
-
-async function enviarFoto(arquivo) {
-    const formulario = new FormData();
-    formulario.append("foto", arquivo);
-
-    try {
-        mostrarMensagem("Salvando foto...");
-
-        if (btnMudarFoto) {
-            btnMudarFoto.disabled = true;
-        }
-
-        const resposta = await fetch(URL_FOTO, {
-            method: "POST",
-            body: formulario,
-            credentials: "same-origin",
-            cache: "no-store"
-        });
-
-        if (!resposta.ok) {
-            if (resposta.status === 401) {
-                throw new Error(
-                    "Sua sessão expirou ou o ID do atleta não foi encontrado na sessão."
-                );
-            }
-
-            if (resposta.status === 413) {
-                throw new Error("A imagem excede o tamanho permitido pelo servidor.");
-            }
-
-            const detalhe = await resposta.text();
-
-            throw new Error(
-                detalhe || `Falha ao salvar a foto. HTTP ${resposta.status}.`
-            );
-        }
-
-        mostrarMensagem("Foto salva com sucesso!");
-
-        fotoTemporaria = null;
-
-        await carregarFotoSalva();
-
-    } catch (erro) {
-        console.error("Erro ao enviar foto:", erro);
-
-        mostrarMensagem(erro.message || "Não foi possível salvar a foto.");
-
-    } finally {
-        if (btnMudarFoto) {
-            btnMudarFoto.disabled = false;
-        }
-
-        if (inputFoto) {
-            inputFoto.value = "";
-        }
-    }
+    avatar.style.backgroundImage = "";
+    avatar.style.backgroundSize = "";
+    avatar.style.backgroundPosition = "";
+    avatar.style.backgroundRepeat = "";
+    avatar.style.color = "";
 }
 
 async function carregarFotoSalva() {
-    const chamadaAtual = ++carregamentoFoto;
-
     try {
         const resposta = await fetch(URL_FOTO, {
             method: "GET",
@@ -329,22 +231,12 @@ async function carregarFotoSalva() {
             cache: "no-store"
         });
 
-        if (chamadaAtual !== carregamentoFoto) {
-            return;
-        }
-
         if (resposta.status === 404) {
-            fotoTemporaria = null;
-            mostrarFoto("");
+            mostrarFotoIndisponivel();
             return;
         }
 
         if (!resposta.ok) {
-            if (resposta.status === 401) {
-                console.warn("Sessão não autenticada para carregar a foto.");
-                return;
-            }
-
             throw new Error(
                 `Não foi possível carregar a foto. HTTP ${resposta.status}.`
             );
@@ -358,67 +250,50 @@ async function carregarFotoSalva() {
 
         const imagem = await resposta.blob();
 
-        if (chamadaAtual !== carregamentoFoto) {
-            return;
+        if (urlFotoTemporaria) {
+            URL.revokeObjectURL(urlFotoTemporaria);
         }
 
-        if (fotoTemporaria) {
-            return;
+        urlFotoTemporaria = URL.createObjectURL(imagem);
+
+        preview.src = urlFotoTemporaria;
+        preview.hidden = false;
+
+        if (fotoSemCadastro) {
+            fotoSemCadastro.hidden = true;
         }
 
-        const urlNova = URL.createObjectURL(imagem);
-        const urlAnterior = preview?.dataset.urlTemporaria;
-
-        if (preview) {
-            preview.dataset.urlTemporaria = urlNova;
-        }
-
-        mostrarFoto(urlNova);
-
-        if (urlAnterior) {
-            URL.revokeObjectURL(urlAnterior);
+        if (avatar) {
+            avatar.style.backgroundImage = `url("${urlFotoTemporaria}")`;
+            avatar.style.backgroundSize = "cover";
+            avatar.style.backgroundPosition = "center";
+            avatar.style.backgroundRepeat = "no-repeat";
+            avatar.style.color = "transparent";
         }
 
     } catch (erro) {
         console.error("Erro ao carregar foto salva:", erro);
+        mostrarFotoIndisponivel();
     }
 }
 
-if (btnMudarFoto && inputFoto) {
-    btnMudarFoto.addEventListener("click", () => {
-        inputFoto.click();
-    });
-}
+function mostrarFotoIndisponivel() {
+    if (preview) {
+        preview.removeAttribute("src");
+        preview.hidden = true;
+    }
 
-if (inputFoto) {
-    inputFoto.addEventListener("change", async function () {
-        const arquivo = this.files[0];
+    if (fotoSemCadastro) {
+        fotoSemCadastro.hidden = false;
+    }
 
-        if (!arquivo) {
-            return;
-        }
-
-        if (!validarArquivo(arquivo)) {
-            this.value = "";
-            return;
-        }
-
-        const leitor = new FileReader();
-
-        leitor.onload = async function (evento) {
-            fotoTemporaria = evento.target.result;
-
-            mostrarFoto(fotoTemporaria);
-
-            await enviarFoto(arquivo);
-        };
-
-        leitor.onerror = function () {
-            mostrarMensagem("Não foi possível ler a imagem selecionada.");
-        };
-
-        leitor.readAsDataURL(arquivo);
-    });
+    if (avatar) {
+        avatar.style.backgroundImage = "";
+        avatar.style.backgroundSize = "";
+        avatar.style.backgroundPosition = "";
+        avatar.style.backgroundRepeat = "";
+        avatar.style.color = "";
+    }
 }
 
 carregarPerfil();
