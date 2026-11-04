@@ -1,4 +1,5 @@
 controller\perfilAtletaController.class
+controller\eventoController.class
 models\loginModel.class
 connection\ConnectionFactory.class
 service\SporTicketsService.class

@@ -217,4 +217,48 @@ public class atletaDAO {
             return false;
         }
     }
+    
+     public String buscarCidade(String email) {
+
+    String sql = "SELECT cidade FROM Atletas WHERE email = ?";
+
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, email);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getString("cidade");
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return null;
+}
+
+public String buscarEstado(String email) {
+
+    String sql = "SELECT estado FROM Atletas WHERE email = ?";
+
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, email);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getString("estado");
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return null;
+}
 }

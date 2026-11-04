@@ -1,10 +1,10 @@
-
 package service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import dao.atletaDAO;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -20,8 +20,8 @@ import models.eventoModel;
 
 public class SporTicketsService {
 
-    private static final String BASE_URL =
-            "https://api.sportickets.com.br/public/v1/events";
+    private static final String BASE_URL
+            = "https://api.sportickets.com.br/public/v1/events";
 
     private static final Set<String> MODALIDADES = Set.of(
             "FUTEBOL",
@@ -37,8 +37,22 @@ public class SporTicketsService {
                 .build();
     }
 
-    public List<eventoModel> buscarEventos(String cidade, String estado)
-            throws Exception {
+    public List<eventoModel> buscarEventos(String email) throws Exception {
+
+    atletaDAO atletaDAO = new atletaDAO();
+
+    String cidade = atletaDAO.buscarCidade(email);
+    String estado = atletaDAO.buscarEstado(email);
+    
+    System.out.println("cidade: " + cidade);
+    System.out.println("estado: " + estado);
+
+    if (cidade == null || estado == null) {
+        throw new IllegalStateException(
+                "Não foi possível localizar a cidade e o estado do atleta."
+        );
+    }
+
 
         String token = "stk_live_9Gu6zE4SnbI3MoLEel9UYqnLg6z8XvrN1Iu130";
 
@@ -56,9 +70,9 @@ public class SporTicketsService {
                     + "?page_size=100"
                     + "&fields=id,name,detail,start_date,status,image,url,address,host,sport"
                     + (cursor != null
-                        ? "&cursor=" + URLEncoder.encode(
-                                cursor, StandardCharsets.UTF_8)
-                        : "");
+                            ? "&cursor=" + URLEncoder.encode(
+                                    cursor, StandardCharsets.UTF_8)
+                            : "");
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
