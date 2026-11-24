@@ -18,15 +18,22 @@ from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+from pathlib import Path
 
 
 load_dotenv()
 
 # logica do contexto do RAG
-def carregar_pdf(): # ler o pdf e extrair o texto do pdf
-    pdf_loader = PyPDFLoader("manual_clube_flow.pdf")
-    texto = pdf_loader.load()
-    return texto
+from pathlib import Path
+
+def carregar_pdf():
+    caminho_pdf = Path(__file__).parent / "manual_clube_flow.pdf"
+
+    pdf_loader = PyPDFLoader(str(caminho_pdf))
+
+    documentos = pdf_loader.load()
+
+    return documentos
 
 texto_pdf = carregar_pdf()
 
@@ -55,21 +62,37 @@ banco_vetores = criar_banco_vetores(lista_blocos)
 def criar_chain_agente(banco_vetores):
 
     prompt_template = ChatPromptTemplate.from_template(
-        """Você é o assistente virtual de suporte do Club Flow, uma plataforma voltada para atletas e clubes de futebol.
+       """ Você é o assistente virtual oficial de suporte do Club Flow.
 
-Sua função é ajudar os usuários a entenderem e utilizarem as funcionalidades da plataforma, esclarecendo dúvidas sobre cadastro, perfil, desempenho, agenda, gamificação, oportunidades, rede social e demais recursos disponíveis.
+SOBRE A PLATAFORMA:
+O Club Flow é uma plataforma voltada para conectar atletas e clubes de futebol,
+oferecendo ferramentas para gerenciamento de perfis esportivos, acompanhamento
+de desempenho e acesso a oportunidades no futebol.
 
-Use APENAS as informações presentes no contexto fornecido para elaborar suas respostas. Não invente funcionalidades, procedimentos ou informações que não estejam documentados.
+SUA FUNÇÃO:
+Ajudar atletas e clubes a compreenderem e utilizarem as funcionalidades
+do Club Flow.
 
-Se não encontrar informações suficientes no contexto para responder, informe claramente que não sabe a resposta e oriente o usuário a entrar em contato com o suporte do Club Flow.
+REGRAS OBRIGATÓRIAS:
+1. Utilize exclusivamente as informações presentes no CONTEXTO fornecido.
+2. Considere que o Club Flow é uma plataforma própria e não confunda seu nome
+   com outros produtos, empresas ou serviços.
+3. Nunca pesquise, suponha ou invente funcionalidades.
+4. Se a informação solicitada não estiver no contexto, informe educadamente
+   que não encontrou essa informação na sua base de conhecimento.
+5. Não apresente pensamentos, raciocínios internos ou etapas de análise.
+6. Não mencione informações sobre outras plataformas chamadas Flow.
+7. Responda diretamente à pergunta do usuário.
+8. Utilize português do Brasil, com linguagem clara, educada e objetiva.
 
-Responda sempre em português do Brasil, utilizando uma linguagem clara, objetiva, educada e acessível. Adapte suas explicações para que atletas e clubes consigam compreender facilmente as orientações.
+CONTEXTO:
+{context}
 
-    Contexto: {context}
+PERGUNTA DO USUÁRIO:
+{question}
 
-    A pergunta: {question}
-
-    Resposta:""")
+RESPOSTA:
+""")
 
     buscador_contexto = banco_vetores.as_retriever()
 
@@ -102,7 +125,7 @@ for msg in st.session_state["messages"]:
     with st.chat_message(msg["role"]):
         st.write(msg["content"])
 
-prompt = st.chat_input("Pergunte sobre as políticas da empresa...")
+prompt = st.chat_input("Pergunte suas dúvidas sobre o Clube Flow...")
 if prompt :
     st.session_state["messages"].append({"role": "user", "content": prompt})
     with st.chat_message("user"):
