@@ -12,8 +12,11 @@ from pathlib import Path
 
 load_dotenv()
 
-app = FastAPI(title="API de Suporte Club Flow")
-
+app = FastAPI(
+    title="Club Flow - IA de Suporte",
+    description="API de suporte inteligente do Club Flow",
+    version="1.0.0"
+)
 
 class Pergunta(BaseModel):
     mensagem: str
