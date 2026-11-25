@@ -1,4 +1,5 @@
 
+
 const API_ANALISE = `${window.location.origin}/ProjetoClubeFlow/api/desempenho`;
 
 const inputDocumento = document.getElementById("documentoDesempenho");
@@ -88,27 +89,16 @@ function selecionarArquivo(arquivo) {
 
     limparStatus();
 
-    const extensao = arquivo.name
-        .split(".")
-        .pop()
-        .toLowerCase();
+    const extensao = arquivo.name.split(".").pop().toLowerCase();
 
     if (extensao !== "pdf" || arquivo.type !== "application/pdf") {
-        mostrarStatus(
-            "Selecione um documento PDF válido.",
-            "error"
-        );
-
+        mostrarStatus("Selecione um documento PDF válido.", "error");
         inputDocumento.value = "";
         return;
     }
 
     if (arquivo.size > 10 * 1024 * 1024) {
-        mostrarStatus(
-            "O arquivo ultrapassa o limite de 10 MB.",
-            "error"
-        );
-
+        mostrarStatus("O arquivo ultrapassa o limite de 10 MB.", "error");
         inputDocumento.value = "";
         return;
     }
@@ -119,7 +109,6 @@ function selecionarArquivo(arquivo) {
     tamanhoArquivo.textContent = formatarTamanho(arquivo.size);
 
     arquivoSelecionado.classList.remove("hidden");
-
     btnAnalisar.disabled = false;
 
     resultadoAnalise.classList.add("hidden");
@@ -128,20 +117,14 @@ function selecionarArquivo(arquivo) {
 
 function removerArquivo() {
     arquivoAtual = null;
-
     inputDocumento.value = "";
-
     arquivoSelecionado.classList.add("hidden");
-
     btnAnalisar.disabled = true;
-
     limparStatus();
 }
 
 inputDocumento.addEventListener("change", () => {
-    const arquivo = inputDocumento.files[0];
-
-    selecionarArquivo(arquivo);
+    selecionarArquivo(inputDocumento.files[0]);
 });
 
 btnRemover.addEventListener("click", removerArquivo);
@@ -169,9 +152,8 @@ function atualizarNotaAtributo(chave, avaliacao) {
         return;
     }
 
-    const notaEscala10 = Math.max(0, Math.min(10, nota));
-
-    const notaEscala100 = notaEscala10 * 10;
+    const notaLimitada = Math.max(0, Math.min(10, nota));
+    const notaEscala100 = notaLimitada * 10;
 
     const elementoNota = document.getElementById(atributo.idNota);
     const elementoBarra = document.getElementById(atributo.idBarra);
@@ -185,8 +167,12 @@ function atualizarNotaAtributo(chave, avaliacao) {
     }
 }
 
-function renderizarAtributos(avaliacao) {
+function renderizarAtributos(avaliacao = {}) {
     const lista = document.getElementById("listaAtributos");
+
+    if (!lista) {
+        return;
+    }
 
     lista.innerHTML = "";
 
@@ -197,7 +183,9 @@ function renderizarAtributos(avaliacao) {
             return;
         }
 
-        const nota = Number(dados.nota);
+        const nota = Number(
+            typeof dados === "object" ? dados.nota : dados
+        );
 
         if (!Number.isFinite(nota)) {
             return;
@@ -233,7 +221,7 @@ function renderizarAtributos(avaliacao) {
         const justificativa = document.createElement("p");
         justificativa.className = "attribute-justification";
         justificativa.textContent =
-            dados.justificativa || "Não foi fornecida uma justificativa.";
+            dados.justificativa || "Justificativa não disponível.";
 
         item.appendChild(topo);
         item.appendChild(progress);
@@ -248,18 +236,17 @@ function renderizarAtributos(avaliacao) {
 function renderizarRecomendacoes(recomendacoes) {
     const lista = document.getElementById("listaRecomendacoes");
 
+    if (!lista) {
+        return;
+    }
+
     lista.innerHTML = "";
 
     if (!Array.isArray(recomendacoes) || recomendacoes.length === 0) {
         const mensagem = document.createElement("p");
-
-        mensagem.textContent =
-            "Não foram geradas recomendações para este relatório.";
-
+        mensagem.textContent = "Não foram geradas recomendações para este relatório.";
         mensagem.className = "attribute-justification";
-
         lista.appendChild(mensagem);
-
         return;
     }
 
@@ -276,7 +263,7 @@ function renderizarRecomendacoes(recomendacoes) {
 
         const titulo = document.createElement("strong");
         titulo.textContent = formatarAtributo(
-            recomendacao.atributo
+            recomendacao.atributo || recomendacao.categoria
         );
 
         topo.appendChild(numero);
@@ -285,6 +272,7 @@ function renderizarRecomendacoes(recomendacoes) {
         const texto = document.createElement("p");
         texto.textContent =
             recomendacao.recomendacao ||
+            recomendacao.sugestao ||
             "Recomendação não informada.";
 
         const objetivo = document.createElement("p");
@@ -316,9 +304,11 @@ function formatarAtributo(valor) {
     const nomes = {
         velocidade: "Velocidade",
         finalizacao: "Finalização",
+        finalização: "Finalização",
         drible: "Drible",
         passe: "Passe",
-        resistencia: "Resistência"
+        resistencia: "Resistência",
+        resistência: "Resistência"
     };
 
     const chave = valor.toLowerCase();
@@ -326,29 +316,27 @@ function formatarAtributo(valor) {
     return nomes[chave] || valor;
 }
 
-function renderizarDadosAtleta(atleta) {
-    if (!atleta) {
-        return;
-    }
+function renderizarDadosAtleta(atleta = {}) {
+    const campos = {
+        resultadoAtleta: atleta.nome,
+        resultadoClube: atleta.clube,
+        resultadoCategoria: atleta.categoria,
+        resultadoPosicao: atleta.posicao
+    };
 
-    document.getElementById("resultadoAtleta").textContent =
-        atleta.nome || "--";
+    Object.entries(campos).forEach(([id, valor]) => {
+        const elemento = document.getElementById(id);
 
-    document.getElementById("resultadoClube").textContent =
-        atleta.clube || "--";
-
-    document.getElementById("resultadoCategoria").textContent =
-        atleta.categoria || "--";
-
-    document.getElementById("resultadoPosicao").textContent =
-        atleta.posicao || "--";
+        if (elemento) {
+            elemento.textContent = valor || "--";
+        }
+    });
 }
 
-function renderizarPeriodo(periodo) {
+function renderizarPeriodo(periodo = {}) {
     const elemento = document.getElementById("resultadoPeriodo");
 
-    if (!periodo) {
-        elemento.textContent = "--";
+    if (!elemento) {
         return;
     }
 
@@ -364,67 +352,153 @@ function renderizarPeriodo(periodo) {
     }
 }
 
-function renderizarEstatisticas(estatisticas) {
-    if (!estatisticas) {
-        return;
-    }
-
+function renderizarEstatisticas(estatisticas = {}) {
     atualizarIndicador("jogos", estatisticas.jogos);
     atualizarIndicador("gols", estatisticas.gols);
     atualizarIndicador("assistencias", estatisticas.assistencias);
-    atualizarIndicador(
-        "totalFinalizacoes",
-        estatisticas.finalizacoes
-    );
-
-    atualizarIndicador(
-        "minutos",
-        estatisticas.minutos_jogados
-    );
+    atualizarIndicador("totalFinalizacoes", estatisticas.finalizacoes);
+    atualizarIndicador("minutos", estatisticas.minutos_jogados);
 }
 
 function renderizarResultado(resposta) {
-    const dados = resposta.dados;
-
-    if (!dados) {
-        throw new Error(
-            "A API não retornou os dados da análise."
-        );
-    }
+    const dados = resposta.dados || resposta;
 
     const atleta = dados.atleta || {};
     const periodo = dados.periodo || {};
     const estatisticas = dados.estatisticas || {};
-    const avaliacao = dados.avaliacao_ia || {};
+
+    const avaliacao =
+        dados.avaliacao_ia ||
+        dados.avaliacoes_ia ||
+        dados.avaliacoes ||
+        {};
+
+    const recomendacoes =
+        avaliacao.recomendacoes ||
+        dados.sugestoes ||
+        dados.recomendacoes ||
+        [];
 
     renderizarDadosAtleta(atleta);
     renderizarPeriodo(periodo);
     renderizarEstatisticas(estatisticas);
 
-    const notaMedia = Number(avaliacao.nota_media);
+    const notaMedia = Number(
+        avaliacao.nota_media ??
+        avaliacao.nota_geral ??
+        dados.nota_media
+    );
 
     if (Number.isFinite(notaMedia)) {
-        document.getElementById("notaMedia").textContent =
-            formatarNumero(notaMedia, 2);
+        const nota = formatarNumero(notaMedia, 2);
 
-        document.getElementById("notaMediaResultado").textContent =
-            formatarNumero(notaMedia, 2);
+        const notaMediaElemento = document.getElementById("notaMedia");
+        const notaResultadoElemento = document.getElementById("notaMediaResultado");
+
+        if (notaMediaElemento) {
+            notaMediaElemento.textContent = nota;
+        }
+
+        if (notaResultadoElemento) {
+            notaResultadoElemento.textContent = nota;
+        }
     }
 
     renderizarAtributos(avaliacao);
-    renderizarRecomendacoes(avaliacao.recomendacoes);
+    renderizarRecomendacoes(recomendacoes);
 
-    document.getElementById("metodologia").textContent =
-        avaliacao.metodologia ||
-        "A avaliação foi calculada a partir dos indicadores extraídos do relatório e dos critérios experimentais definidos pelo Club Flow.";
+    const metodologia = document.getElementById("metodologia");
+
+    if (metodologia) {
+        metodologia.textContent =
+            avaliacao.metodologia ||
+            dados.metodologia ||
+            "A avaliação foi calculada a partir dos indicadores extraídos do relatório e dos critérios experimentais definidos pelo Club Flow.";
+    }
 
     resultadoAnalise.classList.remove("hidden");
     atributosPadrao.classList.add("hidden");
+}
 
-    resultadoAnalise.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+async function carregarAnaliseSalva() {
+    try {
+        mostrarStatus("Carregando seu desempenho salvo...", "info");
+
+        const respostaHTTP = await fetch(API_ANALISE, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            },
+            credentials: "same-origin"
+        });
+
+        if (respostaHTTP.status === 404) {
+            resultadoAnalise.classList.add("hidden");
+            atributosPadrao.classList.remove("hidden");
+            limparStatus();
+            return;
+        }
+
+        if (respostaHTTP.status === 204) {
+            resultadoAnalise.classList.add("hidden");
+            atributosPadrao.classList.remove("hidden");
+            limparStatus();
+            return;
+        }
+
+        let resposta;
+
+        try {
+            resposta = await respostaHTTP.json();
+        } catch {
+            throw new Error("O servidor retornou uma resposta inválida.");
+        }
+
+        if (!respostaHTTP.ok) {
+            throw new Error(
+                resposta.mensagem ||
+                resposta.detail ||
+                `Erro HTTP ${respostaHTTP.status}`
+            );
+        }
+
+        if (resposta.sucesso === false) {
+            resultadoAnalise.classList.add("hidden");
+            atributosPadrao.classList.remove("hidden");
+
+            mostrarStatus(
+                resposta.mensagem || "Nenhuma análise salva foi encontrada.",
+                "info"
+            );
+
+            return;
+        }
+
+        if (!resposta.dados && !resposta.estatisticas) {
+            resultadoAnalise.classList.add("hidden");
+            atributosPadrao.classList.remove("hidden");
+            limparStatus();
+            return;
+        }
+
+        renderizarResultado(resposta);
+
+        mostrarStatus(
+            "Última análise carregada do banco de dados.",
+            "success"
+        );
+
+    } catch (erro) {
+        console.error("Erro ao carregar análise salva:", erro);
+
+        resultadoAnalise.classList.add("hidden");
+        atributosPadrao.classList.remove("hidden");
+
+        mostrarStatus(
+            "Não foi possível carregar os dados salvos. " + erro.message,
+            "error"
+        );
+    }
 }
 
 async function analisarDocumento() {
@@ -433,12 +507,10 @@ async function analisarDocumento() {
             "Selecione um documento antes de iniciar a análise.",
             "error"
         );
-
         return;
     }
 
     const formData = new FormData();
-
     formData.append("arquivo", arquivoAtual);
 
     btnAnalisar.disabled = true;
@@ -453,7 +525,8 @@ async function analisarDocumento() {
     try {
         const respostaHTTP = await fetch(API_ANALISE, {
             method: "POST",
-            body: formData
+            body: formData,
+            credentials: "same-origin"
         });
 
         let resposta;
@@ -461,9 +534,7 @@ async function analisarDocumento() {
         try {
             resposta = await respostaHTTP.json();
         } catch {
-            throw new Error(
-                "A API retornou uma resposta que não é JSON válido."
-            );
+            throw new Error("A API retornou uma resposta que não é JSON válido.");
         }
 
         if (!respostaHTTP.ok) {
@@ -477,8 +548,7 @@ async function analisarDocumento() {
         if (!resposta.sucesso) {
             if (resposta.necessita_ocr) {
                 throw new Error(
-                    "Não foi possível extrair texto suficiente do PDF. " +
-                    "O documento pode ser escaneado e precisar de OCR."
+                    "Não foi possível extrair texto suficiente do PDF. O documento pode ser escaneado e precisar de OCR."
                 );
             }
 
@@ -491,26 +561,14 @@ async function analisarDocumento() {
         renderizarResultado(resposta);
 
         mostrarStatus(
-            "Documento analisado com sucesso! Os resultados foram atualizados.",
+            "Documento analisado e salvo com sucesso! Os resultados foram atualizados.",
             "success"
         );
 
     } catch (erro) {
         console.error("Erro na análise:", erro);
 
-        let mensagem = erro.message;
-
-        if (
-            erro instanceof TypeError &&
-            erro.message.toLowerCase().includes("fetch")
-        ) {
-            mensagem =
-                "Não foi possível conectar à IA. " +
-                "Verifique se a API Python está rodando na porta 8001 " +
-                "e se o CORS está configurado.";
-        }
-
-        mostrarStatus(mensagem, "error");
+        mostrarStatus(erro.message, "error");
 
     } finally {
         btnAnalisar.disabled = !arquivoAtual;
@@ -521,4 +579,4 @@ async function analisarDocumento() {
 
 btnAnalisar.addEventListener("click", analisarDocumento);
 
-
+document.addEventListener("DOMContentLoaded", carregarAnaliseSalva);
