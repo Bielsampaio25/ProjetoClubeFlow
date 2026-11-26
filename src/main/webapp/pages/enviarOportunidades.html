@@ -1,0 +1,502 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Enviar Oportunidades · Club Flow</title>
+
+        <link rel="stylesheet" href="../css/reset.css">
+        <link rel="stylesheet" href="../css/colors.css">
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/enviarOportunidades.css">
+
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div class="app">
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="brand">
+                    <span class="brand-icon"></span>
+                    <span>CLUB <em>FLOW</em></span>
+                </div>
+
+                <div class="area-box">ÁREA DO <b>CLUBE</b></div>
+                <p class="menu-title">MENU PRINCIPAL</p>
+
+                <nav class="menu">
+                    <a href="dashboard-clube.html"><span>⌂</span>Painel</a>
+                    <a href="ranking.html"><span>★</span>Ranking</a>
+                    <a href="banco-talentos.html"><span>⌕</span>Banco de talentos</a>
+                    <a href="enviarOportunidades.html"><span>✉</span>Enviar oportunidades</a>
+                    <a href="rede-social-clube.html"><span>◌</span>Rede social</a>
+                    <a href="perfil-clube.html"><span>◉</span>Perfil do clube</a>
+                </nav>
+
+                <div class="side-actions">
+                    <a href="configuracoes-clube.html">⚙ Configurações</a>
+                    <a href="sair.html">↪ Sair</a>
+                </div>
+
+                <a class="help-box" href="suporte.html">
+                    <b>Precisa de ajuda?</b>
+                    Fale com o suporte
+                </a>
+            </aside>
+
+            <!-- Conteúdo principal -->
+            <main class="main-content">
+
+                <!-- Cabeçalho -->
+                <header class="topbar">
+                    <div class="breadcrumb">
+                        CLUB FLOW / <b>CLUBE</b>
+                    </div>
+
+                    <div class="account">
+                        <span>
+                            <strong id="nomeClubeAccount">Clube</strong>
+                            <small style="display: block; color: var(--text-muted);">
+                                Gestão do clube
+                            </small>
+                        </span>
+
+                        <span class="avatar" id="avatarClube">
+                            <span class="material-symbols-outlined">shield</span>
+                        </span>
+                    </div>
+                </header>
+
+                <!-- Página -->
+                <section class="page-content">
+
+                    <div class="page-introduction">
+
+                        <div>
+                            <span class="section-label">RECRUTAMENTO</span>
+
+                            <h2>Encontre talentos para o seu clube</h2>
+
+                            <p>
+                                Explore os perfis dos atletas cadastrados no Club Flow
+                                e envie convites para avaliações, seletivas e oportunidades.
+                            </p>
+                        </div>
+
+                        <div class="introduction-icon">
+                            <span class="material-symbols-outlined">person_search</span>
+                        </div>
+
+                    </div>
+
+                    <!-- Busca -->
+                    <section class="search-section">
+
+                        <div class="search-container">
+
+                            <span class="material-symbols-outlined search-icon">
+                                search
+                            </span>
+
+                            <input
+                                type="search"
+                                id="campoBuscaAtleta"
+                                placeholder="Buscar atleta pelo nome..."
+                                autocomplete="off"
+                                >
+
+                            <button id="btnBuscarAtleta">
+                                Buscar
+                            </button>
+
+                        </div>
+
+                        <div class="filters-container">
+
+                            <div class="filter-group">
+
+                                <label for="filtroPosicao">Posição</label>
+
+                                <select id="filtroPosicao">
+                                    <option value="">Todas as posições</option>
+                                    <option value="GOLEIRO">Goleiro</option>
+                                    <option value="ZAGUEIRO">Zagueiro</option>
+                                    <option value="LATERAL">Lateral</option>
+                                    <option value="VOLANTE">Volante</option>
+                                    <option value="MEIO-CAMPO">Meio-campo</option>
+                                    <option value="MEIA">Meia</option>
+                                    <option value="PONTA">Ponta</option>
+                                    <option value="ATACANTE">Atacante</option>
+                                </select>
+
+                            </div>
+
+                            <div class="filter-group">
+
+                                <label for="filtroCategoria">Categoria</label>
+
+                                <select id="filtroCategoria">
+                                    <option value="">Todas as categorias</option>
+                                    <option value="SUB-15">Sub-15</option>
+                                    <option value="SUB-17">Sub-17</option>
+                                    <option value="SUB-20">Sub-20</option>
+                                    <option value="SUB-23">Sub-23</option>
+                                    <option value="PROFISSIONAL">Profissional</option>
+                                </select>
+
+                            </div>
+
+                            <div class="filter-group">
+
+                                <label for="filtroEstado">Estado</label>
+
+                                <select id="filtroEstado">
+                                    <option value="">Todos os estados</option>
+                                    <option value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                </select>
+
+                            </div>
+
+                            <div class="filter-group">
+
+                                <label for="filtroCidade">Cidade</label>
+
+                                <input
+                                    type="text"
+                                    id="filtroCidade"
+                                    placeholder="Digite a cidade"
+                                    >
+
+                            </div>
+
+                            <button id="btnLimparFiltros" class="btn-limpar">
+                                <span class="material-symbols-outlined">filter_alt_off</span>
+                                Limpar filtros
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                    <!-- Resultado da busca -->
+                    <section class="athletes-section">
+
+                        <div class="section-heading">
+
+                            <div>
+                                <h2>Atletas disponíveis</h2>
+
+                                <p id="textoQuantidadeAtletas">
+                                    Atletas encontrados na plataforma
+                                </p>
+                            </div>
+
+                            <div class="results-indicator">
+                                <span class="material-symbols-outlined">groups</span>
+                                <span id="quantidadeAtletas">0 atletas</span>
+                            </div>
+
+                        </div>
+
+                        <div id="atletasCarregando" class="loading-container">
+                            <div class="loading-spinner"></div>
+                            <p>Buscando atletas...</p>
+                        </div>
+
+                        <div id="atletasErro" class="error-container" hidden>
+
+                            <span class="material-symbols-outlined">error</span>
+
+                            <p>Não foi possível carregar os atletas.</p>
+
+                            <button id="btnTentarNovamente">
+                                Tentar novamente
+                            </button>
+
+                        </div>
+
+                        <div id="atletasVazios" class="empty-container" hidden>
+
+                            <span class="material-symbols-outlined">person_search</span>
+
+                            <h3>Nenhum atleta encontrado</h3>
+
+                            <p>
+                                Tente alterar os filtros ou buscar por outro nome.
+                            </p>
+
+                        </div>
+
+                        <div id="listaAtletas" class="athletes-grid"></div>
+
+                    </section>
+
+                </section>
+
+            </main>
+
+        </div>
+
+        <!-- Modal de envio de oportunidade -->
+        <div class="modal-overlay" id="modalOportunidade" hidden>
+
+            <div class="modal-container">
+
+                <div class="modal-header">
+
+                    <div>
+                        <span class="section-label">NOVO CONVITE</span>
+                        <h2>Enviar oportunidade</h2>
+                    </div>
+
+                    <button class="modal-close" id="btnFecharModal" aria-label="Fechar">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+
+                </div>
+
+                <div class="selected-athlete" id="atletaSelecionado">
+
+                    <div class="selected-athlete-avatar">
+                        <span class="material-symbols-outlined">person</span>
+                    </div>
+
+                    <div>
+                        <span>Convite destinado a</span>
+                        <strong id="nomeAtletaSelecionado">Atleta</strong>
+                    </div>
+
+                </div>
+
+                <form id="formOportunidade">
+
+                    <input type="hidden" id="idAtletaSelecionado" name="atletaDestinatarioId">
+
+                    <div class="form-group">
+
+                        <label for="tituloOportunidade">
+                            Título da oportunidade *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="tituloOportunidade"
+                            name="titulo"
+                            placeholder="Ex.: Convite para avaliação Sub-20"
+                            maxlength="150"
+                            required
+                            >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="descricaoOportunidade">
+                            Descrição *
+                        </label>
+
+                        <textarea
+                            id="descricaoOportunidade"
+                            name="descricao"
+                            placeholder="Descreva a oportunidade e o que o atleta precisa saber..."
+                            rows="4"
+                            required
+                            ></textarea>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="objetivoOportunidade">
+                            Objetivo da oportunidade
+                        </label>
+
+                        <textarea
+                            id="objetivoOportunidade"
+                            name="objetivo"
+                            placeholder="Ex.: Avaliação técnica para integrar a equipe..."
+                            rows="3"
+                            ></textarea>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="posicoesOportunidade">
+                            Posições procuradas
+                        </label>
+
+                        <input
+                            type="text"
+                            id="posicoesOportunidade"
+                            name="posicoesProcuradas"
+                            placeholder="Ex.: Atacante, Ponta"
+                            >
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="idadeMinima">
+                                Idade mínima
+                            </label>
+
+                            <input
+                                type="number"
+                                id="idadeMinima"
+                                name="idadeMinima"
+                                min="0"
+                                max="100"
+                                placeholder="Ex.: 16"
+                                >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="idadeMaxima">
+                                Idade máxima
+                            </label>
+
+                            <input
+                                type="number"
+                                id="idadeMaxima"
+                                name="idadeMaxima"
+                                min="0"
+                                max="100"
+                                placeholder="Ex.: 20"
+                                >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="localOportunidade">
+                            Local de realização *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="localOportunidade"
+                            name="localRealizacao"
+                            placeholder="Cidade, estado ou endereço"
+                            required
+                            >
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="prazoInscricao">
+                                Prazo para resposta/inscrição
+                            </label>
+
+                            <input
+                                type="date"
+                                id="prazoInscricao"
+                                name="prazoInscricao"
+                                >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="dataAvaliacao">
+                                Data da avaliação
+                            </label>
+
+                            <input
+                                type="datetime-local"
+                                id="dataAvaliacao"
+                                name="dataHoraAvaliacao"
+                                >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="requisitosOportunidade">
+                            Requisitos
+                        </label>
+
+                        <textarea
+                            id="requisitosOportunidade"
+                            name="requisitos"
+                            placeholder="Ex.: Levar chuteira, documento e roupa de treino..."
+                            rows="3"
+                            ></textarea>
+
+                    </div>
+
+                    <div class="modal-actions">
+
+                        <button type="button" class="btn-cancelar" id="btnCancelarOportunidade">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="btn-enviar" id="btnEnviarOportunidade">
+                            <span class="material-symbols-outlined">send</span>
+                            Enviar convite
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <!-- Notificação -->
+        <div class="toast" id="toast" hidden>
+            <span class="material-symbols-outlined" id="toastIcone">check_circle</span>
+            <span id="toastMensagem"></span>
+        </div>
+
+        <script src="../js/account-clube.js"></script>
+        <script src="../js/enviarOportunidades.js"></script>
+
+    </body>
+
+</html>
+

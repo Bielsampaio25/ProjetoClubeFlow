@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
 
-    public static final String URL = "jdbc:mysql://localhost:3306/ClubeFlow";
+    public static final String URL = "jdbc:mysql://localhost:3309/ClubeFlow";
     public static final String USER = "root";
-    public static final String PASSWORD = "25042007";
+    public static final String PASSWORD = "cimatec";
 
     private static Connection conn;
 
