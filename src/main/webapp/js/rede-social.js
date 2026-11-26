@@ -43,17 +43,80 @@ async function requisicao(url, opcoes = {}) {
     return dados;
 }
 
-function dataUrl(bytes, mime) {
-    if (!bytes) return "";
+function identificarMime(bytes) {
+    if (
+        bytes.length >= 8 &&
+        bytes[0] === 137 && bytes[1] === 80 && bytes[2] === 78 &&
+        bytes[3] === 71 && bytes[4] === 13 && bytes[5] === 10 &&
+        bytes[6] === 26 && bytes[7] === 10
+    ) return "image/png";
 
-    const binario = atob(bytes);
-    const array = new Uint8Array(binario.length);
+    if (
+        bytes.length >= 3 &&
+        bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255
+    ) return "image/jpeg";
 
-    for (let i = 0; i < binario.length; i++) {
-        array[i] = binario.charCodeAt(i);
+    if (
+        bytes.length >= 12 &&
+        bytes[0] === 82 && bytes[1] === 73 && bytes[2] === 70 && bytes[3] === 70 &&
+        bytes[8] === 87 && bytes[9] === 69 && bytes[10] === 66 && bytes[11] === 80
+    ) return "image/webp";
+
+    if (
+        bytes.length >= 6 &&
+        (String.fromCharCode(...bytes.slice(0, 6)) === "GIF87a" ||
+         String.fromCharCode(...bytes.slice(0, 6)) === "GIF89a")
+    ) return "image/gif";
+
+    return "application/octet-stream";
+}
+
+
+function dataUrl(bytes, mime = "application/octet-stream") {
+    if (bytes == null || bytes === "") return "";
+
+    if (typeof bytes === "string") {
+        if (
+            bytes.startsWith("data:") ||
+            bytes.startsWith("http://") ||
+            bytes.startsWith("https://") ||
+            bytes.startsWith("/") ||
+            bytes.startsWith("../") ||
+            bytes.startsWith("../../")
+        ) return bytes;
+
+        try {
+            const binario = atob(bytes);
+            const array = new Uint8Array(binario.length);
+
+            for (let i = 0; i < binario.length; i++) {
+                array[i] = binario.charCodeAt(i);
+            }
+
+            const mimeDetectado = identificarMime(array);
+            const tipoFinal = mimeDetectado !== "application/octet-stream"
+                ? mimeDetectado
+                : mime;
+
+            return URL.createObjectURL(new Blob([array], { type: tipoFinal }));
+        } catch (erro) {
+            console.error("Erro ao converter mídia Base64:", erro);
+            return "";
+        }
     }
 
-    return URL.createObjectURL(new Blob([array], { type: mime }));
+    if (Array.isArray(bytes) || bytes instanceof Uint8Array) {
+        const array = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
+        const mimeDetectado = identificarMime(array);
+        const tipoFinal = mimeDetectado !== "application/octet-stream"
+            ? mimeDetectado
+            : mime;
+
+        return URL.createObjectURL(new Blob([array], { type: tipoFinal }));
+    }
+
+    console.error("Formato de mídia não reconhecido:", bytes);
+    return "";
 }
 
 function criarAvatar(foto, nome) {
@@ -137,8 +200,10 @@ function criarPost(post) {
 
     const identificacao = document.createElement("div");
 
-    const nome = document.createElement("strong");
+    const nome = document.createElement("a");
+    nome.className = "nome-atleta-link";
     nome.textContent = post.nome || "Atleta";
+    nome.href = `perfil-atleta-social.html?id=${encodeURIComponent(post.idAtleta)}`;
 
     const data = document.createElement("small");
     data.className = "post-hora";
@@ -631,8 +696,7 @@ function mostrarStory() {
     document.getElementById("storyProximo").disabled =
         indiceStory === storiesAtuais.length - 1;
 
-    document.getElementById("excluirStory").hidden =
-        story.idAtleta !== stories[0]?.idAtleta;
+    document.getElementById("excluirStory").hidden = !story.proprio;
 }
 
 document.getElementById("storyAnterior")

@@ -93,6 +93,138 @@ public class redeSocialDAO {
         throw new SQLException("Atleta não encontrado.");
     }
 
+
+    // =========================================================
+    // PERFIL, SEGUIDORES E PUBLICAÇÕES DO PERFIL
+    // =========================================================
+
+    public Map<String, Object> buscarPerfilSocial(int idAtleta, int idVisualizador)
+            throws SQLException {
+        Map<String, Object> perfil = new LinkedHashMap<>();
+        String sql = "SELECT id,nome,cidade,estado,posicao_principal,posicao_secundaria,"
+                + "pe_dominante,altura,peso,categoria,nivel_atual,foto_perfil,bio "
+                + "FROM Atletas WHERE id = ?";
+        try (Connection conn = conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idAtleta);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) throw new SQLException("Atleta não encontrado.");
+                perfil.put("id", rs.getInt("id"));
+                perfil.put("nome", rs.getString("nome"));
+                perfil.put("cidade", rs.getString("cidade"));
+                perfil.put("estado", rs.getString("estado"));
+                perfil.put("posicao", rs.getString("posicao_principal"));
+                perfil.put("posicaoSecundaria", rs.getString("posicao_secundaria"));
+                perfil.put("peDominante", rs.getString("pe_dominante"));
+                perfil.put("altura", rs.getBigDecimal("altura"));
+                perfil.put("peso", rs.getBigDecimal("peso"));
+                perfil.put("categoria", rs.getString("categoria"));
+                perfil.put("nivel", rs.getString("nivel_atual"));
+                perfil.put("fotoPerfil", rs.getBytes("foto_perfil"));
+                perfil.put("bio", rs.getString("bio"));
+            }
+            int idPerfil = obterPerfil(conn, idAtleta);
+            try (PreparedStatement psUsuario = conn.prepareStatement(
+                    "SELECT nome_usuario FROM Perfil_social_atleta WHERE id = ?")) {
+                psUsuario.setInt(1, idPerfil);
+                try (ResultSet rsUsuario = psUsuario.executeQuery()) {
+                    perfil.put("usuario", rsUsuario.next() ? rsUsuario.getString(1) : "atleta" + idAtleta);
+                }
+            }
+            perfil.put("publicacoes", contar(conn, "SELECT COUNT(*) FROM Publicacoes p WHERE p.id_perfil = ?", idPerfil));
+            perfil.put("seguidores", contar(conn, "SELECT COUNT(*) FROM SeguidoresAtletas WHERE id_seguido = ?", idAtleta));
+            perfil.put("seguindo", contar(conn, "SELECT COUNT(*) FROM SeguidoresAtletas WHERE id_seguidor = ?", idAtleta));
+            perfil.put("seguindoVisualizador", idVisualizador != idAtleta && existeSeguindo(conn, idVisualizador, idAtleta));
+            perfil.put("idVisualizador", idVisualizador);
+            perfil.put("proprioPerfil", idVisualizador == idAtleta);
+            perfil.put("sobre", rsSafeBio(perfil.get("bio")));
+        }
+        return perfil;
+    }
+
+    private int contar(Connection conn, String sql, int id) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) { return rs.next() ? rs.getInt(1) : 0; }
+        }
+    }
+
+    private String rsSafeBio(Object bio) {
+        return bio == null ? "" : String.valueOf(bio);
+    }
+
+    private boolean existeSeguindo(Connection conn, int idSeguidor, int idSeguido) throws SQLException {
+        if (idSeguidor == idSeguido) return false;
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT 1 FROM SeguidoresAtletas WHERE id_seguidor = ? AND id_seguido = ?")) {
+            ps.setInt(1, idSeguidor);
+            ps.setInt(2, idSeguido);
+            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
+        }
+    }
+
+    public boolean seguir(int idSeguidor, int idSeguido) throws SQLException {
+        if (idSeguidor == idSeguido) throw new SQLException("Você não pode seguir seu próprio perfil.");
+        try (Connection conn = conectar()) {
+            conn.setAutoCommit(false);
+            try {
+                boolean jaSegue = existeSeguindo(conn, idSeguidor, idSeguido);
+                if (jaSegue) {
+                    try (PreparedStatement ps = conn.prepareStatement(
+                            "DELETE FROM SeguidoresAtletas WHERE id_seguidor = ? AND id_seguido = ?")) {
+                        ps.setInt(1, idSeguidor); ps.setInt(2, idSeguido); ps.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement ps = conn.prepareStatement(
+                            "INSERT INTO SeguidoresAtletas (id_seguidor,id_seguido) VALUES (?,?)")) {
+                        ps.setInt(1, idSeguidor); ps.setInt(2, idSeguido); ps.executeUpdate();
+                    }
+                }
+                conn.commit();
+                return !jaSegue;
+            } catch (Exception e) { conn.rollback(); throw e; }
+            finally { conn.setAutoCommit(true); }
+        }
+    }
+
+    public boolean excluirPublicacao(int idAtleta, int idPublicacao) throws SQLException {
+        try (Connection conn = conectar()) {
+            conn.setAutoCommit(false);
+            try {
+                String dono = "SELECT ps.id_atleta FROM Publicacoes p JOIN Perfil_social_atleta ps "
+                        + "ON ps.id = p.id_perfil WHERE p.id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(dono)) {
+                    ps.setInt(1, idPublicacao);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (!rs.next() || rs.getInt(1) != idAtleta) {
+                            conn.rollback();
+                            return false;
+                        }
+                    }
+                }
+                for (String tabela : List.of("ComentariosPublicacao", "CurtidasPublicacao", "PublicacaoMidias")) {
+                    try (PreparedStatement ps = conn.prepareStatement(
+                            "DELETE FROM " + tabela + " WHERE id_publicacao = ?")) {
+                        ps.setInt(1, idPublicacao);
+                        ps.executeUpdate();
+                    }
+                }
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Publicacoes WHERE id = ?")) {
+                    ps.setInt(1, idPublicacao);
+                    ps.executeUpdate();
+                }
+                int idPerfil = obterPerfil(conn, idAtleta);
+                atualizarContagemPublicacoes(conn, idPerfil);
+                conn.commit();
+                return true;
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
     // =========================================================
     // FEED
     // =========================================================
@@ -912,7 +1044,7 @@ public class redeSocialDAO {
         throw new SQLException("Story não foi salvo.");
     }
 
-    public List<Map<String, Object>> listarStories() throws SQLException {
+    public List<Map<String, Object>> listarStories(int idAtletaVisualizador) throws SQLException {
         List<Map<String, Object>> stories = new ArrayList<>();
 
         String sql = """
@@ -935,6 +1067,7 @@ public class redeSocialDAO {
 
                 item.put("id", rs.getInt("id"));
                 item.put("idAtleta", rs.getInt("id_atleta"));
+                item.put("proprio", rs.getInt("id_atleta") == idAtletaVisualizador);
                 item.put("nome", rs.getString("nome"));
                 item.put("usuario", rs.getString("nome_usuario"));
                 item.put("arquivo", rs.getBytes("arquivo"));

@@ -17,9 +17,9 @@ import java.util.Map;
 
 @WebServlet("/RedeSocialController")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,
-    maxFileSize = 2 * 1024 * 1024,
-    maxRequestSize = 20 * 1024 * 1024
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 2 * 1024 * 1024,
+        maxRequestSize = 20 * 1024 * 1024
 )
 public class redeSocialController extends HttpServlet {
 
@@ -36,7 +36,6 @@ public class redeSocialController extends HttpServlet {
     // =========================================================
     // RESPOSTAS JSON
     // =========================================================
-
     private void responder(HttpServletResponse response, Object dados)
             throws IOException {
 
@@ -74,7 +73,6 @@ public class redeSocialController extends HttpServlet {
     // =========================================================
     // AUTENTICAÇÃO
     // =========================================================
-
     private int obterAtleta(HttpServletRequest request) throws Exception {
 
         HttpSession sessao = request.getSession(false);
@@ -95,7 +93,6 @@ public class redeSocialController extends HttpServlet {
     // =========================================================
     // VALIDAR PARÂMETROS
     // =========================================================
-
     private int obterId(HttpServletRequest request, String parametro) {
 
         String valor = request.getParameter(parametro);
@@ -136,7 +133,6 @@ public class redeSocialController extends HttpServlet {
     // =========================================================
     // VALIDAR E LER MÍDIA
     // =========================================================
-
     private Midia lerMidia(Part parte) throws IOException {
 
         if (parte == null || parte.getSize() <= 0) {
@@ -206,7 +202,6 @@ public class redeSocialController extends HttpServlet {
     // =========================================================
     // GET
     // =========================================================
-
     @Override
     protected void doGet(
             HttpServletRequest request,
@@ -231,16 +226,29 @@ public class redeSocialController extends HttpServlet {
                 // -------------------------------------------------
                 // FEED
                 // -------------------------------------------------
-
                 case "feed": {
                     responder(response, dao.listarFeed(atleta));
+                    break;
+                }
+
+                case "perfil": {
+                    String parametroId = request.getParameter("id");
+
+                    int idPerfil;
+
+                    if (parametroId == null || parametroId.trim().isEmpty()) {
+                        idPerfil = atleta;
+                    } else {
+                        idPerfil = obterId(request, "id");
+                    }
+
+                    responder(response, dao.buscarPerfilSocial(idPerfil, atleta));
                     break;
                 }
 
                 // -------------------------------------------------
                 // COMENTÁRIOS
                 // -------------------------------------------------
-
                 case "comentarios": {
                     int idPublicacao = obterId(request, "id");
 
@@ -255,9 +263,8 @@ public class redeSocialController extends HttpServlet {
                 // -------------------------------------------------
                 // STORIES
                 // -------------------------------------------------
-
                 case "stories": {
-                    responder(response, dao.listarStories());
+                    responder(response, dao.listarStories(atleta));
                     break;
                 }
 
@@ -289,7 +296,6 @@ public class redeSocialController extends HttpServlet {
     // =========================================================
     // POST
     // =========================================================
-
     @Override
     protected void doPost(
             HttpServletRequest request,
@@ -313,7 +319,6 @@ public class redeSocialController extends HttpServlet {
                 // -------------------------------------------------
                 // PUBLICAR NO FEED
                 // -------------------------------------------------
-
                 case "publicar": {
 
                     String texto = obterTexto(request, "texto");
@@ -367,8 +372,8 @@ public class redeSocialController extends HttpServlet {
                             midias
                     );
 
-                    Map<String, Object> resultado =
-                            sucesso("Publicação realizada com sucesso.");
+                    Map<String, Object> resultado
+                            = sucesso("Publicação realizada com sucesso.");
 
                     resultado.put("id", idPublicacao);
 
@@ -380,6 +385,23 @@ public class redeSocialController extends HttpServlet {
                 // -------------------------------------------------
                 // CURTIR / DESCURTIR
                 // -------------------------------------------------
+                case "seguir": {
+                    int idSeguido = obterId(request, "id");
+                    boolean seguindo = dao.seguir(atleta, idSeguido);
+                    Map<String, Object> resultado = sucesso(seguindo ? "Você começou a seguir." : "Você deixou de seguir.");
+                    resultado.put("seguindo", seguindo);
+                    responder(response, resultado);
+                    break;
+                }
+
+                case "excluirPublicacao": {
+                    int idPublicacao = obterId(request, "id");
+                    boolean excluida = dao.excluirPublicacao(atleta, idPublicacao);
+                    Map<String, Object> resultado = sucesso(excluida ? "Publicação excluída." : "Publicação não encontrada ou não pertence a você.");
+                    resultado.put("excluida", excluida);
+                    responder(response, resultado);
+                    break;
+                }
 
                 case "curtir": {
 
@@ -406,7 +428,6 @@ public class redeSocialController extends HttpServlet {
                 // -------------------------------------------------
                 // COMENTAR
                 // -------------------------------------------------
-
                 case "comentar": {
 
                     int idPublicacao = obterId(request, "id");
@@ -447,7 +468,6 @@ public class redeSocialController extends HttpServlet {
                 // -------------------------------------------------
                 // PUBLICAR STORY
                 // -------------------------------------------------
-
                 case "publicarStory": {
 
                     Part parte = request.getPart("arquivo");
@@ -467,8 +487,8 @@ public class redeSocialController extends HttpServlet {
                             midia
                     );
 
-                    Map<String, Object> resultado =
-                            sucesso("Story publicado com sucesso.");
+                    Map<String, Object> resultado
+                            = sucesso("Story publicado com sucesso.");
 
                     resultado.put("id", idStory);
 
@@ -480,7 +500,6 @@ public class redeSocialController extends HttpServlet {
                 // -------------------------------------------------
                 // EXCLUIR STORY
                 // -------------------------------------------------
-
                 case "excluirStory": {
 
                     int idStory = obterId(request, "id");
@@ -506,7 +525,6 @@ public class redeSocialController extends HttpServlet {
                 // -------------------------------------------------
                 // AÇÃO INVÁLIDA
                 // -------------------------------------------------
-
                 default: {
 
                     erro(response, 400, "Ação inválida.");
@@ -521,8 +539,8 @@ public class redeSocialController extends HttpServlet {
                     response,
                     400,
                     e.getMessage() == null
-                            ? "Dados informados inválidos."
-                            : e.getMessage()
+                    ? "Dados informados inválidos."
+                    : e.getMessage()
             );
 
         } catch (Exception e) {

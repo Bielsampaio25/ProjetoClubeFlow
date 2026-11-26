@@ -1,456 +1,316 @@
-//perfil-atleta-social.js
+console.log("ARQUIVO perfil-atleta-social.js FOI CARREGADO");
 
-const perfilStorageKey = "perfilAtleta";
-const fotoStorageKey = "fotoPerfil";
-const publicacoesStorageKey = "publicacoes";
+const API_REDE_SOCIAL = "../RedeSocialController";
+const parametrosPerfil = new URLSearchParams(window.location.search);
+const idPerfilAtleta = parametrosPerfil.get("id");
+let perfilAtual = null;
 
-const parametros = new URLSearchParams(window.location.search);
-const idAtleta = parametros.get("id");
+async function apiPerfil(url, opcoes = {}) {
+    const resposta = await fetch(url, {credentials: "same-origin", ...opcoes});
+    const dados = await resposta.json();
 
-const perfilPadrao = {
-    nome: "Gabriel Almeida",
-    usuario: "gabrielalmeida",
-    posicao: "Atacante",
-    categoria: "Sub-20",
-    cidade: "São Paulo - SP",
-    peDominante: "Direito",
-    altura: "1,78 m",
-    peso: "72 kg",
-    nivel: "Nível 18",
-    ranking: "#10",
-    bio: "Atacante com perfil ofensivo, velocidade e boa capacidade de finalização. Em busca de novas oportunidades para evoluir no futebol.",
-    sobre: "Apaixonado por futebol e comprometido com a evolução técnica, física e tática dentro e fora de campo."
-};
-
-function obterPerfil() {
-    const publicacoes = obterPublicacoesSalvas();
-    const identificador = idAtleta;
-
-    let perfilSalvo;
-
-    try {
-        perfilSalvo = JSON.parse(localStorage.getItem(perfilStorageKey));
-    } catch {
-        perfilSalvo = null;
+    if (!resposta.ok || dados.sucesso === false) {
+        throw new Error(dados.mensagem || "Não foi possível concluir a operação.");
     }
+
+    return dados;
+}
+
+function definirTextoPerfil(id, valor) {
+    const el = document.getElementById(id);
+
+    if (el) {
+        el.textContent = valor == null || valor === "" ? "—" : String(valor);
+    }
+}
+
+function identificarMimeFoto(bytes) {
+    if (
+        bytes.length >= 8 &&
+        bytes[0] === 137 && bytes[1] === 80 && bytes[2] === 78 &&
+        bytes[3] === 71 && bytes[4] === 13 && bytes[5] === 10 &&
+        bytes[6] === 26 && bytes[7] === 10
+    ) return "image/png";
 
     if (
-        !identificador ||
-        String(identificador) === String(perfilSalvo?.id) ||
-        String(identificador) === String(perfilSalvo?.usuario)
-    ) {
-        return {
-            ...perfilPadrao,
-            ...perfilSalvo
-        };
-    }
+        bytes.length >= 3 &&
+        bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255
+    ) return "image/jpeg";
 
-    const publicacaoAtleta = publicacoes.find((publicacao) =>
-        String(publicacao.usuarioId) === String(identificador) ||
-        String(publicacao.usuario) === String(identificador)
-    );
+    if (
+        bytes.length >= 12 &&
+        bytes[0] === 82 && bytes[1] === 73 && bytes[2] === 70 && bytes[3] === 70 &&
+        bytes[8] === 87 && bytes[9] === 69 && bytes[10] === 66 && bytes[11] === 80
+    ) return "image/webp";
 
-    if (publicacaoAtleta) {
-        return {
-            ...perfilPadrao,
-            id: publicacaoAtleta.usuarioId,
-            nome: publicacaoAtleta.usuarioNome || perfilPadrao.nome,
-            usuario: publicacaoAtleta.usuario || perfilPadrao.usuario
-        };
-    }
+    if (
+        bytes.length >= 6 &&
+        (String.fromCharCode(...bytes.slice(0, 6)) === "GIF87a" ||
+         String.fromCharCode(...bytes.slice(0, 6)) === "GIF89a")
+    ) return "image/gif";
 
-    return {
-        ...perfilPadrao,
-        id: identificador
-    };
+    return "application/octet-stream";
 }
 
-function definirTexto(id, valor) {
-    const elemento = document.getElementById(id);
 
-    if (elemento && valor !== undefined && valor !== null) {
-        elemento.textContent = valor;
+function converterFoto(foto, mime = "image/jpeg") {
+    if (foto == null || foto === "") return null;
+
+
+    if (typeof foto === "string") {
+        if (
+            foto.startsWith("data:") ||
+            foto.startsWith("http://") ||
+            foto.startsWith("https://") ||
+            foto.startsWith("../") ||
+            foto.startsWith("/")
+        ) return foto;
+
+        try {
+            const binario = atob(foto);
+            const bytes = new Uint8Array(binario.length);
+
+            for (let i = 0; i < binario.length; i++) {
+                bytes[i] = binario.charCodeAt(i);
+            }
+
+            const mimeDetectado = identificarMimeFoto(bytes);
+            const tipoFinal = mimeDetectado !== "application/octet-stream"
+                ? mimeDetectado
+                : mime;
+
+            return URL.createObjectURL(new Blob([bytes], { type: tipoFinal }));
+        } catch (erro) {
+            console.error("Erro ao converter foto Base64:", erro);
+            return null;
+        }
     }
+
+    if (Array.isArray(foto) || foto instanceof Uint8Array) {
+        const bytes = foto instanceof Uint8Array ? foto : Uint8Array.from(foto);
+        const mimeDetectado = identificarMimeFoto(bytes);
+        const tipoFinal = mimeDetectado !== "application/octet-stream"
+            ? mimeDetectado
+            : mime;
+
+        return URL.createObjectURL(new Blob([bytes], { type: tipoFinal }));
+    }
+
+    console.error("Formato de foto não reconhecido:", foto);
+    return null;
 }
 
-const foto = obterFotoPerfil();
+function aplicarFotoPerfil(el, foto, idPlaceholder) {
+    if (!el) return;
 
-aplicarFoto(document.getElementById("fotoAtleta"), foto);
-aplicarFoto(document.getElementById("fotoCabecalho"), foto);
+    const placeholder = idPlaceholder
+        ? document.getElementById(idPlaceholder)
+        : null;
 
-function aplicarFoto(elemento, foto) {
-    if (!elemento) {
+    const imagem = converterFoto(foto);
+
+    if (!imagem) {
+        el.removeAttribute("src");
+        el.hidden = true;
+
+        if (placeholder) {
+            placeholder.hidden = false;
+            placeholder.textContent = "Foto não cadastrada";
+        }
+
         return;
     }
 
-    elemento.src = foto || "../../assets/images/avatar-padrao.png";
-    elemento.hidden = false;
+    el.onerror = () => {
+        el.onerror = null;
+        el.removeAttribute("src");
+        el.hidden = true;
 
-    elemento.onerror = () => {
-        elemento.onerror = null;
-        elemento.src = "../../assets/images/avatar-padrao.png";
-    };
-}
-
-function carregarPerfil() {
-    const perfil = obterPerfil();
-
-    definirTexto("nomeAtleta", perfil.nome);
-    definirTexto("nomeCabecalho", perfil.nome);
-    definirTexto("usuarioAtleta", `@${perfil.usuario || "atleta"}`);
-    definirTexto("bioAtleta", perfil.bio);
-    definirTexto("sobreAtleta", perfil.sobre || perfil.bio);
-
-    definirTexto("posicaoAtleta", perfil.posicao);
-    definirTexto("categoriaAtleta", perfil.categoria);
-    definirTexto("cidadeAtleta", perfil.cidade);
-    definirTexto("peAtleta", perfil.peDominante);
-    definirTexto("alturaAtleta", perfil.altura);
-    definirTexto("pesoAtleta", perfil.peso);
-    definirTexto("nivelAtleta", perfil.nivel);
-    definirTexto("rankingAtleta", perfil.ranking);
-
-    definirTexto("posicaoCabecalho", `${perfil.posicao} · ${perfil.categoria}`);
-
-    definirTexto("sobrePosicao", perfil.posicao);
-    definirTexto("sobreCategoria", perfil.categoria);
-    definirTexto("sobreAltura", perfil.altura);
-    definirTexto("sobrePeso", perfil.peso);
-    definirTexto("sobrePe", perfil.peDominante);
-    definirTexto("sobreRanking", perfil.ranking);
-
-    const foto = obterFotoPerfil();
-
-    aplicarFoto(document.getElementById("fotoAtleta"), foto);
-    aplicarFoto(document.getElementById("fotoCabecalho"), foto);
-
-    document.querySelectorAll(".post-avatar").forEach((imagem) => {
-        aplicarFoto(imagem, foto);
-    });
-
-    document.querySelectorAll(".post-author strong").forEach((nome) => {
-        nome.textContent = perfil.nome;
-    });
-
-    document.querySelectorAll(".post-author span").forEach((usuario) => {
-        usuario.textContent = `@${perfil.usuario || "atleta"}`;
-    });
-}
-
-function configurarSeguir() {
-    const botao = document.getElementById("btnSeguir");
-    const total = document.getElementById("totalSeguidores");
-
-    if (!botao || !total) {
-        return;
-    }
-
-    let seguindo = false;
-    const seguidoresIniciais = Number(total.textContent) || 0;
-
-    botao.addEventListener("click", () => {
-        seguindo = !seguindo;
-        botao.textContent = seguindo ? "✓ Seguindo" : "+ Seguir";
-        botao.classList.toggle("following", seguindo);
-        botao.setAttribute("aria-pressed", String(seguindo));
-
-        total.textContent = String(
-            seguidoresIniciais + (seguindo ? 1 : 0)
-        );
-    });
-}
-
-function obterPublicacoesSalvas() {
-    try {
-        const publicacoes = JSON.parse(
-            localStorage.getItem(publicacoesStorageKey) || "[]"
-        );
-
-        return Array.isArray(publicacoes) ? publicacoes : [];
-    } catch {
-        return [];
-    }
-}
-
-function salvarPublicacoesSalvas(publicacoes) {
-    try {
-        localStorage.setItem(
-            publicacoesStorageKey,
-            JSON.stringify(publicacoes)
-        );
-
-        return true;
-    } catch (erro) {
-        console.error("Erro ao salvar publicações:", erro);
-        alert("Não foi possível atualizar a publicação no armazenamento.");
-        return false;
-    }
-}
-
-function configurarCurtidas() {
-    document.querySelectorAll(".like-btn").forEach((botao) => {
-        botao.addEventListener("click", () => {
-            const curtido = botao.classList.toggle("liked");
-            botao.textContent = curtido ? "♥ Curtido" : "♡ Curtir";
-            botao.setAttribute("aria-pressed", String(curtido));
-
-            const publicacao = botao.closest(".post");
-            const quantidade = publicacao?.querySelector(
-                ".post-stats span:first-child b"
-            );
-
-            if (quantidade) {
-                const atual = Number(quantidade.textContent) || 0;
-                quantidade.textContent = String(
-                    Math.max(0, atual + (curtido ? 1 : -1))
-                );
-            }
-        });
-    });
-}
-
-function configurarComentarios() { }
-
-function configurarCompartilhamento() {
-    document.querySelectorAll(".share-btn").forEach((botao) => {
-        botao.addEventListener("click", async () => {
-            try {
-                await navigator.clipboard.writeText(window.location.href);
-                alert("Link do perfil copiado!");
-            } catch {
-                prompt("Copie o link do perfil:", window.location.href);
-            }
-        });
-    });
-}
-
-function configurarMensagem() {
-    document.getElementById("btnMensagem")?.addEventListener("click", () => {
-        alert("Integre este botão à funcionalidade de mensagens da rede social.");
-    });
-}
-
-function atualizarPublicacaoSalva(id, alteracoes) {
-    const publicacoes = obterPublicacoesSalvas();
-    const indice = publicacoes.findIndex(
-        (item) => String(item.id) === String(id)
-    );
-
-    if (indice === -1) {
-        return false;
-    }
-
-    publicacoes[indice] = {
-        ...publicacoes[indice],
-        ...alteracoes
+        if (placeholder) {
+            placeholder.hidden = false;
+            placeholder.textContent = "Foto não cadastrada";
+        }
     };
 
-    return salvarPublicacoesSalvas(publicacoes);
+    el.src = imagem;
+    el.hidden = false;
+
+    if (placeholder) {
+        placeholder.hidden = true;
+    }
 }
 
-function formatarComentarios(comentarios) {
-    if (!Array.isArray(comentarios)) {
-        return [];
-    }
+function formatarDataPerfil(data) {
+    if (!data) return "Agora mesmo";
 
-    return comentarios.map((comentario) => {
-        if (typeof comentario === "string") {
-            return {
-                id: `comentario-${Date.now()}-${Math.random()}`,
-                autor: "Atleta",
-                usuario: "atleta",
-                texto: comentario,
-                data: new Date().toISOString()
-            };
-        }
+    const dt = new Date(data);
 
-        return comentario;
-    });
+    if (Number.isNaN(dt.getTime())) return "Agora mesmo";
+
+    const seg = Math.max(0, Math.floor((Date.now() - dt.getTime()) / 1000));
+
+    if (seg < 60) return "há poucos segundos";
+    if (seg < 3600) return `há ${Math.floor(seg / 60)} min`;
+    if (seg < 86400) return `há ${Math.floor(seg / 3600)} h`;
+
+    return `há ${Math.floor(seg / 86400)} dias`;
 }
 
-function formatarDataPublicacao(data) {
-    if (!data) {
-        return "Agora mesmo";
-    }
+function criarMidiasPerfil(midias = []) {
+    if (!midias?.length) return null;
 
-    const dataConvertida = new Date(data);
+    const area = document.createElement("div");
+    area.className = "post-media";
 
-    if (Number.isNaN(dataConvertida.getTime())) {
-        return "Agora mesmo";
-    }
+    midias.forEach(m => {
+        const el = m.tipo === "VIDEO"
+            ? document.createElement("video")
+            : document.createElement("img");
 
-    const diferenca = Math.max(
-        0,
-        Math.floor((Date.now() - dataConvertida.getTime()) / 1000)
-    );
+        el.src = converterFoto(
+            m.arquivo,
+            m.mime || (m.tipo === "VIDEO" ? "video/mp4" : "image/jpeg")
+        ) || "";
 
-    if (diferenca < 60) {
-        return "há poucos segundos";
-    }
-
-    if (diferenca < 3600) {
-        return `há ${Math.floor(diferenca / 60)} min`;
-    }
-
-    if (diferenca < 86400) {
-        return `há ${Math.floor(diferenca / 3600)} h`;
-    }
-
-    return `há ${Math.floor(diferenca / 86400)} dias`;
-}
-
-function criarMidiaPublicacao(arquivos) {
-    const midias = document.createElement("div");
-    midias.className = "post-media";
-
-    if (!Array.isArray(arquivos) || arquivos.length === 0) {
-        return midias;
-    }
-
-    arquivos.forEach((arquivo) => {
-        const tipo = arquivo.tipo || arquivo.type || "";
-        const origem = arquivo.dados || arquivo.url || "";
-
-        if (!origem) {
-            return;
+        if (el.tagName === "VIDEO") {
+            el.controls = true;
+            el.playsInline = true;
+        } else {
+            el.className = "post-image";
+            el.alt = m.nome || "Mídia da publicação";
+            el.loading = "lazy";
         }
 
-        if (tipo.startsWith("image/")) {
-            const imagem = document.createElement("img");
-            imagem.className = "post-image";
-            imagem.src = origem;
-            imagem.alt = arquivo.nome || "Imagem da publicação";
-            imagem.loading = "lazy";
-            midias.appendChild(imagem);
-        } else if (tipo.startsWith("video/")) {
-            const video = document.createElement("video");
-            video.className = "post-image";
-            video.src = origem;
-            video.controls = true;
-            video.playsInline = true;
-            video.preload = "metadata";
-            midias.appendChild(video);
-        }
+        area.appendChild(el);
     });
 
-    return midias;
+    return area;
 }
 
-function obterFotoPerfil(publicacao) {
-    const fotoSalva = localStorage.getItem(fotoStorageKey);
+function criarPublicacaoPerfil(post) {
+    const article = document.createElement("article");
+    article.className = "post card";
+    article.dataset.id = post.id;
 
-    if (fotoSalva) {
-        return fotoSalva;
-    }
+    const head = document.createElement("div");
+    head.className = "post-header";
 
-    if (publicacao && publicacao.fotoPerfil) {
-        return publicacao.fotoPerfil;
-    }
-
-    return "";
-}
-
-function criarPublicacaoPerfil(publicacao, perfil) {
-    const artigo = document.createElement("article");
-    artigo.className = "post card";
-    artigo.dataset.id = publicacao.id || "";
-
-    const cabecalho = document.createElement("div");
-    cabecalho.className = "post-header";
-
-    const foto = document.createElement("img");
-    foto.className = "post-avatar";
-    foto.alt = "Foto do atleta";
-    aplicarFoto(foto, publicacao.fotoPerfil || obterFotoPerfil());
+    const avatar = document.createElement("img");
+    avatar.className = "post-avatar";
+    avatar.alt = "Foto de perfil";
+    aplicarFotoPerfil(avatar, post.fotoPerfil);
 
     const autor = document.createElement("div");
     autor.className = "post-author";
 
     const nome = document.createElement("strong");
-    nome.textContent = publicacao.usuarioNome || perfil.nome;
+    nome.textContent = post.nome || perfilAtual.nome;
 
-    const data = document.createElement("span");
-    data.textContent = `@${publicacao.usuario || perfil.usuario} · ${formatarDataPublicacao(publicacao.data)}`;
+    const user = document.createElement("span");
+    user.textContent = `@${post.usuario || perfilAtual.usuario} · ${formatarDataPerfil(post.data)}`;
 
-    autor.append(nome, data);
-    cabecalho.append(foto, autor);
-    artigo.appendChild(cabecalho);
+    autor.append(nome, user);
+    head.append(avatar, autor);
+    article.appendChild(head);
 
-    const textoPublicacao = publicacao.texto || publicacao.conteudo || "";
-
-    if (textoPublicacao) {
+    if (post.texto) {
         const texto = document.createElement("p");
         texto.className = "post-text";
-        texto.textContent = textoPublicacao;
-        artigo.appendChild(texto);
+        texto.textContent = post.texto;
+        article.appendChild(texto);
     }
 
-    if (Array.isArray(publicacao.arquivos) && publicacao.arquivos.length > 0) {
-        artigo.appendChild(criarMidiaPublicacao(publicacao.arquivos));
-    } else {
-        const imagemUrl = publicacao.imagem || publicacao.foto;
+    const media = criarMidiasPerfil(post.midias);
 
-        if (imagemUrl) {
-            const imagem = document.createElement("img");
-            imagem.className = "post-image";
-            imagem.src = imagemUrl;
-            imagem.alt = "Imagem da publicação";
-            imagem.loading = "lazy";
-            artigo.appendChild(imagem);
+    if (media) {
+        article.appendChild(media);
+    }
+
+    const stats = document.createElement("div");
+    stats.className = "post-stats";
+    stats.textContent = `♥ ${post.curtidas || 0} curtidas · 💬 ${post.comentarios || 0} comentários`;
+    article.appendChild(stats);
+
+    const actions = document.createElement("div");
+    actions.className = "post-actions";
+
+    const like = document.createElement("button");
+    like.type = "button";
+    like.className = "like-btn";
+    like.textContent = post.curtido ? "♥ Curtido" : "♡ Curtir";
+    like.classList.toggle("liked", !!post.curtido);
+    like.setAttribute("aria-pressed", String(!!post.curtido));
+
+    like.addEventListener("click", async () => {
+        like.disabled = true;
+
+        try {
+            const result = await apiPerfil(API_REDE_SOCIAL, {
+                method: "POST",
+                body: new URLSearchParams({
+                    acao: "curtir",
+                    id: post.id
+                })
+            });
+
+            post.curtido = result.curtido;
+            post.curtidas = Math.max(
+                0,
+                Number(post.curtidas || 0) + (post.curtido ? 1 : -1)
+            );
+
+            like.textContent = post.curtido ? "♥ Curtido" : "♡ Curtir";
+            like.classList.toggle("liked", post.curtido);
+            like.setAttribute("aria-pressed", String(post.curtido));
+
+            stats.textContent = `♥ ${post.curtidas} curtidas · 💬 ${post.comentarios || 0} comentários`;
+        } catch (e) {
+            alert(e.message);
+        } finally {
+            like.disabled = false;
         }
-    }
-
-    const estatisticas = document.createElement("div");
-    estatisticas.className = "post-stats";
-
-    const totalCurtidas = document.createElement("span");
-    const numeroCurtidas = document.createElement("b");
-    numeroCurtidas.textContent = String(Number(publicacao.curtidas) || 0);
-    totalCurtidas.append("❤️ ", numeroCurtidas, " curtidas");
-
-    const totalComentarios = document.createElement("span");
-    const comentarios = Array.isArray(publicacao.comentarios)
-        ? publicacao.comentarios.length
-        : Number(publicacao.comentarios) || 0;
-
-    totalComentarios.textContent = `💬 ${comentarios} comentários`;
-
-    estatisticas.append(totalCurtidas, totalComentarios);
-    artigo.appendChild(estatisticas);
-
-    const acoes = document.createElement("div");
-    acoes.className = "post-actions";
-
-    const botaoCurtir = document.createElement("button");
-    botaoCurtir.type = "button";
-    botaoCurtir.className = "like-btn";
-    botaoCurtir.textContent = "♡ Curtir";
-
-    const botaoCompartilhar = document.createElement("button");
-    botaoCompartilhar.type = "button";
-    botaoCompartilhar.className = "share-btn";
-    botaoCompartilhar.textContent = "Compartilhar";
-
-    const botaoExcluir = document.createElement("button");
-    botaoExcluir.type = "button";
-    botaoExcluir.className = "btn-apagar-publicacao";
-    botaoExcluir.textContent = "Excluir publicação";
-
-    acoes.append(botaoCurtir, botaoCompartilhar, botaoExcluir);
-    artigo.appendChild(acoes);
-
-    botaoCurtir.addEventListener("click", () => {
-        const curtido = botaoCurtir.classList.toggle("liked");
-        botaoCurtir.textContent = curtido ? "♥ Curtido" : "♡ Curtir";
-        botaoCurtir.setAttribute("aria-pressed", String(curtido));
-
-        const atual = Number(numeroCurtidas.textContent) || 0;
-        numeroCurtidas.textContent = String(
-            Math.max(0, atual + (curtido ? 1 : -1))
-        );
     });
 
-    botaoCompartilhar.addEventListener("click", async () => {
+    const comment = document.createElement("button");
+    comment.type = "button";
+    comment.className = "comment-btn";
+    comment.textContent = "💬 Comentar";
+
+    comment.addEventListener("click", async () => {
+        try {
+            const list = await apiPerfil(
+                `${API_REDE_SOCIAL}?acao=comentarios&id=${post.id}`
+            );
+
+            const historico = list
+                .map(c => `${c.nome}: ${c.texto}`)
+                .join("\n") || "Ainda não há comentários.";
+
+            const texto = prompt(`${historico}\n\nDigite seu comentário:`);
+
+            if (!texto?.trim()) return;
+
+            await apiPerfil(API_REDE_SOCIAL, {
+                method: "POST",
+                body: new URLSearchParams({
+                    acao: "comentar",
+                    id: post.id,
+                    texto: texto.trim()
+                })
+            });
+
+            await carregarPublicacoesPerfil();
+        } catch (e) {
+            alert(e.message);
+        }
+    });
+
+    const share = document.createElement("button");
+    share.type = "button";
+    share.className = "share-btn";
+    share.textContent = "Compartilhar";
+
+    share.addEventListener("click", async () => {
         try {
             await navigator.clipboard.writeText(window.location.href);
             alert("Link do perfil copiado!");
@@ -459,112 +319,320 @@ function criarPublicacaoPerfil(publicacao, perfil) {
         }
     });
 
-    botaoExcluir.addEventListener("click", () => {
-        if (!confirm("Tem certeza de que deseja excluir esta publicação?")) {
-            return;
-        }
+    actions.append(like, comment, share);
 
-        const publicacoesAtualizadas = obterPublicacoesSalvas().filter(
-            (item) => String(item.id) !== String(publicacao.id)
-        );
+    if (perfilAtual.proprioPerfil) {
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "btn-apagar-publicacao";
+        del.textContent = "Excluir publicação";
 
-        if (!salvarPublicacoesSalvas(publicacoesAtualizadas)) {
-            return;
-        }
+        del.addEventListener("click", async () => {
+            if (!confirm("Deseja excluir esta publicação permanentemente?")) {
+                return;
+            }
 
-        artigo.remove();
+            try {
+                await apiPerfil(API_REDE_SOCIAL, {
+                    method: "POST",
+                    body: new URLSearchParams({
+                        acao: "excluirPublicacao",
+                        id: post.id
+                    })
+                });
 
-        const feed = document.getElementById("feedAtleta");
-        const vazio = document.getElementById("feedVazio");
-        const total = document.getElementById("totalPublicacoes");
-
-        const identificadorPerfil = String(
-            idAtleta || perfil.id || perfil.usuario || "gabrielalmeida"
-        );
-        const restantesDoPerfil = publicacoesAtualizadas.filter((item) => {
-            const identificadores = [
-                item.usuarioId,
-                item.usuario,
-                item.atletaId
-            ].filter((valor) => valor !== undefined && valor !== null);
-
-            return identificadores.some(
-                (identificador) =>
-                    String(identificador) === String(identificadorPerfil)
-            );
+                await carregarPublicacoesPerfil();
+            } catch (e) {
+                alert(e.message);
+            }
         });
 
-        if (total) {
-            total.textContent = String(restantesDoPerfil.length);
-        }
+        actions.appendChild(del);
+    }
 
-        if (feed && feed.children.length === 0 && vazio) {
-            vazio.hidden = false;
-        }
-    });
+    article.appendChild(actions);
 
-    return artigo;
+    return article;
 }
 
-function carregarPublicacoes() {
-    const feed = document.getElementById("feedAtleta");
-    const vazio = document.getElementById("feedVazio");
-    const totalElemento = document.getElementById("totalPublicacoes");
+async function carregarDadosPerfil() {
+    console.log("CARREGANDO DADOS DO PERFIL");
 
-    if (!feed || !vazio) {
-        console.error(
-            "Não foram encontrados os elementos feedAtleta ou feedVazio."
+    const urlPerfil = idPerfilAtleta
+        ? `${API_REDE_SOCIAL}?acao=perfil&id=${encodeURIComponent(idPerfilAtleta)}`
+        : `${API_REDE_SOCIAL}?acao=perfil`;
+
+    perfilAtual = await apiPerfil(urlPerfil);
+
+    console.log("PERFIL RETORNADO PELA API:", perfilAtual);
+
+    if (!perfilAtual || !perfilAtual.id) {
+        throw new Error("Não foi possível localizar os dados do atleta.");
+    }
+
+    const nome = perfilAtual.nome || "Atleta";
+    const posicao = perfilAtual.posicao || "Não informado";
+    const categoria = perfilAtual.categoria || "Não informado";
+
+    const cidadeEstado = [perfilAtual.cidade, perfilAtual.estado]
+        .filter(Boolean)
+        .join(" - ");
+
+    const altura = perfilAtual.altura == null
+        ? "Não informado"
+        : `${perfilAtual.altura} m`;
+
+    const peso = perfilAtual.peso == null
+        ? "Não informado"
+        : `${perfilAtual.peso} kg`;
+
+    const nivel = perfilAtual.nivel || "Não informado";
+    const ranking = perfilAtual.ranking || "—";
+    const bio = perfilAtual.bio || "Este atleta ainda não adicionou uma biografia.";
+
+    ["nomeAtleta", "nomeCabecalho"].forEach(id =>
+        definirTextoPerfil(id, nome)
+    );
+
+    definirTextoPerfil(
+        "usuarioAtleta",
+        `@${perfilAtual.usuario || `atleta${perfilAtual.id}`}`
+    );
+
+    definirTextoPerfil("bioAtleta", bio);
+    definirTextoPerfil("sobreAtleta", perfilAtual.sobre || bio);
+    definirTextoPerfil("posicaoAtleta", posicao);
+    definirTextoPerfil("posicaoCabecalho", `${posicao} · ${categoria}`);
+    definirTextoPerfil("categoriaAtleta", categoria);
+    definirTextoPerfil("cidadeAtleta", cidadeEstado || "Não informado");
+    definirTextoPerfil("peAtleta", perfilAtual.peDominante || "Não informado");
+    definirTextoPerfil("alturaAtleta", altura);
+    definirTextoPerfil("pesoAtleta", peso);
+    definirTextoPerfil("nivelAtleta", nivel);
+    definirTextoPerfil("rankingAtleta", ranking);
+
+    definirTextoPerfil("sobrePosicao", posicao);
+    definirTextoPerfil("sobreCategoria", categoria);
+    definirTextoPerfil("sobreAltura", altura);
+    definirTextoPerfil("sobrePeso", peso);
+    definirTextoPerfil("sobrePe", perfilAtual.peDominante || "Não informado");
+    definirTextoPerfil("sobreRanking", ranking);
+
+    definirTextoPerfil("totalPublicacoes", perfilAtual.publicacoes || 0);
+    definirTextoPerfil("totalSeguidores", perfilAtual.seguidores || 0);
+    definirTextoPerfil("totalSeguindo", perfilAtual.seguindo || 0);
+
+    aplicarFotoPerfil(
+        document.getElementById("fotoAtleta"),
+        perfilAtual.fotoPerfil,
+        "fotoAtletaSemCadastro"
+    );
+
+    aplicarFotoPerfil(
+        document.getElementById("fotoCabecalho"),
+        perfilAtual.fotoPerfil,
+        "fotoCabecalhoSemCadastro"
+    );
+
+    const seguir = document.getElementById("btnSeguir");
+
+    if (seguir) {
+        seguir.hidden = !!perfilAtual.proprioPerfil;
+        seguir.textContent = perfilAtual.seguindoVisualizador
+            ? "✓ Seguindo"
+            : "+ Seguir";
+
+        seguir.classList.toggle(
+            "following",
+            !!perfilAtual.seguindoVisualizador
         );
+    }
+}
+
+async function carregarPublicacoesPerfil() {
+    console.log("CARREGAR PUBLICAÇÕES: FUNÇÃO INICIADA");
+
+    const container = document.getElementById("feedAtleta");
+    const mensagemVazia = document.getElementById("feedVazio");
+
+    console.log("Container encontrado:", container);
+    console.log("Mensagem de feed vazio:", mensagemVazia);
+
+    if (!container) {
+        console.error("ERRO: elemento feedAtleta não existe no HTML.");
         return;
     }
 
-    const publicacoes = obterPublicacoesSalvas();
-    const perfil = obterPerfil();
-    const identificadorPerfil = String(
-        idAtleta || perfil.id || perfil.usuario
-    );
+    container.innerHTML = "<p>Carregando publicações...</p>";
 
-    const minhasPublicacoes = publicacoes.filter((publicacao) => {
-        return [
-            publicacao.usuarioId,
-            publicacao.usuario,
-            publicacao.atletaId
-        ].some((identificador) => {
-            return identificador != null &&
-                String(identificador) === identificadorPerfil;
-        });
-    });
-
-    feed.replaceChildren();
-
-    if (totalElemento) {
-        totalElemento.textContent = String(minhasPublicacoes.length);
+    if (mensagemVazia) {
+        mensagemVazia.hidden = true;
     }
 
-    vazio.hidden = minhasPublicacoes.length > 0;
+    try {
+        if (!perfilAtual || !perfilAtual.id) {
+            console.error("ERRO: perfilAtual ou ID do perfil não carregado.");
+            container.innerHTML = "<p>Perfil não carregado.</p>";
+            return;
+        }
 
-    minhasPublicacoes.forEach((publicacao) => {
-        const elemento = criarPublicacaoPerfil(publicacao, perfil);
-        feed.appendChild(elemento);
+        const urlFeed = `${API_REDE_SOCIAL}?acao=feed`;
+
+        console.log("URL requisitada:", urlFeed);
+        console.log("ID do atleta do perfil:", perfilAtual.id);
+        console.log("Iniciando requisição do feed...");
+
+        const resposta = await apiPerfil(urlFeed);
+
+        console.log("RESPOSTA COMPLETA DO FEED:", resposta);
+        console.log("Tipo da resposta:", typeof resposta);
+        console.log("É array?", Array.isArray(resposta));
+
+        let publicacoes = [];
+
+        if (Array.isArray(resposta)) {
+            publicacoes = resposta;
+        } else if (Array.isArray(resposta.publicacoes)) {
+            publicacoes = resposta.publicacoes;
+        } else if (Array.isArray(resposta.feed)) {
+            publicacoes = resposta.feed;
+        } else if (Array.isArray(resposta.dados)) {
+            publicacoes = resposta.dados;
+        } else if (Array.isArray(resposta.posts)) {
+            publicacoes = resposta.posts;
+        } else if (Array.isArray(resposta.resultados)) {
+            publicacoes = resposta.resultados;
+        }
+
+        console.log("PUBLICAÇÕES EXTRAÍDAS:", publicacoes);
+        console.log("QUANTIDADE RECEBIDA:", publicacoes.length);
+
+        if (publicacoes.length > 0) {
+            console.log("ESTRUTURA DA PRIMEIRA PUBLICAÇÃO:", publicacoes[0]);
+            console.log("CHAVES DA PRIMEIRA PUBLICAÇÃO:", Object.keys(publicacoes[0]));
+        }
+
+        const publicacoesAtleta = publicacoes.filter(publicacao => {
+            const idPublicacao = Number(
+                publicacao.idAtleta ??
+                publicacao.id_atleta ??
+                publicacao.atletaId ??
+                publicacao.atleta_id
+            );
+
+            console.log(
+                "Comparando publicação:",
+                publicacao.id,
+                "| ID do autor:",
+                idPublicacao,
+                "| ID do perfil:",
+                Number(perfilAtual.id)
+            );
+
+            return idPublicacao === Number(perfilAtual.id);
+        });
+
+        console.log("PUBLICAÇÕES FILTRADAS DO ATLETA:", publicacoesAtleta);
+        console.log("TOTAL FILTRADO:", publicacoesAtleta.length);
+
+        container.innerHTML = "";
+
+        if (publicacoesAtleta.length === 0) {
+            if (mensagemVazia) {
+                mensagemVazia.hidden = false;
+            } else {
+                container.innerHTML = `
+                    <p class="mensagem-sem-publicacoes">
+                        Este atleta ainda não possui publicações.
+                    </p>
+                `;
+            }
+
+            return;
+        }
+
+        if (mensagemVazia) {
+            mensagemVazia.hidden = true;
+        }
+
+        publicacoesAtleta.forEach(publicacao => {
+            const elemento = criarPublicacaoPerfil(publicacao);
+            container.appendChild(elemento);
+        });
+
+        console.log("PUBLICAÇÕES RENDERIZADAS COM SUCESSO!");
+
+    } catch (erro) {
+        console.error("ERRO AO CARREGAR PUBLICAÇÕES:", erro);
+        console.error("Detalhes do erro:", erro.message);
+
+        container.innerHTML = `
+            <p>Não foi possível carregar as publicações.</p>
+        `;
+
+        if (mensagemVazia) {
+            mensagemVazia.hidden = true;
+        }
+    }
+}
+
+function configurarBotaoSeguir() {
+    const botao = document.getElementById("btnSeguir");
+
+    if (!botao || botao.hidden) return;
+
+    botao.addEventListener("click", async () => {
+        botao.disabled = true;
+
+        try {
+            const resultado = await apiPerfil(API_REDE_SOCIAL, {
+                method: "POST",
+                body: new URLSearchParams({
+                    acao: "seguir",
+                    id: perfilAtual.id
+                })
+            });
+
+            perfilAtual.seguindoVisualizador = resultado.seguindo;
+
+            botao.textContent = resultado.seguindo
+                ? "✓ Seguindo"
+                : "+ Seguir";
+
+            botao.classList.toggle("following", resultado.seguindo);
+
+            const seguidores = Number(perfilAtual.seguidores || 0)
+                + (resultado.seguindo ? 1 : -1);
+
+            perfilAtual.seguidores = Math.max(0, seguidores);
+
+            definirTextoPerfil("totalSeguidores", perfilAtual.seguidores);
+
+        } catch (e) {
+            alert(e.message);
+        } finally {
+            botao.disabled = false;
+        }
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    carregarPerfil();
-    carregarPublicacoes();
-    configurarSeguir();
-    configurarCurtidas();
-    configurarComentarios();
-    configurarCompartilhamento();
-    configurarMensagem();
-});
+async function iniciarPerfilSocial() {
+    console.log("INICIANDO PERFIL SOCIAL");
 
-window.addEventListener("storage", (evento) => {
-    if (evento.key === publicacoesStorageKey) {
-        carregarPublicacoes();
+    try {
+        await carregarDadosPerfil();
+
+        console.log("PERFIL CARREGADO:", perfilAtual);
+
+        await carregarPublicacoesPerfil();
+
+        console.log("CARREGAMENTO DO FEED FINALIZADO");
+
+        configurarBotaoSeguir();
+
+    } catch (erro) {
+        console.error("ERRO NA INICIALIZAÇÃO DO PERFIL:", erro);
     }
-});
+}
 
-window.addEventListener("focus", () => {
-    carregarPublicacoes();
-});
+document.addEventListener("DOMContentLoaded", iniciarPerfilSocial);
