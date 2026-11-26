@@ -1206,6 +1206,310 @@ dialog::backdrop {
     color: var(--text-muted);
 }
 
+
+/* Perfil social do atleta */
+
+.social-profile {
+    width: 100%;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.profile-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.social-avatar-wrap {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 140px;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: #10271c;
+    border: 3px solid var(--primary-green, #b6f36a);
+}
+
+.social-avatar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+}
+
+.social-avatar-wrap span {
+    font-size: 12px;
+    text-align: center;
+    padding: 8px;
+}
+
+.identity {
+    flex: 1;
+    min-width: 0;
+}
+
+.identity h2 {
+    margin: 0;
+    font-size: 28px;
+    overflow-wrap: anywhere;
+}
+
+.name-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.username {
+    margin-top: 6px;
+    opacity: 0.75;
+}
+
+.athlete-description {
+    margin-top: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.profile-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    margin-top: 16px;
+}
+
+.profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.social-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.social-numbers div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.social-numbers strong {
+    font-size: 20px;
+}
+
+.social-numbers span {
+    font-size: 13px;
+    opacity: 0.75;
+}
+
+.profile-actions {
+    flex-shrink: 0;
+}
+
+/* Foto no cabeçalho da aplicação */
+
+.account-photo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.account-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+}
+
+.account-photo-container span {
+    font-size: 9px;
+    text-align: center;
+}
+
+/* Feed dentro do perfil */
+
+.athlete-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.athlete-feed .card-post {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.athlete-feed .post-media {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.athlete-feed .post-media img,
+.athlete-feed .post-media video {
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Layout responsivo */
+
+@media (max-width: 900px) {
+    .profile-content {
+        flex-wrap: wrap;
+    }
+
+    .profile-actions {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+        padding: 18px;
+    }
+
+    .social-avatar-wrap {
+        width: 110px;
+        height: 110px;
+    }
+
+    .identity {
+        width: 100%;
+        text-align: center;
+    }
+
+    .name-line,
+    .profile-details,
+    .profile-tags,
+    .social-numbers {
+        justify-content: center;
+    }
+
+    .identity h2 {
+        font-size: 24px;
+    }
+
+    .profile-actions {
+        width: 100%;
+    }
+
+    .profile-actions button {
+        width: 100%;
+    }
+}
+
+/* Cabeçalho das publicações no perfil */
+
+#feedAtleta .post.card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+/* Linha com foto e nome */
+
+#feedAtleta .post-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Foto do autor */
+
+#feedAtleta img.post-avatar {
+    display: block;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    max-width: 44px;
+    max-height: 44px;
+    flex: 0 0 44px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+/* Nome e usuário */
+
+#feedAtleta .post-author {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#feedAtleta .post-author strong {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+#feedAtleta .post-author span {
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0.75;
+    overflow-wrap: anywhere;
+}
+
+/* Mídias da publicação */
+
+#feedAtleta .post-media {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+#feedAtleta .post-media img,
+#feedAtleta .post-media video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
 @media (max-width: 768px) {
     .post-galeria img,
     .post-galeria video {

@@ -187,10 +187,35 @@ function criarMidiasPerfil(midias = []) {
     return area;
 }
 
+async function compartilharPublicacaoPerfil(post) {
+    const link = new URL(window.location.href);
+    link.hash = `publicacao-${post.id}`;
+    const dados = {
+        title: `Publicação de ${post.nome || perfilAtual.nome || "atleta"} · Club Flow`,
+        text: post.texto || "Confira esta publicação no Club Flow.",
+        url: link.href
+    };
+    try {
+        if (navigator.share) {
+            await navigator.share(dados);
+        } else if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(link.href);
+            alert("Link da publicação copiado!");
+        } else {
+            prompt("Copie o link da publicação:", link.href);
+        }
+    } catch (erro) {
+        if (erro.name !== "AbortError") {
+            prompt("Copie o link da publicação:", link.href);
+        }
+    }
+}
+
 function criarPublicacaoPerfil(post) {
     const article = document.createElement("article");
     article.className = "post card";
     article.dataset.id = post.id;
+    article.id = `publicacao-${post.id}`;
 
     const head = document.createElement("div");
     head.className = "post-header";
@@ -310,14 +335,7 @@ function criarPublicacaoPerfil(post) {
     share.className = "share-btn";
     share.textContent = "Compartilhar";
 
-    share.addEventListener("click", async () => {
-        try {
-            await navigator.clipboard.writeText(window.location.href);
-            alert("Link do perfil copiado!");
-        } catch {
-            prompt("Copie o link do perfil:", window.location.href);
-        }
-    });
+    share.addEventListener("click", () => compartilharPublicacaoPerfil(post));
 
     actions.append(like, comment, share);
 

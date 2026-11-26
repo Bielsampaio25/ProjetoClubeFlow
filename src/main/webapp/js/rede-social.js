@@ -188,10 +188,35 @@ function criarMidias(midias) {
     return container;
 }
 
+async function compartilharPublicacao(post) {
+    const link = new URL(window.location.href);
+    link.hash = `publicacao-${post.id}`;
+    const dados = {
+        title: `Publicação de ${post.nome || "atleta"} · Club Flow`,
+        text: post.texto || "Confira esta publicação no Club Flow.",
+        url: link.href
+    };
+    try {
+        if (navigator.share) {
+            await navigator.share(dados);
+        } else if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(link.href);
+            alert("Link da publicação copiado!");
+        } else {
+            prompt("Copie o link da publicação:", link.href);
+        }
+    } catch (erro) {
+        if (erro.name !== "AbortError") {
+            prompt("Copie o link da publicação:", link.href);
+        }
+    }
+}
+
 function criarPost(post) {
     const card = document.createElement("article");
     card.className = "card-post";
     card.dataset.id = post.id;
+    card.id = `publicacao-${post.id}`;
 
     const cabecalho = document.createElement("div");
     cabecalho.className = "post-head";
@@ -268,7 +293,13 @@ function criarPost(post) {
 
     btnComentar.addEventListener("click", () => abrirComentarios(post.id));
 
-    acoes.append(btnCurtir, btnComentar);
+    const btnCompartilhar = document.createElement("button");
+    btnCompartilhar.type = "button";
+    btnCompartilhar.className = "btn-compartilhar";
+    btnCompartilhar.textContent = "↗ Compartilhar";
+    btnCompartilhar.addEventListener("click", () => compartilharPublicacao(post));
+
+    acoes.append(btnCurtir, btnComentar, btnCompartilhar);
     card.appendChild(acoes);
 
     return card;
