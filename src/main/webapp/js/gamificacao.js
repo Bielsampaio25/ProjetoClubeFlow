@@ -29,30 +29,44 @@ const gamificacao = {
 
         } catch (erro) {
             console.error(erro);
-            document.getElementById("mensagemGamificacao").textContent = erro.message;
+            this.mostrarMensagem(erro.message, true);
         }
     },
 
     renderizarDashboard() {
         const dados = this.dashboard;
 
-        document.getElementById("nomeAtleta").textContent = dados.nome || "Atleta";
-        document.getElementById("nivelAtleta").textContent = dados.nivel;
-        document.getElementById("xpTotal").textContent = dados.xpTotal;
-        document.getElementById("xpAtual").textContent = dados.xpNivel;
-        document.getElementById("xpNecessario").textContent = dados.xpProximoNivel;
-        document.getElementById("xpRestante").textContent = dados.xpRestante;
-        document.getElementById("desafiosConcluidos").textContent = dados.desafiosConcluidos;
-
+        const nivel = document.getElementById("nivelAtletaGamificacao");
+        const xpTotal = document.getElementById("XPAtletaGamificacao");
         const barra = document.getElementById("barraXP");
-        barra.style.width = dados.porcentagem + "%";
+        const xpFalta = document.getElementById("XPFalta");
+        const proximoNivel = document.getElementById("proximoNivel");
+        const nomeAtleta = document.getElementById("nomeAtleta");
+        const perfilAtleta = document.getElementById("perfilAtleta");
 
-        document.getElementById("porcentagemXP").textContent = dados.porcentagem + "%";
+        if (nivel) nivel.textContent = dados.nivel ?? 1;
+        if (xpTotal) xpTotal.textContent = `${dados.xpTotal ?? 0} XP`;
+        if (barra) barra.style.width = `${dados.porcentagem ?? 0}%`;
+        if (xpFalta) xpFalta.textContent = dados.xpRestante ?? 0;
+        if (proximoNivel) proximoNivel.textContent = dados.nivelProximo ?? ((dados.nivel ?? 1) + 1);
 
-        const foto = document.getElementById("fotoAtleta");
+        if (nomeAtleta && dados.nome) {
+            const textoNome = Array.from(nomeAtleta.childNodes).find(no => no.nodeType === Node.TEXT_NODE);
+            if (textoNome) textoNome.textContent = dados.nome;
+        }
 
-        if (dados.fotoPerfil) {
-            foto.src = dados.fotoPerfil;
+        if (perfilAtleta) {
+            if (dados.fotoPerfil) {
+                perfilAtleta.innerHTML = `<img src="${this.escaparHTML(dados.fotoPerfil)}" alt="Foto do atleta">`;
+            } else if (dados.nome) {
+                perfilAtleta.textContent = dados.nome
+                    .split(" ")
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map(nome => nome[0])
+                    .join("")
+                    .toUpperCase();
+            }
         }
 
         this.renderizarDesafios(dados.desafios || []);
@@ -60,9 +74,11 @@ const gamificacao = {
 
     renderizarDesafios(desafios) {
         const container = document.getElementById("listaDesafios");
+        if (!container) return;
+
         container.innerHTML = "";
 
-        if (desafios.length === 0) {
+        if (!desafios.length) {
             container.innerHTML = `<p class="vazio">Nenhum desafio disponível no momento.</p>`;
             return;
         }
@@ -72,33 +88,27 @@ const gamificacao = {
             card.className = "desafio-card";
 
             const concluido = desafio.concluido;
-            const porcentagem = desafio.porcentagem;
+            const porcentagem = Math.min(100, Math.max(0, desafio.porcentagem || 0));
 
             card.innerHTML = `
                 <div class="desafio-topo">
                     <span class="desafio-frequencia">${this.formatarFrequencia(desafio.frequencia)}</span>
-                    <span class="desafio-xp">+${desafio.xp} XP</span>
+                    <span class="desafio-xp">+${desafio.xp || 0} XP</span>
                 </div>
-
                 <h3>${this.escaparHTML(desafio.titulo)}</h3>
                 <p>${this.escaparHTML(desafio.descricao)}</p>
-
                 <div class="desafio-progresso-texto">
                     <span>Progresso</span>
-                    <span>${desafio.progresso}/${desafio.objetivo}</span>
+                    <span>${desafio.progresso || 0}/${desafio.objetivo || 0}</span>
                 </div>
-
                 <div class="barra-progresso">
                     <div class="barra-progresso-preenchida" style="width:${porcentagem}%"></div>
                 </div>
-
                 <div class="desafio-rodape">
                     <span>${porcentagem}% concluído</span>
                     ${concluido
                         ? `<span class="status-concluido">Concluído</span>`
-                        : `<button class="btn-teste" data-tipo="${desafio.tipoAcao}">
-                                Testar ação
-                           </button>`
+                        : `<button type="button" class="btn-teste" data-tipo="${this.escaparHTML(desafio.tipoAcao || "")}">Testar ação</button>`
                     }
                 </div>
             `;
@@ -122,7 +132,7 @@ const gamificacao = {
             PERMANENTE: "Desafio permanente"
         };
 
-        return formatos[frequencia] || frequencia;
+        return formatos[frequencia] || frequencia || "Desafio";
     },
 
     escaparHTML(texto) {
@@ -155,7 +165,6 @@ const gamificacao = {
             }
 
             this.mostrarMensagem(dados.mensagem);
-
             await this.carregar();
 
             return dados;
@@ -168,61 +177,77 @@ const gamificacao = {
     },
 
     async carregarRanking() {
-        const container = document.getElementById("listaRanking");
+        const container = document.getElementById("rankingBody");
+        if (!container) return;
 
         try {
             const resposta = await fetch(`${API_GAMIFICACAO}?acao=ranking`, {
                 credentials: "include"
             });
 
-            if (!resposta.ok) throw new Error("Erro ao carregar ranking.");
+            if (!resposta.ok) {
+                throw new Error("Erro ao carregar ranking.");
+            }
 
             const ranking = await resposta.json();
-
             container.innerHTML = "";
 
-            if (ranking.length === 0) {
-                container.innerHTML = `<p class="vazio">Ranking ainda sem atletas.</p>`;
+            if (!Array.isArray(ranking) || ranking.length === 0) {
+                container.innerHTML = `<tr><td colspan="8">Ranking ainda sem atletas.</td></tr>`;
                 return;
             }
 
             ranking.forEach(atleta => {
-                const item = document.createElement("div");
-                item.className = "ranking-item";
+                const linha = document.createElement("tr");
 
-                item.innerHTML = `
-                    <span class="ranking-posicao">${atleta.posicao}</span>
-                    <div class="ranking-avatar">
-                        ${atleta.fotoPerfil
-                            ? `<img src="${this.escaparHTML(atleta.fotoPerfil)}" alt="">`
-                            : `<span>${this.escaparHTML(atleta.nome.charAt(0))}</span>`
-                        }
-                    </div>
-                    <div class="ranking-info">
-                        <strong>${this.escaparHTML(atleta.nome)}</strong>
-                        <small>Nível ${atleta.nivel}</small>
-                    </div>
-                    <span class="ranking-xp">${atleta.xp} XP</span>
+                const nome = atleta.nome || "Atleta";
+                const iniciais = nome.split(" ")
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map(palavra => palavra[0])
+                    .join("")
+                    .toUpperCase();
+
+                linha.innerHTML = `
+                    <td>${atleta.posicao ?? "-"}</td>
+                    <td>
+                        <div class="ranking-atleta">
+                            <span class="ranking-avatar">
+                                ${atleta.fotoPerfil
+                                    ? `<img src="${this.escaparHTML(atleta.fotoPerfil)}" alt="">`
+                                    : this.escaparHTML(iniciais)
+                                }
+                            </span>
+                            <span>${this.escaparHTML(nome)}</span>
+                        </div>
+                    </td>
+                    <td>${this.escaparHTML(atleta.categoria || "-")}</td>
+                    <td>${this.escaparHTML(atleta.posicaoAtleta || atleta.posicaoPrincipal || "-")}</td>
+                    <td>${atleta.xp ?? 0} XP</td>
+                    <td>${atleta.nivel ?? 1}</td>
+                    <td>${this.escaparHTML(atleta.desempenho || "-")}</td>
+                    <td>${atleta.engajamento ?? 0}</td>
                 `;
 
-                container.appendChild(item);
+                container.appendChild(linha);
             });
 
         } catch (erro) {
             console.error(erro);
-            container.innerHTML = `<p class="vazio">Não foi possível carregar o ranking.</p>`;
+            container.innerHTML = `<tr><td colspan="8">Não foi possível carregar o ranking.</td></tr>`;
         }
     },
 
     mostrarMensagem(texto, erro = false) {
         const mensagem = document.getElementById("mensagemGamificacao");
+        if (!mensagem) return;
 
         mensagem.textContent = texto;
         mensagem.className = erro ? "mensagem erro" : "mensagem sucesso";
 
         setTimeout(() => {
             mensagem.textContent = "";
-            mensagem.className = "mensagem";
+            mensagem.className = "";
         }, 4000);
     }
 };
@@ -252,4 +277,3 @@ window.ClubFlowGamificacao = {
 document.addEventListener("DOMContentLoaded", () => {
     gamificacao.carregar();
 });
-

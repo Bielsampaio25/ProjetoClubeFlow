@@ -1103,6 +1103,132 @@ dialog::backdrop {
     outline-offset: 3px;
 }
 
+.post-avatar {
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.post-avatar img,
+.avatar-story img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.post-galeria {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.post-galeria img,
+.post-galeria video {
+    display: block;
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #07130e;
+}
+
+.post-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+}
+
+.post-actions button:hover {
+    border-color: var(--primary-green);
+}
+
+.btn-curtida.curtido {
+    color: #ff4d6d;
+}
+
+.story-remoto {
+    cursor: pointer;
+}
+
+.story-remoto .avatar {
+    overflow: hidden;
+    border-color: var(--primary-green);
+}
+
+.story-remoto span {
+    font-size: 12px;
+    max-width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#conteudoVisualizarStory {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    width: 100%;
+}
+
+#conteudoVisualizarStory img,
+#conteudoVisualizarStory video {
+    max-width: 100%;
+    max-height: 65vh;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+#sessaoComentarios {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.comentario {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.comentario p {
+    overflow-wrap: anywhere;
+}
+
+.comentario small {
+    color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+    .post-galeria img,
+    .post-galeria video {
+        max-height: 380px;
+    }
+
+    .post-actions {
+        gap: 8px;
+    }
+
+    .post-actions button {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .story-row {
+        gap: 12px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 8px;
+    }
+}
+
 @media (max-width: 480px) {
     .post-actions {
         gap: 8px;

@@ -1,271 +1,268 @@
-//rede-social.js
+const API = "../RedeSocialController";
 
-const stories = document.querySelectorAll(".story .avatar");
-const storyModal = document.getElementById("storyModal");
-const fecharStoryModal = document.getElementById("fecharStoryModal");
-const storyUsuario = document.getElementById("storyUsuario");
-const storyNome = document.getElementById("storyNome");
+const publicacaoDialog = document.getElementById("Publicacao");
+const feedDialog = document.getElementById("Feed");
+const storyDialog = document.getElementById("Story");
+const comentariosDialog = document.getElementById("Comentarios");
+const visualizarStoryDialog = document.getElementById("visualizarStory");
 
-const publicacao = document.getElementById("Publicacao");
-const btnAbrir = document.getElementById("fazerPublicacao");
-const btnFechar = document.getElementById("fecharPublicacao");
-
-const feed = document.getElementById("Feed");
-const btnAbrirFeed = document.getElementById("publicarFeed");
-const btnFecharFeed = document.getElementById("fecharFeed");
-
-const dialogStory = document.getElementById("Story");
-const btnAbrirStory = document.getElementById("publicarStory");
-const btnFecharStory = document.getElementById("fecharStory");
+const timeline = document.getElementById("timeline");
+const listaStories = document.getElementById("listaStories");
 
 const formFeed = document.getElementById("formFeed");
 const arquivoFeed = document.getElementById("arquivoFeed");
-const previewFeed = document.getElementById("previewFeed");
 const legendaFeed = document.getElementById("legendaFeed");
-const removerArquivo = document.getElementById("removerArquivo");
-const timeline = document.getElementById("timeline");
+const previewFeed = document.getElementById("previewFeed");
 
-const abrirCriacaoStory = document.getElementById("abrirCriacaoStory");
 const arquivoStory = document.getElementById("arquivoStory");
 const previewStory = document.getElementById("previewStory");
-const btnpublicarStory = document.getElementById("btnpublicarStory");
-const visualizarStory = document.getElementById("visualizarStory");
-const conteudoVisualizarStory = document.getElementById("conteudoVisualizarStory");
-const fecharVisualizacaoStory = document.getElementById("fecharVisualizacaoStory");
-const storyAnterior = document.getElementById("storyAnterior");
-const storyProximo = document.getElementById("storyProximo");
-const contadorStory = document.getElementById("contadorStory");
+const btnPublicarStory = document.getElementById("btnpublicarStory");
 
-const dialogComentarios = document.getElementById("Comentarios");
 const sessaoComentarios = document.getElementById("sessaoComentarios");
-const btnEnviarComentarios = document.getElementById("btnEnviarComentarios");
 const inputComentarios = document.getElementById("inputComentarios");
-const voltarComentarios = document.getElementById("voltarComentarios");
-const excluirStory = document.getElementById("excluirStory");
-const listaStories = document.querySelector(".story-row");
+const btnEnviarComentarios = document.getElementById("btnEnviarComentarios");
 
-const publicacoesStorageKey = "publicacoes";
-const perfilStorageKey = "perfilAtleta";
-const fotoStorageKey = "fotoPerfil";
-const tamanhoMaximoArquivo = 2 * 1024 * 1024;
-
-let arquivosSelecionados = [];
-let urlsPreview = [];
+let arquivosFeed = [];
 let arquivosStory = [];
-let urlsPreviewStory = [];
-let storiesPublicados = [];
-let indiceStoryAtual = 0;
+let publicacaoComentarioAtual = null;
+let stories = [];
+let indiceStory = 0;
 
-function obterPerfilAtleta() {
-    let perfilSalvo = {};
+async function requisicao(url, opcoes = {}) {
+    const resposta = await fetch(url, {
+        credentials: "same-origin",
+        ...opcoes
+    });
 
-    try {
-        perfilSalvo = JSON.parse(
-            localStorage.getItem(perfilStorageKey) || "{}"
-        );
-    } catch {
-        perfilSalvo = {};
+    const dados = await resposta.json();
+
+    if (!resposta.ok || dados.sucesso === false) {
+        throw new Error(dados.mensagem || "Erro na requisição.");
     }
 
-    const nome = perfilSalvo.nome || "Gabriel Sampaio";
-    const usuario = perfilSalvo.usuario || "gabrielalmeida";
-
-    return {
-        id: perfilSalvo.id || usuario,
-        nome,
-        usuario
-    };
+    return dados;
 }
 
-function obterPublicacoesSalvas() {
-    try {
-        const publicacoes = JSON.parse(
-            localStorage.getItem(publicacoesStorageKey) || "[]"
-        );
+function dataUrl(bytes, mime) {
+    if (!bytes) return "";
 
-        return Array.isArray(publicacoes) ? publicacoes : [];
-    } catch {
-        return [];
+    const binario = atob(bytes);
+    const array = new Uint8Array(binario.length);
+
+    for (let i = 0; i < binario.length; i++) {
+        array[i] = binario.charCodeAt(i);
     }
+
+    return URL.createObjectURL(new Blob([array], { type: mime }));
 }
 
-function salvarPublicacoesSalvas(publicacoes) {
-    try {
-        localStorage.setItem(
-            publicacoesStorageKey,
-            JSON.stringify(publicacoes)
-        );
+function criarAvatar(foto, nome) {
+    const avatar = document.createElement("div");
+    avatar.className = "avatar post-avatar";
 
-        return true;
-    } catch (erro) {
-        console.error("Erro ao salvar publicações:", erro);
-        alert("Não foi possível salvar a publicação. O armazenamento do navegador pode estar cheio.");
-        return false;
+    if (foto) {
+        const img = document.createElement("img");
+        img.src = dataUrl(foto, "image/jpeg");
+        img.alt = "Foto de perfil";
+        avatar.appendChild(img);
+    } else {
+        avatar.textContent = (nome || "Atleta")
+            .split(" ")
+            .filter(Boolean)
+            .slice(0, 2)
+            .map(p => p[0])
+            .join("")
+            .toUpperCase();
     }
+
+    return avatar;
 }
 
-function converterArquivoParaBase64(arquivo) {
-    return new Promise((resolve, reject) => {
-        const leitor = new FileReader();
+function formatarData(data) {
+    if (!data) return "";
 
-        leitor.onload = () => {
-            resolve({
-                nome: arquivo.name,
-                tipo: arquivo.type,
-                tamanho: arquivo.size,
-                dados: leitor.result
+    const dataObj = new Date(data);
+
+    if (Number.isNaN(dataObj.getTime())) return "";
+
+    return dataObj.toLocaleString("pt-BR", {
+        dateStyle: "short",
+        timeStyle: "short"
+    });
+}
+
+function criarMidias(midias) {
+    const container = document.createElement("div");
+    container.className = "post-media";
+
+    if (!midias || midias.length === 0) {
+        container.remove();
+        return null;
+    }
+
+    const galeria = document.createElement("div");
+    galeria.className = "post-galeria";
+
+    midias.forEach(midia => {
+        const elemento = midia.tipo === "VIDEO"
+            ? document.createElement("video")
+            : document.createElement("img");
+
+        elemento.src = dataUrl(midia.arquivo, midia.mime);
+
+        if (elemento.tagName === "VIDEO") {
+            elemento.controls = true;
+            elemento.playsInline = true;
+        } else {
+            elemento.alt = "Imagem da publicação";
+        }
+
+        galeria.appendChild(elemento);
+    });
+
+    container.appendChild(galeria);
+
+    return container;
+}
+
+function criarPost(post) {
+    const card = document.createElement("article");
+    card.className = "card-post";
+    card.dataset.id = post.id;
+
+    const cabecalho = document.createElement("div");
+    cabecalho.className = "post-head";
+
+    cabecalho.appendChild(criarAvatar(post.fotoPerfil, post.nome));
+
+    const identificacao = document.createElement("div");
+
+    const nome = document.createElement("strong");
+    nome.textContent = post.nome || "Atleta";
+
+    const data = document.createElement("small");
+    data.className = "post-hora";
+    data.textContent = formatarData(post.data);
+
+    identificacao.append(nome, data);
+    cabecalho.appendChild(identificacao);
+
+    card.appendChild(cabecalho);
+
+    const midias = criarMidias(post.midias);
+
+    if (midias) {
+        card.appendChild(midias);
+    }
+
+    if (post.texto) {
+        const texto = document.createElement("p");
+        texto.className = "post-body";
+        texto.textContent = post.texto;
+        card.appendChild(texto);
+    }
+
+    const acoes = document.createElement("div");
+    acoes.className = "post-actions";
+
+    const btnCurtir = document.createElement("button");
+    btnCurtir.type = "button";
+    btnCurtir.className = "btn-curtida";
+
+    function atualizarCurtir() {
+        btnCurtir.classList.toggle("curtido", post.curtido);
+
+        btnCurtir.textContent =
+            `${post.curtido ? "♥" : "♡"} ${post.curtidas || 0}`;
+    }
+
+    atualizarCurtir();
+
+    btnCurtir.addEventListener("click", async () => {
+        try {
+            const resultado = await requisicao(API, {
+                method: "POST",
+                body: new URLSearchParams({
+                    acao: "curtir",
+                    id: post.id
+                })
             });
-        };
 
-        leitor.onerror = () => {
-            reject(new Error("Não foi possível ler o arquivo."));
-        };
-
-        leitor.readAsDataURL(arquivo);
-    });
-}
-
-function obterDataPublicacao(data) {
-    if (!data) {
-        return new Date();
-    }
-
-    const dataConvertida = new Date(data);
-
-    return Number.isNaN(dataConvertida.getTime())
-        ? new Date()
-        : dataConvertida;
-}
-
-function formatarTempoPublicacao(data) {
-    const diferenca = Math.max(
-        0,
-        Math.floor((Date.now() - data.getTime()) / 1000)
-    );
-
-    if (diferenca < 60) {
-        return "há poucos segundos";
-    }
-
-    if (diferenca < 3600) {
-        return `há ${Math.floor(diferenca / 60)} min`;
-    }
-
-    if (diferenca < 86400) {
-        return `há ${Math.floor(diferenca / 3600)} h`;
-    }
-
-    return `há ${Math.floor(diferenca / 86400)} dias`;
-}
-
-stories.forEach((storyItem) => {
-    storyItem.addEventListener("click", (evento) => {
-        evento.preventDefault();
-
-        if (storyItem.id === "abrirCriacaoStory") {
-            return;
-        }
-
-        const nome = storyItem.dataset.nome ||
-            storyItem.parentElement?.textContent.trim() ||
-            "Story";
-
-        if (storyModal && storyUsuario && storyNome) {
-            storyUsuario.textContent = nome;
-            storyNome.textContent = nome;
-            storyModal.classList.add("ativo");
+            post.curtido = resultado.curtido;
+            post.curtidas += post.curtido ? 1 : -1;
+            atualizarCurtir();
+        } catch (erro) {
+            alert(erro.message);
         }
     });
-});
 
-if (fecharStoryModal && storyModal) {
-    fecharStoryModal.addEventListener("click", () => {
-        storyModal.classList.remove("ativo");
-    });
+    const btnComentar = document.createElement("button");
+    btnComentar.type = "button";
+    btnComentar.className = "btn-comentarios";
+    btnComentar.textContent = `💬 ${post.comentarios || 0} comentários`;
 
-    storyModal.addEventListener("click", (evento) => {
-        if (evento.target === storyModal) {
-            storyModal.classList.remove("ativo");
-        }
-    });
+    btnComentar.addEventListener("click", () => abrirComentarios(post.id));
+
+    acoes.append(btnCurtir, btnComentar);
+    card.appendChild(acoes);
+
+    return card;
 }
 
-document.addEventListener("keydown", (evento) => {
-    if (evento.key === "Escape" && storyModal) {
-        storyModal.classList.remove("ativo");
+async function carregarFeed() {
+    try {
+        const publicacoes = await requisicao(`${API}?acao=feed`);
+
+        timeline.replaceChildren();
+
+        publicacoes.forEach(post => {
+            timeline.appendChild(criarPost(post));
+        });
+
+        if (publicacoes.length === 0) {
+            const vazio = document.createElement("p");
+            vazio.textContent = "Nenhuma publicação ainda. Seja o primeiro a publicar!";
+            timeline.appendChild(vazio);
+        }
+    } catch (erro) {
+        timeline.textContent = erro.message;
     }
-});
+}
 
-btnAbrir.addEventListener("click", (evento) => {
-    evento.preventDefault();
-    publicacao.showModal();
-});
-
-btnFechar.addEventListener("click", () => {
-    publicacao.close();
-});
-
-btnAbrirFeed.addEventListener("click", (evento) => {
-    evento.preventDefault();
-    publicacao.close();
-    feed.showModal();
-});
-
-btnFecharFeed.addEventListener("click", () => {
-    feed.close();
-});
-
-btnAbrirStory.addEventListener("click", (evento) => {
-    evento.preventDefault();
-    publicacao.close();
-    dialogStory.showModal();
-});
-
-function limparPreview() {
-    urlsPreview.forEach((url) => URL.revokeObjectURL(url));
-    urlsPreview = [];
+function renderizarPreviewFeed() {
     previewFeed.replaceChildren();
-}
 
-function renderizarPreview() {
-    limparPreview();
-
-    if (arquivosSelecionados.length === 0) {
-        const mensagem = document.createElement("p");
-        mensagem.textContent = "Nenhum arquivo selecionado";
-        previewFeed.appendChild(mensagem);
+    if (arquivosFeed.length === 0) {
+        const texto = document.createElement("p");
+        texto.textContent = "Nenhum arquivo selecionado";
+        previewFeed.appendChild(texto);
         return;
     }
 
-    arquivosSelecionados.forEach((arquivo, indice) => {
-        const url = URL.createObjectURL(arquivo);
-        urlsPreview.push(url);
-
+    arquivosFeed.forEach((arquivo, indice) => {
         const item = document.createElement("div");
-        item.classList.add("preview-item");
+        item.className = "preview-item";
 
-        let midia;
+        const midia = arquivo.type.startsWith("video/")
+            ? document.createElement("video")
+            : document.createElement("img");
 
-        if (arquivo.type.startsWith("image/")) {
-            midia = document.createElement("img");
-            midia.alt = `Imagem ${indice + 1}`;
-        } else {
-            midia = document.createElement("video");
+        midia.src = URL.createObjectURL(arquivo);
+
+        if (midia.tagName === "VIDEO") {
             midia.controls = true;
-            midia.playsInline = true;
+        } else {
+            midia.alt = "Pré-visualização";
         }
-
-        midia.src = url;
 
         const remover = document.createElement("button");
         remover.type = "button";
-        remover.classList.add("remover-midia");
+        remover.className = "remover-midia";
         remover.textContent = "×";
-        remover.setAttribute("aria-label", `Remover mídia ${indice + 1}`);
 
         remover.addEventListener("click", () => {
-            arquivosSelecionados.splice(indice, 1);
-            renderizarPreview();
+            arquivosFeed.splice(indice, 1);
+            renderizarPreviewFeed();
         });
 
         item.append(midia, remover);
@@ -274,561 +271,224 @@ function renderizarPreview() {
 }
 
 arquivoFeed.addEventListener("change", () => {
-    const novosArquivos = Array.from(arquivoFeed.files);
-
-    const validos = novosArquivos.filter((arquivo) =>
-        arquivo.type.startsWith("image/") ||
-        arquivo.type.startsWith("video/")
-    );
-
-    if (validos.length !== novosArquivos.length) {
-        alert("Selecione apenas imagens ou vídeos.");
-    }
-
-    const excedidos = validos.filter(
-        (arquivo) => arquivo.size > tamanhoMaximoArquivo
-    );
-
-    if (excedidos.length > 0) {
-        alert("Cada imagem ou vídeo deve ter no máximo 2 MB.");
-    }
-
-    arquivosSelecionados.push(
-        ...validos.filter((arquivo) => arquivo.size <= tamanhoMaximoArquivo)
-    );
-
-    arquivoFeed.value = "";
-    renderizarPreview();
-});
-
-removerArquivo.addEventListener("click", () => {
-    arquivosSelecionados = [];
-    arquivoFeed.value = "";
-    renderizarPreview();
-});
-
-function criarCarrossel(arquivos) {
-    const midiaContainer = document.createElement("div");
-    midiaContainer.classList.add("post-media");
-
-    if (!arquivos || arquivos.length === 0) {
-        return midiaContainer;
-    }
-
-    const galeria = document.createElement("div");
-    galeria.classList.add("post-carousel");
-
-    const slides = [];
-    const indicadores = [];
-    let indiceAtual = 0;
-
-    arquivos.forEach((arquivo, indice) => {
-        const slide = document.createElement("div");
-        slide.classList.add("post-slide");
-
-        if (indice === 0) {
-            slide.classList.add("ativo");
-        }
-
-        const tipo = arquivo.type || arquivo.tipo || "";
-        const origem = arquivo.dados || arquivo.url || "";
-
-        let midia;
-
-        if (tipo.startsWith("image/")) {
-            midia = document.createElement("img");
-            midia.alt = `Mídia ${indice + 1} da publicação`;
-        } else {
-            midia = document.createElement("video");
-            midia.controls = false;
-            midia.loop = true;
-            midia.autoplay = true;
-            midia.playsInline = true;
-            midia.preload = "metadata";
-        }
-
-        if (arquivo instanceof Blob) {
-            midia.src = URL.createObjectURL(arquivo);
-        } else {
-            midia.src = origem;
-        }
-
-        slide.appendChild(midia);
-        galeria.appendChild(slide);
-        slides.push(slide);
-    });
-
-    const contador = document.createElement("span");
-    contador.classList.add("post-carousel-contador");
-
-    const anterior = document.createElement("button");
-    anterior.type = "button";
-    anterior.classList.add("post-carousel-btn", "anterior");
-    anterior.textContent = "‹";
-    anterior.setAttribute("aria-label", "Mídia anterior");
-
-    const proximo = document.createElement("button");
-    proximo.type = "button";
-    proximo.classList.add("post-carousel-btn", "proximo");
-    proximo.textContent = "›";
-    proximo.setAttribute("aria-label", "Próxima mídia");
-
-    const containerIndicadores = document.createElement("div");
-    containerIndicadores.classList.add("post-carousel-indicadores");
-
-    arquivos.forEach((arquivo, indice) => {
-        const indicador = document.createElement("span");
-
-        if (indice === 0) {
-            indicador.classList.add("ativo");
-        }
-
-        containerIndicadores.appendChild(indicador);
-        indicadores.push(indicador);
-    });
-
-    function atualizarCarrossel() {
-        slides.forEach((slide, indice) => {
-            slide.classList.toggle("ativo", indice === indiceAtual);
-
-            const video = slide.querySelector("video");
-
-            if (video && indice !== indiceAtual) {
-                video.pause();
-            }
-        });
-
-        contador.textContent = `${indiceAtual + 1}/${slides.length}`;
-        anterior.disabled = indiceAtual === 0;
-        proximo.disabled = indiceAtual === slides.length - 1;
-
-        indicadores.forEach((indicador, indice) => {
-            indicador.classList.toggle("ativo", indice === indiceAtual);
-        });
-    }
-
-    anterior.addEventListener("click", () => {
-        if (indiceAtual > 0) {
-            indiceAtual--;
-            atualizarCarrossel();
-        }
-    });
-
-    proximo.addEventListener("click", () => {
-        if (indiceAtual < slides.length - 1) {
-            indiceAtual++;
-            atualizarCarrossel();
-        }
-    });
-
-    galeria.append(contador, anterior, proximo);
-    midiaContainer.appendChild(galeria);
-
-    if (arquivos.length > 1) {
-        midiaContainer.appendChild(containerIndicadores);
-    }
-
-    atualizarCarrossel();
-
-    return midiaContainer;
-}
-
-function criarPublicacao(arquivos, legenda, dados = {}) {
-    const artigo = document.createElement("article");
-    artigo.classList.add("card-post");
-
-    const idPublicacao = dados.id || `publicacao-${Date.now()}-${Math.random()}`;
-    artigo.dataset.id = idPublicacao;
-
-    const perfil = obterPerfilAtleta();
-
-    const cabecalho = document.createElement("div");
-    cabecalho.classList.add("post-head");
-
-    const avatar = document.createElement("span");
-    avatar.classList.add("avatar");
-
-    const fotoPerfil = dados.fotoPerfil || localStorage.getItem(fotoStorageKey);
-
-    if (fotoPerfil) {
-        const imagemAvatar = document.createElement("img");
-        imagemAvatar.src = fotoPerfil;
-        imagemAvatar.alt = "Foto do atleta";
-        avatar.textContent = "";
-        avatar.appendChild(imagemAvatar);
-    } else {
-        avatar.textContent = (perfil.nome || "Atleta")
-            .split(" ")
-            .filter(Boolean)
-            .slice(0, 2)
-            .map((parte) => parte[0])
-            .join("")
-            .toUpperCase();
-    }
-
-    const identificacao = document.createElement("div");
-
-    const nome = document.createElement("a");
-    nome.classList.add("nome-atleta-link");
-    nome.textContent = dados.usuarioNome || perfil.nome;
-
-    const idAtleta = dados.usuarioId || dados.atletaId || perfil.id;
-
-    nome.href = `perfil-atleta-social.html?id=${encodeURIComponent(idAtleta)}`;
-    nome.setAttribute("aria-label", `Ver perfil de ${nome.textContent}`);
-
-    const descricao = document.createElement("small");
-    descricao.classList.add("post-hora");
-
-    const dataPublicacao = obterDataPublicacao(dados.data);
-
-    function atualizarHora() {
-        descricao.textContent = formatarTempoPublicacao(dataPublicacao);
-    }
-
-    atualizarHora();
-
-    const intervaloHora = setInterval(atualizarHora, 10000);
-
-    artigo.addEventListener("DOMNodeRemoved", () => {
-        clearInterval(intervaloHora);
-    }, { once: true });
-
-    identificacao.append(nome, descricao);
-    cabecalho.append(avatar, identificacao);
-
-    const btnCurtida = document.createElement("button");
-    btnCurtida.type = "button";
-    btnCurtida.classList.add("btn-curtida");
-
-    const iconeCurtida = document.createElement("span");
-    iconeCurtida.classList.add("material-symbols-outlined");
-    iconeCurtida.textContent = "favorite";
-
-    const textoCurtida = document.createElement("span");
-    let curtido = Boolean(dados.curtido);
-    let totalCurtidas = Number(dados.curtidas) || 0;
-
-    textoCurtida.textContent = String(totalCurtidas);
-    btnCurtida.classList.toggle("curtido", curtido);
-
-    btnCurtida.append(iconeCurtida, textoCurtida);
-
-    btnCurtida.addEventListener("click", () => {
-        curtido = !curtido;
-        totalCurtidas = Math.max(0, totalCurtidas + (curtido ? 1 : -1));
-
-        textoCurtida.textContent = String(totalCurtidas);
-        btnCurtida.classList.toggle("curtido", curtido);
-
-        atualizarPublicacaoSalva(idPublicacao, {
-            curtidas: totalCurtidas,
-            curtido
-        });
-    });
-
-    const btnComentarios = document.createElement("button");
-    btnComentarios.type = "button";
-    btnComentarios.classList.add("btn-comentarios");
-
-    const iconeComentarios = document.createElement("span");
-    iconeComentarios.classList.add("material-symbols-outlined");
-    iconeComentarios.textContent = "comment";
-
-    const textoComentarios = document.createElement("span");
-    textoComentarios.textContent = "Comentários";
-
-    btnComentarios.append(iconeComentarios, textoComentarios);
-    btnComentarios.addEventListener("click", () => {
-        dialogComentarios.showModal();
-    });
-
-    const btnCompartilhar = document.createElement("button");
-    btnCompartilhar.type = "button";
-    btnCompartilhar.classList.add("btn-compartilhar");
-
-    const iconeCompartilhar = document.createElement("span");
-    iconeCompartilhar.classList.add("material-symbols-outlined");
-    iconeCompartilhar.textContent = "share";
-
-    const textoCompartilhar = document.createElement("span");
-    textoCompartilhar.textContent = "Compartilhar";
-
-    btnCompartilhar.append(iconeCompartilhar, textoCompartilhar);
-
-    btnCompartilhar.addEventListener("click", async () => {
-        const dadosCompartilhamento = {
-            title: "Club Flow",
-            text: `${dados.usuarioNome || perfil.nome} publicou no Club Flow: ${legenda || "Confira esta publicação!"}`,
-            url: window.location.href
-        };
-
-        try {
-            if (navigator.share) {
-                await navigator.share(dadosCompartilhamento);
-            } else if (navigator.clipboard && window.isSecureContext) {
-                await navigator.clipboard.writeText(
-                    `${dadosCompartilhamento.text}\n${dadosCompartilhamento.url}`
-                );
-                alert("Link copiado! Você já pode compartilhar.");
-            } else {
-                prompt(
-                    "Copie o texto para compartilhar:",
-                    `${dadosCompartilhamento.text}\n${dadosCompartilhamento.url}`
-                );
-            }
-        } catch (erro) {
-            if (erro.name !== "AbortError") {
-                console.error("Erro ao compartilhar:", erro);
-                alert("Não foi possível compartilhar a publicação.");
-            }
-        }
-    });
-
-    artigo.appendChild(cabecalho);
-    artigo.appendChild(criarCarrossel(arquivos));
-
-    if (legenda) {
-        const corpo = document.createElement("p");
-        corpo.classList.add("post-body");
-        corpo.textContent = legenda;
-        artigo.appendChild(corpo);
-    }
-
-    const acoes = document.createElement("div");
-    acoes.classList.add("post-actions");
-    acoes.append(btnCurtida, btnComentarios, btnCompartilhar);
-    artigo.appendChild(acoes);
-
-    return artigo;
-}
-
-function atualizarPublicacaoSalva(id, alteracoes) {
-    const publicacoes = obterPublicacoesSalvas();
-
-    const indice = publicacoes.findIndex(
-        (item) => String(item.id) === String(id)
-    );
-
-    if (indice === -1) {
-        return;
-    }
-
-    publicacoes[indice] = {
-        ...publicacoes[indice],
-        ...alteracoes
-    };
-
-    salvarPublicacoesSalvas(publicacoes);
-}
-
-function carregarPublicacoesNoFeed() {
-    const publicacoes = obterPublicacoesSalvas();
-
-    timeline.replaceChildren();
-
-    publicacoes.forEach((item) => {
-        const artigo = criarPublicacao(
-            item.arquivos || [],
-            item.texto || item.conteudo || "",
-            item
-        );
-
-        timeline.appendChild(artigo);
-    });
-}
-
-formFeed.addEventListener("submit", async (evento) => {
-    evento.preventDefault();
-
-    if (arquivosSelecionados.length === 0) {
-        alert("Selecione pelo menos uma imagem ou um vídeo.");
-        return;
-    }
-
-    if (arquivosSelecionados.some((arquivo) => arquivo.size > tamanhoMaximoArquivo)) {
-        alert("Cada imagem ou vídeo deve ter no máximo 2 MB.");
-        return;
-    }
-
-    try {
-        const perfil = obterPerfilAtleta();
-
-        const arquivosSalvos = await Promise.all(
-            arquivosSelecionados.map(converterArquivoParaBase64)
-        );
-
-        const idPublicacao = typeof crypto !== "undefined" && crypto.randomUUID
-            ? crypto.randomUUID()
-            : `publicacao-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
-        const novaPublicacaoSalva = {
-            id: idPublicacao,
-            usuarioId: perfil.id,
-            usuario: perfil.usuario,
-            usuarioNome: perfil.nome,
-            fotoPerfil: localStorage.getItem(fotoStorageKey) || "",
-            texto: legendaFeed.value.trim(),
-            data: new Date().toISOString(),
-            arquivos: arquivosSalvos,
-            curtidas: 0,
-            curtido: false,
-            comentarios: []
-        };
-
-        const publicacoes = obterPublicacoesSalvas();
-        publicacoes.unshift(novaPublicacaoSalva);
-
-        if (!salvarPublicacoesSalvas(publicacoes)) {
+    const selecionados = Array.from(arquivoFeed.files);
+
+    selecionados.forEach(arquivo => {
+        if (!arquivo.type.startsWith("image/") &&
+            !arquivo.type.startsWith("video/")) {
+            alert("Arquivo não suportado.");
             return;
         }
 
-        const novaPublicacao = criarPublicacao(
-            [...arquivosSelecionados],
-            novaPublicacaoSalva.texto,
-            novaPublicacaoSalva
-        );
+        if (arquivo.size > 2 * 1024 * 1024) {
+            alert(`${arquivo.name} ultrapassa 2 MB.`);
+            return;
+        }
 
-        timeline.prepend(novaPublicacao);
-        feed.close();
-    } catch (erro) {
-    console.error("Erro ao publicar:", erro);
+        arquivosFeed.push(arquivo);
+    });
 
-    if (erro.name === "QuotaExceededError") {
-        alert(
-            "O armazenamento do navegador está cheio. " +
-            "Exclua publicações antigas ou reduza o tamanho das mídias."
-        );
-    } else {
-        alert(
-            `Erro ao publicar: ${erro.message || "Erro desconhecido."}`
-        );
-    }
-}
-});
-
-feed.addEventListener("close", () => {
-    arquivosSelecionados = [];
     arquivoFeed.value = "";
-    legendaFeed.value = "";
-
-    limparPreview();
-
-    const mensagem = document.createElement("p");
-    mensagem.textContent = "Nenhum arquivo selecionado";
-    previewFeed.appendChild(mensagem);
+    renderizarPreviewFeed();
 });
 
-btnEnviarComentarios.addEventListener("click", () => {
-    const textoComentario = inputComentarios.value.trim();
+formFeed.addEventListener("submit", async evento => {
+    evento.preventDefault();
 
-    if (!textoComentario) {
+    const texto = legendaFeed.value.trim();
+
+    if (!texto && arquivosFeed.length === 0) {
+        alert("Escreva uma legenda ou selecione uma mídia.");
         return;
     }
 
-    const comentario = document.createElement("div");
-    comentario.classList.add("comentario");
+    const dados = new FormData();
 
-    const texto = document.createElement("p");
-    texto.classList.add("texto-comentario");
-    texto.textContent = textoComentario;
+    dados.append("acao", "publicar");
+    dados.append("texto", texto);
 
-    const acoes = document.createElement("div");
-    acoes.classList.add("acoes-comentario");
-
-    const btnCurtir = document.createElement("button");
-    btnCurtir.type = "button";
-    btnCurtir.classList.add("btn-curtida-comentario");
-
-    const iconeCurtir = document.createElement("span");
-    iconeCurtir.classList.add("material-symbols-outlined");
-    iconeCurtir.textContent = "favorite_border";
-
-    btnCurtir.appendChild(iconeCurtir);
-
-    btnCurtir.addEventListener("click", () => {
-        const curtido = btnCurtir.classList.toggle("curtido");
-        iconeCurtir.textContent = curtido ? "favorite" : "favorite_border";
+    arquivosFeed.forEach(arquivo => {
+        dados.append("arquivos", arquivo);
     });
 
-    const btnApagar = document.createElement("button");
-    btnApagar.type = "button";
-    btnApagar.classList.add("btn-apagar-comentario");
+    try {
+        await requisicao(API, {
+            method: "POST",
+            body: dados
+        });
 
-    const iconeApagar = document.createElement("span");
-    iconeApagar.classList.add("material-symbols-outlined");
-    iconeApagar.textContent = "delete";
+        feedDialog.close();
+        legendaFeed.value = "";
+        arquivosFeed = [];
+        renderizarPreviewFeed();
 
-    btnApagar.appendChild(iconeApagar);
-    btnApagar.addEventListener("click", () => comentario.remove());
+        await carregarFeed();
 
-    acoes.append(btnCurtir, btnApagar);
-    comentario.append(texto, acoes);
-    sessaoComentarios.appendChild(comentario);
-
-    inputComentarios.value = "";
+        alert("Publicação realizada com sucesso!");
+    } catch (erro) {
+        alert(erro.message);
+    }
 });
 
-voltarComentarios.addEventListener("click", (evento) => {
-    evento.preventDefault();
-    dialogComentarios.close();
+async function abrirComentarios(idPublicacao) {
+    publicacaoComentarioAtual = idPublicacao;
+
+    sessaoComentarios.replaceChildren();
+
+    try {
+        const comentarios = await requisicao(
+            `${API}?acao=comentarios&id=${idPublicacao}`
+        );
+
+        comentarios.forEach(comentario => {
+            const item = document.createElement("div");
+            item.className = "comentario";
+
+            const nome = document.createElement("strong");
+            nome.textContent = comentario.nome;
+
+            const texto = document.createElement("p");
+            texto.textContent = comentario.texto;
+
+            const data = document.createElement("small");
+            data.textContent = formatarData(comentario.data);
+
+            item.append(nome, texto, data);
+            sessaoComentarios.appendChild(item);
+        });
+
+        if (comentarios.length === 0) {
+            sessaoComentarios.textContent = "Nenhum comentário ainda.";
+        }
+
+        comentariosDialog.showModal();
+
+    } catch (erro) {
+        alert(erro.message);
+    }
+}
+
+btnEnviarComentarios.addEventListener("click", async () => {
+    const texto = inputComentarios.value.trim();
+
+    if (!texto || !publicacaoComentarioAtual) return;
+
+    try {
+        await requisicao(API, {
+            method: "POST",
+            body: new URLSearchParams({
+                acao: "comentar",
+                id: publicacaoComentarioAtual,
+                texto
+            })
+        });
+
+        inputComentarios.value = "";
+
+        await abrirComentarios(publicacaoComentarioAtual);
+        await carregarFeed();
+
+    } catch (erro) {
+        alert(erro.message);
+    }
 });
 
-inputComentarios.addEventListener("keydown", (evento) => {
+inputComentarios.addEventListener("keydown", evento => {
     if (evento.key === "Enter") {
         evento.preventDefault();
         btnEnviarComentarios.click();
     }
 });
 
+document.getElementById("voltarComentarios")
+    .addEventListener("click", evento => {
+        evento.preventDefault();
+        comentariosDialog.close();
+    });
+
+document.getElementById("fazerPublicacao")
+    .addEventListener("click", evento => {
+        evento.preventDefault();
+        publicacaoDialog.showModal();
+    });
+
+document.getElementById("fecharPublicacao")
+    .addEventListener("click", () => publicacaoDialog.close());
+
+document.getElementById("publicarFeed")
+    .addEventListener("click", () => {
+        publicacaoDialog.close();
+        feedDialog.showModal();
+    });
+
+document.getElementById("fecharFeed")
+    .addEventListener("click", () => feedDialog.close());
+
+document.getElementById("removerArquivo")
+    .addEventListener("click", () => {
+        arquivosFeed = [];
+        renderizarPreviewFeed();
+    });
+
+feedDialog.addEventListener("close", () => {
+    arquivosFeed = [];
+    legendaFeed.value = "";
+    renderizarPreviewFeed();
+});
+
+document.getElementById("publicarStory")
+    .addEventListener("click", () => {
+        publicacaoDialog.close();
+        storyDialog.showModal();
+    });
+
+document.getElementById("abrirCriacaoStory")
+    .addEventListener("click", () => storyDialog.showModal());
+
+document.getElementById("fecharStory")
+    .addEventListener("click", () => {
+        storyDialog.close();
+        limparStory();
+    });
+
 arquivoStory.addEventListener("change", () => {
-    const novosArquivos = Array.from(arquivoStory.files);
+    Array.from(arquivoStory.files).forEach(arquivo => {
+        if (arquivo.type.startsWith("image/") ||
+            arquivo.type.startsWith("video/")) {
+            if (arquivo.size <= 2 * 1024 * 1024) {
+                arquivosStory.push(arquivo);
+            } else {
+                alert("O story deve ter no máximo 2 MB.");
+            }
+        }
+    });
 
-    const validos = novosArquivos.filter((arquivo) =>
-        arquivo.type.startsWith("image/") ||
-        arquivo.type.startsWith("video/")
-    );
-
-    if (validos.length !== novosArquivos.length) {
-        alert("Selecione apenas imagens ou vídeos válidos.");
-    }
-
-    arquivosStory.push(...validos);
     arquivoStory.value = "";
-
     renderizarPreviewStory();
 });
 
 function renderizarPreviewStory() {
-    urlsPreviewStory.forEach((url) => URL.revokeObjectURL(url));
-    urlsPreviewStory = [];
     previewStory.replaceChildren();
 
     arquivosStory.forEach((arquivo, indice) => {
-        const url = URL.createObjectURL(arquivo);
-        urlsPreviewStory.push(url);
-
         const item = document.createElement("div");
-        item.classList.add("preview-story-item");
+        item.className = "preview-story-item";
 
-        const midia = document.createElement(
-            arquivo.type.startsWith("image/") ? "img" : "video"
-        );
+        const midia = arquivo.type.startsWith("video/")
+            ? document.createElement("video")
+            : document.createElement("img");
 
-        midia.src = url;
+        midia.src = URL.createObjectURL(arquivo);
 
-        if (midia.tagName === "IMG") {
-            midia.alt = `Prévia do Story ${indice + 1}`;
-        } else {
+        if (midia.tagName === "VIDEO") {
             midia.controls = true;
-            midia.muted = true;
-            midia.playsInline = true;
+        } else {
+            midia.alt = "Pré-visualização do story";
         }
 
         const remover = document.createElement("button");
         remover.type = "button";
         remover.textContent = "×";
-        remover.setAttribute("aria-label", `Remover mídia ${indice + 1}`);
 
         remover.addEventListener("click", () => {
             arquivosStory.splice(indice, 1);
@@ -839,190 +499,183 @@ function renderizarPreviewStory() {
         previewStory.appendChild(item);
     });
 
-    btnpublicarStory.disabled = arquivosStory.length === 0;
+    btnPublicarStory.disabled = arquivosStory.length === 0;
 }
 
-function criarStory(arquivos) {
-    const novasMidias = arquivos.map((arquivo) => ({
-        arquivo,
-        url: URL.createObjectURL(arquivo),
-        tipo: arquivo.type
-    }));
+btnPublicarStory.addEventListener("click", async () => {
+    if (arquivosStory.length === 0) return;
 
-    storiesPublicados.push(...novasMidias);
+    try {
+        for (const arquivo of arquivosStory) {
+            const dados = new FormData();
+            dados.append("acao", "publicarStory");
+            dados.append("arquivo", arquivo);
 
-    const meuStoryExistente = document.getElementById("meuStory");
-    const storyExistente = document.querySelector(".story-publicado");
-
-    let storyElemento = meuStoryExistente || storyExistente;
-
-    if (!storyElemento) {
-        storyElemento = document.createElement("div");
-        storyElemento.classList.add("story", "story-publicado");
-
-        if (listaStories) {
-            listaStories.prepend(storyElemento);
+            await requisicao(API, {
+                method: "POST",
+                body: dados
+            });
         }
-    } else {
-        storyElemento.classList.add("story-publicado");
-        storyElemento.removeAttribute("id");
+
+        storyDialog.close();
+        limparStory();
+        await carregarStories();
+
+        alert("Story publicado!");
+    } catch (erro) {
+        alert(erro.message);
     }
+});
 
-    storyElemento.replaceChildren();
+function limparStory() {
+    arquivosStory = [];
+    previewStory.replaceChildren();
+    btnPublicarStory.disabled = true;
+}
 
-    const botaoStory = document.createElement("button");
-    botaoStory.type = "button";
-    botaoStory.classList.add("avatar", "avatar-story");
-
-    const primeiraMidia = storiesPublicados[0];
-
-    const miniatura = document.createElement(
-        primeiraMidia.tipo.startsWith("image/") ? "img" : "video"
-    );
-
-    miniatura.src = primeiraMidia.url;
-
-    if (miniatura.tagName === "IMG") {
-        miniatura.alt = "Seu Story";
-    } else {
-        miniatura.muted = true;
-        miniatura.preload = "metadata";
+async function carregarStories() {
+    try {
+        stories = await requisicao(`${API}?acao=stories`);
+        renderizarStories();
+    } catch (erro) {
+        console.error(erro);
     }
+}
 
-    botaoStory.appendChild(miniatura);
+function renderizarStories() {
+    listaStories.querySelectorAll(".story-remoto").forEach(item => item.remove());
 
-    const nomeStory = document.createElement("div");
-    nomeStory.textContent = "Seu Story";
+    const atletas = new Map();
 
-    storyElemento.append(botaoStory, nomeStory);
+    stories.forEach(story => {
+        if (!atletas.has(story.idAtleta)) {
+            atletas.set(story.idAtleta, []);
+        }
 
-    botaoStory.addEventListener("click", () => {
-        indiceStoryAtual = 0;
-        visualizarMidiaStory();
-        visualizarStory.showModal();
+        atletas.get(story.idAtleta).push(story);
+    });
+
+    atletas.forEach((itens, idAtleta) => {
+        const primeiro = itens[0];
+
+        const elemento = document.createElement("div");
+        elemento.className = "story story-remoto";
+
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = "avatar avatar-story";
+
+        if (primeiro.fotoPerfil) {
+            const img = document.createElement("img");
+            img.src = dataUrl(primeiro.fotoPerfil, "image/jpeg");
+            img.alt = primeiro.nome;
+            botao.appendChild(img);
+        } else {
+            botao.textContent = (primeiro.nome || "Atleta")
+                .split(" ")
+                .map(p => p[0])
+                .slice(0, 2)
+                .join("");
+        }
+
+        const nome = document.createElement("span");
+        nome.textContent = primeiro.nome;
+
+        botao.addEventListener("click", () => {
+            const lista = itens;
+            indiceStory = 0;
+            abrirVisualizacaoStory(lista);
+        });
+
+        elemento.append(botao, nome);
+        listaStories.appendChild(elemento);
     });
 }
 
-function visualizarMidiaStory() {
-    const midiaStory = storiesPublicados[indiceStoryAtual];
+let storiesAtuais = [];
 
-    if (!midiaStory) {
-        return;
-    }
+function abrirVisualizacaoStory(lista) {
+    storiesAtuais = lista;
+    indiceStory = 0;
+    mostrarStory();
+    visualizarStoryDialog.showModal();
+}
 
-    conteudoVisualizarStory.replaceChildren();
+function mostrarStory() {
+    const story = storiesAtuais[indiceStory];
 
-    const midia = document.createElement(
-        midiaStory.tipo.startsWith("image/") ? "img" : "video"
-    );
+    const conteudo = document.getElementById("conteudoVisualizarStory");
+    const contador = document.getElementById("contadorStory");
 
-    midia.src = midiaStory.url;
+    conteudo.replaceChildren();
 
-    if (midia.tagName === "IMG") {
-        midia.alt = "Story publicado";
+    const media = story.mime.startsWith("video/")
+        ? document.createElement("video")
+        : document.createElement("img");
+
+    media.src = dataUrl(story.arquivo, story.mime);
+
+    if (media.tagName === "VIDEO") {
+        media.controls = true;
+        media.autoplay = true;
+        media.playsInline = true;
     } else {
-        midia.controls = true;
-        midia.autoplay = true;
-        midia.playsInline = true;
+        media.alt = "Story de " + story.nome;
     }
 
-    conteudoVisualizarStory.appendChild(midia);
+    conteudo.appendChild(media);
 
-    contadorStory.textContent = `${indiceStoryAtual + 1} / ${storiesPublicados.length}`;
-    storyAnterior.disabled = indiceStoryAtual === 0;
-    storyProximo.disabled = indiceStoryAtual === storiesPublicados.length - 1;
+    contador.textContent = `${indiceStory + 1} / ${storiesAtuais.length}`;
+
+    document.getElementById("storyAnterior").disabled = indiceStory === 0;
+    document.getElementById("storyProximo").disabled =
+        indiceStory === storiesAtuais.length - 1;
+
+    document.getElementById("excluirStory").hidden =
+        story.idAtleta !== stories[0]?.idAtleta;
 }
 
-storyAnterior.addEventListener("click", () => {
-    if (indiceStoryAtual > 0) {
-        indiceStoryAtual--;
-        visualizarMidiaStory();
-    }
-});
-
-storyProximo.addEventListener("click", () => {
-    if (indiceStoryAtual < storiesPublicados.length - 1) {
-        indiceStoryAtual++;
-        visualizarMidiaStory();
-    }
-});
-
-btnpublicarStory.addEventListener("click", () => {
-    if (arquivosStory.length === 0) {
-        alert("Selecione pelo menos uma foto ou um vídeo.");
-        return;
-    }
-
-    criarStory(arquivosStory);
-    dialogStory.close();
-    limparFormularioStory();
-});
-
-function limparFormularioStory() {
-    urlsPreviewStory.forEach((url) => URL.revokeObjectURL(url));
-    urlsPreviewStory = [];
-    arquivosStory = [];
-    arquivoStory.value = "";
-    previewStory.replaceChildren();
-    btnpublicarStory.disabled = true;
-}
-
-btnFecharStory.addEventListener("click", () => {
-    dialogStory.close();
-    limparFormularioStory();
-});
-
-fecharVisualizacaoStory.addEventListener("click", () => {
-    const videos = conteudoVisualizarStory.querySelectorAll("video");
-    videos.forEach((video) => video.pause());
-    visualizarStory.close();
-    conteudoVisualizarStory.replaceChildren();
-});
-
-visualizarStory.addEventListener("close", () => {
-    const videos = conteudoVisualizarStory.querySelectorAll("video");
-    videos.forEach((video) => video.pause());
-    conteudoVisualizarStory.replaceChildren();
-});
-
-excluirStory.addEventListener("click", () => {
-    const storyAtual = storiesPublicados[indiceStoryAtual];
-
-    if (!storyAtual) {
-        return;
-    }
-
-    const confirmar = confirm("Tem certeza de que deseja excluir este story?");
-
-    if (!confirmar) {
-        return;
-    }
-
-    URL.revokeObjectURL(storyAtual.url);
-    storiesPublicados.splice(indiceStoryAtual, 1);
-
-    if (storiesPublicados.length === 0) {
-        const storyElemento = document.querySelector(".story-publicado");
-
-        if (storyElemento) {
-            storyElemento.remove();
+document.getElementById("storyAnterior")
+    .addEventListener("click", () => {
+        if (indiceStory > 0) {
+            indiceStory--;
+            mostrarStory();
         }
+    });
 
-        visualizarStory.close();
-        conteudoVisualizarStory.replaceChildren();
-        indiceStoryAtual = 0;
-        return;
-    }
+document.getElementById("storyProximo")
+    .addEventListener("click", () => {
+        if (indiceStory < storiesAtuais.length - 1) {
+            indiceStory++;
+            mostrarStory();
+        }
+    });
 
-    if (indiceStoryAtual >= storiesPublicados.length) {
-        indiceStoryAtual = storiesPublicados.length - 1;
-    }
+document.getElementById("fecharVisualizacaoStory")
+    .addEventListener("click", () => visualizarStoryDialog.close());
 
-    visualizarMidiaStory();
-});
+document.getElementById("excluirStory")
+    .addEventListener("click", async () => {
+        const story = storiesAtuais[indiceStory];
 
-visualizarStory.addEventListener("close", () => {
-    excluirStory.disabled = false;
-});
+        if (!story || !confirm("Deseja excluir este story?")) return;
 
-carregarPublicacoesNoFeed();
+        try {
+            await requisicao(API, {
+                method: "POST",
+                body: new URLSearchParams({
+                    acao: "excluirStory",
+                    id: story.id
+                })
+            });
+
+            visualizarStoryDialog.close();
+            await carregarStories();
+        } catch (erro) {
+            alert(erro.message);
+        }
+    });
+
+carregarFeed();
+carregarStories();
+renderizarPreviewFeed();
