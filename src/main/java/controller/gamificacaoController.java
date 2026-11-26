@@ -8,7 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
+
+import java.util.Collection;
 
 @WebServlet("/api/gamificacao")
 public class gamificacaoController extends HttpServlet {
@@ -22,30 +25,42 @@ public class gamificacaoController extends HttpServlet {
     ) throws IOException {
 
         response.setStatus(status);
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
+
         response.getWriter().write(toJson(dados));
     }
 
     private String toJson(Object objeto) {
 
-        if (objeto == null) return "null";
+        if (objeto == null) {
+            return "null";
+        }
 
-        if (objeto instanceof String) {
-            return "\"" + escapar((String) objeto) + "\"";
+        if (objeto instanceof String || objeto instanceof Character) {
+            return "\"" + escapar(String.valueOf(objeto)) + "\"";
         }
 
         if (objeto instanceof Number || objeto instanceof Boolean) {
             return String.valueOf(objeto);
         }
 
-        if (objeto instanceof Map) {
+        if (objeto instanceof Enum<?>) {
+            return toJson(((Enum<?>) objeto).name());
+        }
+
+        if (objeto instanceof Map<?, ?>) {
 
             StringBuilder json = new StringBuilder("{");
             Map<?, ?> mapa = (Map<?, ?>) objeto;
             boolean primeiro = true;
 
             for (Map.Entry<?, ?> entrada : mapa.entrySet()) {
-                if (!primeiro) json.append(",");
+
+                if (!primeiro) {
+                    json.append(",");
+                }
+
                 primeiro = false;
 
                 json.append(toJson(String.valueOf(entrada.getKey())))
@@ -56,15 +71,36 @@ public class gamificacaoController extends HttpServlet {
             return json.append("}").toString();
         }
 
-        if (objeto instanceof Iterable) {
+        if (objeto instanceof Iterable<?>) {
 
             StringBuilder json = new StringBuilder("[");
             boolean primeiro = true;
 
             for (Object item : (Iterable<?>) objeto) {
-                if (!primeiro) json.append(",");
+
+                if (!primeiro) {
+                    json.append(",");
+                }
+
                 primeiro = false;
                 json.append(toJson(item));
+            }
+
+            return json.append("]").toString();
+        }
+
+        if (objeto.getClass().isArray()) {
+
+            StringBuilder json = new StringBuilder("[");
+            int tamanho = Array.getLength(objeto);
+
+            for (int i = 0; i < tamanho; i++) {
+
+                if (i > 0) {
+                    json.append(",");
+                }
+
+                json.append(toJson(Array.get(objeto, i)));
             }
 
             return json.append("]").toString();
@@ -75,19 +111,70 @@ public class gamificacaoController extends HttpServlet {
 
     private String escapar(String texto) {
 
-        return texto
-                .replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r")
-                .replace("\t", "\\t");
+        StringBuilder resultado = new StringBuilder();
+
+        for (int i = 0; i < texto.length(); i++) {
+
+            char caractere = texto.charAt(i);
+
+            switch (caractere) {
+
+                case '"':
+                    resultado.append("\\\"");
+                    break;
+
+                case '\\':
+                    resultado.append("\\\\");
+                    break;
+
+                case '\b':
+                    resultado.append("\\b");
+                    break;
+
+                case '\f':
+                    resultado.append("\\f");
+                    break;
+
+                case '\n':
+                    resultado.append("\\n");
+                    break;
+
+                case '\r':
+                    resultado.append("\\r");
+                    break;
+
+                case '\t':
+                    resultado.append("\\t");
+                    break;
+
+                default:
+
+                    if (caractere < 0x20) {
+
+                        resultado.append(String.format(
+                                "\\u%04x",
+                                (int) caractere
+                        ));
+
+                    } else {
+
+                        resultado.append(caractere);
+                    }
+
+                    break;
+            }
+        }
+
+        return resultado.toString();
     }
 
     private String obterEmail(HttpServletRequest request) {
 
         HttpSession sessao = request.getSession(false);
 
-        if (sessao == null) return null;
+        if (sessao == null) {
+            return null;
+        }
 
         Object email = sessao.getAttribute("email");
 
@@ -98,11 +185,14 @@ public class gamificacaoController extends HttpServlet {
 
         HttpSession sessao = request.getSession(false);
 
-        if (sessao == null) return false;
+        if (sessao == null) {
+            return false;
+        }
 
         Object tipo = sessao.getAttribute("tipoUsuario");
 
-        return tipo != null && tipo.toString().equalsIgnoreCase("atleta");
+        return tipo != null
+                && tipo.toString().equalsIgnoreCase("atleta");
     }
 
     @Override
@@ -114,9 +204,16 @@ public class gamificacaoController extends HttpServlet {
         String email = obterEmail(request);
 
         if (email == null || !atletaAutenticado(request)) {
-            responder(response, 401, Collections.singletonMap(
-                    "mensagem", "Sessão de atleta inválida."
-            ));
+
+            responder(
+                    response,
+                    401,
+                    Collections.singletonMap(
+                            "mensagem",
+                            "Sessão de atleta inválida."
+                    )
+            );
+
             return;
         }
 
@@ -125,6 +222,7 @@ public class gamificacaoController extends HttpServlet {
             String acao = request.getParameter("acao");
 
             if ("ranking".equalsIgnoreCase(acao)) {
+
                 responder(response, 200, dao.buscarRanking());
                 return;
             }
@@ -135,9 +233,17 @@ public class gamificacaoController extends HttpServlet {
 
             e.printStackTrace();
 
-            responder(response, 500, Collections.singletonMap(
-                    "mensagem", "Erro ao carregar gamificação."
-            ));
+            if (!response.isCommitted()) {
+
+                responder(
+                        response,
+                        500,
+                        Collections.singletonMap(
+                                "mensagem",
+                                "Erro ao carregar gamificação."
+                        )
+                );
+            }
         }
     }
 
@@ -147,69 +253,13 @@ public class gamificacaoController extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
-
-        String email = obterEmail(request);
-
-        if (email == null || !atletaAutenticado(request)) {
-            responder(response, 401, Collections.singletonMap(
-                    "mensagem", "Sessão de atleta inválida."
-            ));
-            return;
-        }
-
-        String acao = request.getParameter("acao");
-        String eventoId = request.getParameter("eventoId");
-
-        if (!"registrar".equalsIgnoreCase(acao)) {
-            responder(response, 400, Collections.singletonMap(
-                    "mensagem", "Ação inválida."
-            ));
-            return;
-        }
-
-        String tipo = request.getParameter("tipo");
-
-        if (tipo == null || eventoId == null
-                || tipo.trim().isEmpty()
-                || eventoId.trim().isEmpty()) {
-
-            responder(response, 400, Collections.singletonMap(
-                    "mensagem", "Tipo de ação e identificador do evento são obrigatórios."
-            ));
-            return;
-        }
-
-        tipo = tipo.toUpperCase(Locale.ROOT);
-
-        List<String> tiposPermitidos = Arrays.asList(
-                "VIDEO",
-                "FOTO",
-                "COMENTARIO"
+        responder(
+                response,
+                405,
+                Collections.singletonMap(
+                        "mensagem",
+                        "O progresso dos desafios é contabilizado automaticamente ao realizar ações na plataforma."
+                )
         );
-
-        if (!tiposPermitidos.contains(tipo)) {
-            responder(response, 400, Collections.singletonMap(
-                    "mensagem", "Tipo de ação não permitido."
-            ));
-            return;
-        }
-
-        try {
-
-            responder(response, 200, dao.registrarEvento(
-                    email,
-                    tipo,
-                    eventoId
-            ));
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            responder(response, 500, Collections.singletonMap(
-                    "mensagem", "Erro ao registrar progresso."
-            ));
-        }
     }
 }

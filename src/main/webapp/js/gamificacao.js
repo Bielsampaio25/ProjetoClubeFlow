@@ -7,29 +7,33 @@ const gamificacao = {
     async carregar() {
         try {
             const resposta = await fetch(API_GAMIFICACAO, {
-                method: "GET",
-                credentials: "include"
+                credentials: "same-origin",
+                cache: "no-store"
             });
 
-            if (!resposta.ok) {
-                if (resposta.status === 401) {
-                    throw new Error("Faça login como atleta para acessar a gamificação.");
-                }
-                throw new Error("Não foi possível carregar a gamificação.");
+            const texto = await resposta.text();
+
+            console.log("Status HTTP:", resposta.status);
+            console.log("Resposta bruta do servidor:", texto);
+
+            let dados;
+
+            try {
+                dados = JSON.parse(texto);
+            } catch (erro) {
+                console.error("Erro ao converter resposta para JSON:", erro);
+                console.error("Conteúdo recebido:", texto);
+                return;
             }
 
-            this.dashboard = await resposta.json();
+            console.log("Dados da gamificação:", dados);
 
-            if (!this.dashboard.sucesso) {
-                throw new Error(this.dashboard.mensagem || "Erro ao carregar dados.");
-            }
+            this.dashboard = dados;
 
             this.renderizarDashboard();
-            await this.carregarRanking();
 
         } catch (erro) {
-            console.error(erro);
-            this.mostrarMensagem(erro.message, true);
+            console.error("Erro ao carregar gamificação:", erro);
         }
     },
 
@@ -44,15 +48,21 @@ const gamificacao = {
         const nomeAtleta = document.getElementById("nomeAtleta");
         const perfilAtleta = document.getElementById("perfilAtleta");
 
-        if (nivel) nivel.textContent = dados.nivel ?? 1;
-        if (xpTotal) xpTotal.textContent = `${dados.xpTotal ?? 0} XP`;
-        if (barra) barra.style.width = `${dados.porcentagem ?? 0}%`;
-        if (xpFalta) xpFalta.textContent = dados.xpRestante ?? 0;
-        if (proximoNivel) proximoNivel.textContent = dados.nivelProximo ?? ((dados.nivel ?? 1) + 1);
+        if (nivel)
+            nivel.textContent = dados.nivel ?? 1;
+        if (xpTotal)
+            xpTotal.textContent = `${dados.xpTotal ?? 0} XP`;
+        if (barra)
+            barra.style.width = `${dados.porcentagem ?? 0}%`;
+        if (xpFalta)
+            xpFalta.textContent = dados.xpRestante ?? 0;
+        if (proximoNivel)
+            proximoNivel.textContent = dados.nivelProximo ?? ((dados.nivel ?? 1) + 1);
 
         if (nomeAtleta && dados.nome) {
             const textoNome = Array.from(nomeAtleta.childNodes).find(no => no.nodeType === Node.TEXT_NODE);
-            if (textoNome) textoNome.textContent = dados.nome;
+            if (textoNome)
+                textoNome.textContent = dados.nome;
         }
 
         if (perfilAtleta) {
@@ -60,12 +70,12 @@ const gamificacao = {
                 perfilAtleta.innerHTML = `<img src="${this.escaparHTML(dados.fotoPerfil)}" alt="Foto do atleta">`;
             } else if (dados.nome) {
                 perfilAtleta.textContent = dados.nome
-                    .split(" ")
-                    .filter(Boolean)
-                    .slice(0, 2)
-                    .map(nome => nome[0])
-                    .join("")
-                    .toUpperCase();
+                        .split(" ")
+                        .filter(Boolean)
+                        .slice(0, 2)
+                        .map(nome => nome[0])
+                        .join("")
+                        .toUpperCase();
             }
         }
 
@@ -74,7 +84,8 @@ const gamificacao = {
 
     renderizarDesafios(desafios) {
         const container = document.getElementById("listaDesafios");
-        if (!container) return;
+        if (!container)
+            return;
 
         container.innerHTML = "";
 
@@ -107,19 +118,11 @@ const gamificacao = {
                 <div class="desafio-rodape">
                     <span>${porcentagem}% concluído</span>
                     ${concluido
-                        ? `<span class="status-concluido">Concluído</span>`
-                        : `<button type="button" class="btn-teste" data-tipo="${this.escaparHTML(desafio.tipoAcao || "")}">Testar ação</button>`
+                    ? `<span class="status-concluido">Concluído</span>`
+                    : `<span class="status-automatico">Acompanhamento automático</span>`
                     }
                 </div>
             `;
-
-            const botao = card.querySelector(".btn-teste");
-
-            if (botao) {
-                botao.addEventListener("click", async () => {
-                    await this.registrarEvento(desafio.tipoAcao);
-                });
-            }
 
             container.appendChild(card);
         });
@@ -137,48 +140,26 @@ const gamificacao = {
 
     escaparHTML(texto) {
         return String(texto ?? "").replace(/[&<>"']/g, caractere => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        }[caractere]));
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[caractere]));
     },
 
-    async registrarEvento(tipo, eventoId = crypto.randomUUID()) {
-        try {
-            const parametros = new URLSearchParams({
-                acao: "registrar",
-                tipo: tipo,
-                eventoId: eventoId
-            });
-
-            const resposta = await fetch(`${API_GAMIFICACAO}?${parametros}`, {
-                method: "POST",
-                credentials: "include"
-            });
-
-            const dados = await resposta.json();
-
-            if (!resposta.ok || !dados.sucesso) {
-                throw new Error(dados.mensagem || "Não foi possível registrar a ação.");
-            }
-
-            this.mostrarMensagem(dados.mensagem);
-            await this.carregar();
-
-            return dados;
-
-        } catch (erro) {
-            console.error(erro);
-            this.mostrarMensagem(erro.message, true);
-            return null;
-        }
+    async registrarEvento() {
+        this.mostrarMensagem(
+                "Os desafios são contabilizados automaticamente quando você realiza ações na plataforma.",
+                false
+                );
+        return null;
     },
 
     async carregarRanking() {
         const container = document.getElementById("rankingBody");
-        if (!container) return;
+        if (!container)
+            return;
 
         try {
             const resposta = await fetch(`${API_GAMIFICACAO}?acao=ranking`, {
@@ -202,11 +183,11 @@ const gamificacao = {
 
                 const nome = atleta.nome || "Atleta";
                 const iniciais = nome.split(" ")
-                    .filter(Boolean)
-                    .slice(0, 2)
-                    .map(palavra => palavra[0])
-                    .join("")
-                    .toUpperCase();
+                        .filter(Boolean)
+                        .slice(0, 2)
+                        .map(palavra => palavra[0])
+                        .join("")
+                        .toUpperCase();
 
                 linha.innerHTML = `
                     <td>${atleta.posicao ?? "-"}</td>
@@ -214,9 +195,9 @@ const gamificacao = {
                         <div class="ranking-atleta">
                             <span class="ranking-avatar">
                                 ${atleta.fotoPerfil
-                                    ? `<img src="${this.escaparHTML(atleta.fotoPerfil)}" alt="">`
-                                    : this.escaparHTML(iniciais)
-                                }
+                        ? `<img src="${this.escaparHTML(atleta.fotoPerfil)}" alt="">`
+                        : this.escaparHTML(iniciais)
+                        }
                             </span>
                             <span>${this.escaparHTML(nome)}</span>
                         </div>
@@ -240,7 +221,8 @@ const gamificacao = {
 
     mostrarMensagem(texto, erro = false) {
         const mensagem = document.getElementById("mensagemGamificacao");
-        if (!mensagem) return;
+        if (!mensagem)
+            return;
 
         mensagem.textContent = texto;
         mensagem.className = erro ? "mensagem erro" : "mensagem sucesso";
@@ -253,22 +235,6 @@ const gamificacao = {
 };
 
 window.ClubFlowGamificacao = {
-    registrarVideo(eventoId) {
-        return gamificacao.registrarEvento("VIDEO", eventoId);
-    },
-
-    registrarFoto(eventoId) {
-        return gamificacao.registrarEvento("FOTO", eventoId);
-    },
-
-    registrarComentario(eventoId) {
-        return gamificacao.registrarEvento("COMENTARIO", eventoId);
-    },
-
-    registrarEvento(tipo, eventoId) {
-        return gamificacao.registrarEvento(tipo, eventoId);
-    },
-
     atualizar() {
         return gamificacao.carregar();
     }
