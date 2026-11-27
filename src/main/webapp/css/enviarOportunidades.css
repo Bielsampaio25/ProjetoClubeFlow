@@ -772,7 +772,9 @@
     color: var(--primary-green, #a3e635);
 }
 
-/* Responsividade */
+[hidden] {
+    display: none !important;
+}
 
 @media (max-width: 1200px) {
     .athletes-grid {

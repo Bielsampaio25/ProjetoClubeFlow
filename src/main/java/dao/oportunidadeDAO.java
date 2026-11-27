@@ -26,6 +26,63 @@ public class oportunidadeDAO {
             oportunidadeModel oportunidade,
             Long atletaDestinatarioId) throws SQLException {
 
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            if (conn == null) {
+                throw new SQLException("Não foi possível conectar ao banco de dados.");
+            }
+            return inserirOportunidade(conn, oportunidade, atletaDestinatarioId);
+        }
+    }
+
+    public Long cadastrarPropostaDirecionada(
+            oportunidadeModel oportunidade,
+            Long atletaDestinatarioId) throws SQLException {
+
+        if (atletaDestinatarioId == null || atletaDestinatarioId <= 0) {
+            throw new IllegalArgumentException("Atleta destinatário inválido.");
+        }
+
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            if (conn == null) {
+                throw new SQLException("Não foi possível conectar ao banco de dados.");
+            }
+
+            boolean autoCommitOriginal = conn.getAutoCommit();
+            conn.setAutoCommit(false);
+
+            try {
+                Long oportunidadeId = inserirOportunidade(
+                        conn, oportunidade, atletaDestinatarioId);
+
+                String sqlInscricao = "INSERT INTO inscricao_oportunidade ("
+                        + "oportunidade_id, atleta_id, status_candidatura, "
+                        + "status_resposta_proposta, data_inscricao"
+                        + ") VALUES (?, ?, 'INSCRICAO_REALIZADA', 'PENDENTE', CURRENT_TIMESTAMP())";
+
+                try (PreparedStatement stmt = conn.prepareStatement(sqlInscricao)) {
+                    stmt.setLong(1, oportunidadeId);
+                    stmt.setLong(2, atletaDestinatarioId);
+                    stmt.executeUpdate();
+                }
+
+                conn.commit();
+                return oportunidadeId;
+
+            } catch (SQLException | RuntimeException ex) {
+                conn.rollback();
+                throw ex;
+            } finally {
+                conn.setAutoCommit(autoCommitOriginal);
+            }
+        }
+    }
+
+
+    private Long inserirOportunidade(
+            Connection conn,
+            oportunidadeModel oportunidade,
+            Long atletaDestinatarioId) throws SQLException {
+
         String sql = "INSERT INTO oportunidade ("
                 + "clube_id, atleta_destinatario_id, titulo, descricao, "
                 + "objetivo, posicoes_procuradas, idade_minima, idade_maxima, "
@@ -33,9 +90,8 @@ public class oportunidadeDAO {
                 + "data_hora_avaliacao, requisitos, status_oportunidade"
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(
-                     sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = conn.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setLong(1, oportunidade.getClubeId());
 
@@ -49,14 +105,24 @@ public class oportunidadeDAO {
             stmt.setString(4, oportunidade.getDescricao());
             stmt.setString(5, oportunidade.getObjetivo());
             stmt.setString(6, oportunidade.getPosicoesProcuradas());
-            stmt.setInt(7, oportunidade.getIdadeMinima());
-            stmt.setInt(8, oportunidade.getIdadeMaxima());
+
+            if (oportunidade.getIdadeMinima() == null) {
+                stmt.setNull(7, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(7, oportunidade.getIdadeMinima());
+            }
+
+            if (oportunidade.getIdadeMaxima() == null) {
+                stmt.setNull(8, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(8, oportunidade.getIdadeMaxima());
+            }
+
             stmt.setString(9, oportunidade.getLocalRealizacao());
 
             Timestamp publicacao = oportunidade.getDataPublicacao() != null
                     ? Timestamp.valueOf(oportunidade.getDataPublicacao())
                     : new Timestamp(System.currentTimeMillis());
-
             stmt.setTimestamp(10, publicacao);
 
             if (oportunidade.getPrazoInscricao() != null) {
@@ -73,11 +139,8 @@ public class oportunidadeDAO {
             }
 
             stmt.setString(13, oportunidade.getRequisitos());
-
-            stmt.setString(14,
-                    oportunidade.getStatusOportunidade() != null
-                            ? oportunidade.getStatusOportunidade()
-                            : "ABERTA");
+            stmt.setString(14, oportunidade.getStatusOportunidade() != null
+                    ? oportunidade.getStatusOportunidade() : "ABERTA");
 
             stmt.executeUpdate();
 
@@ -89,8 +152,7 @@ public class oportunidadeDAO {
                 }
             }
         }
-
-        return null;
+        throw new SQLException("Não foi possível obter o ID da oportunidade cadastrada.");
     }
 
     public List<Map<String, Object>> listarAtletasParaClube(
@@ -98,12 +160,13 @@ public class oportunidadeDAO {
 
         String sql = "SELECT id, nome, posicao_principal, "
                 + "posicao_secundaria, categoria, cidade, estado, "
-                + "data_nascimento, nivel_atual "
+                + "data_nascimento, nivel_atual, altura "
                 + "FROM Atletas "
                 + "WHERE (? IS NULL OR nome LIKE ? "
                 + "OR posicao_principal LIKE ? "
-                + "OR cidade LIKE ? "
-                + "OR estado LIKE ?) "
+                + "OR posicao_secundaria LIKE ? "
+                + "OR categoria LIKE ? OR nivel_atual LIKE ? "
+                + "OR cidade LIKE ? OR estado LIKE ?) "
                 + "ORDER BY nome";
 
         List<Map<String, Object>> atletas = new ArrayList<>();
@@ -115,11 +178,11 @@ public class oportunidadeDAO {
                     ? null
                     : pesquisa.trim();
 
+            String termo = busca == null ? null : "%" + busca + "%";
             stmt.setString(1, busca);
-            stmt.setString(2, busca == null ? null : "%" + busca + "%");
-            stmt.setString(3, busca == null ? null : "%" + busca + "%");
-            stmt.setString(4, busca == null ? null : "%" + busca + "%");
-            stmt.setString(5, busca == null ? null : "%" + busca + "%");
+            for (int i = 2; i <= 8; i++) {
+                stmt.setString(i, termo);
+            }
 
             try (ResultSet rs = stmt.executeQuery()) {
 
@@ -137,6 +200,7 @@ public class oportunidadeDAO {
                     atleta.put("cidade", rs.getString("cidade"));
                     atleta.put("estado", rs.getString("estado"));
                     atleta.put("nivelAtual", rs.getString("nivel_atual"));
+                    atleta.put("altura", rs.getBigDecimal("altura"));
 
                     Date nascimento = rs.getDate("data_nascimento");
 
@@ -302,8 +366,10 @@ public class oportunidadeDAO {
         model.setObjetivo(rs.getString("objetivo"));
         model.setPosicoesProcuradas(
                 rs.getString("posicoes_procuradas"));
-        model.setIdadeMinima(rs.getInt("idade_minima"));
-        model.setIdadeMaxima(rs.getInt("idade_maxima"));
+        int idadeMinima = rs.getInt("idade_minima");
+        model.setIdadeMinima(rs.wasNull() ? null : idadeMinima);
+        int idadeMaxima = rs.getInt("idade_maxima");
+        model.setIdadeMaxima(rs.wasNull() ? null : idadeMaxima);
         model.setLocalRealizacao(rs.getString("local_realizacao"));
 
         Timestamp publicacao = rs.getTimestamp("data_publicacao");

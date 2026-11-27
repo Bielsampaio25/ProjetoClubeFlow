@@ -1,6 +1,6 @@
 package service;
 
-import DAO.inscricaoOportunidadeDAO;
+import dao.inscricaoOportunidadeDAO;
 import dao.oportunidadeDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -255,7 +255,7 @@ public class oportunidadeService {
 
         oportunidade.setStatusOportunidade("ABERTA");
 
-        oportunidadeDao.cadastrar(
+        oportunidadeDao.cadastrarPropostaDirecionada(
                 oportunidade,
                 atletaDestinatarioId
         );

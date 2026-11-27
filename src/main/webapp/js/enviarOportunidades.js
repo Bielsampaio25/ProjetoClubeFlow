@@ -6,6 +6,7 @@ const enviarOportunidades = {
     atletaSelecionado: null,
     buscaAtual: "",
     enviando: false,
+    toastTimer: null,
 
     iniciar() {
         this.configurarEventos();
@@ -122,11 +123,6 @@ const enviarOportunidades = {
         try {
             const resposta = await fetch(`${API_URL}?${params.toString()}`);
 
-            if (resposta.status === 401) {
-                window.location.href = "login.html";
-                return;
-            }
-
             const dados = await this.lerResposta(resposta);
 
             if (!resposta.ok) {
@@ -144,7 +140,7 @@ const enviarOportunidades = {
 
         } catch (erro) {
             console.error("Erro ao carregar atletas:", erro);
-            this.exibirErro();
+            this.exibirErro(erro.message);
         }
     },
 
@@ -152,28 +148,58 @@ const enviarOportunidades = {
         this.carregarAtletas();
     },
 
+    obterCategoriaAtleta(atleta) {
+        return String(
+            atleta.categoria ||
+            atleta.nivelAtual ||
+            atleta.nivel ||
+            ""
+        ).trim();
+    },
+
+    normalizarTexto(texto) {
+        return String(texto || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, "");
+    },
+
     aplicarFiltros() {
-        const posicao = this.valorCampo("filtroPosicao").toLowerCase();
-        const categoria = this.valorCampo("filtroCategoria").toLowerCase();
-        const estado = this.valorCampo("filtroEstado").toLowerCase();
-        const cidade = this.valorCampo("filtroCidade").toLowerCase();
+        const posicao = this.normalizarTexto(
+            this.valorCampo("filtroPosicao")
+        );
+
+        const categoria = this.normalizarTexto(
+            this.valorCampo("filtroCategoria")
+        );
+
+        const estado = this.normalizarTexto(
+            this.valorCampo("filtroEstado")
+        );
+
+        const cidade = this.normalizarTexto(
+            this.valorCampo("filtroCidade")
+        );
 
         const atletasFiltrados = this.atletas.filter((atleta) => {
-            const posicaoAtleta = String(
-                atleta.posicaoPrincipal || atleta.posicao || ""
-            ).toLowerCase();
+            const posicaoAtleta = this.normalizarTexto(
+                atleta.posicaoPrincipal ||
+                atleta.posicao ||
+                ""
+            );
 
-            const categoriaAtleta = String(
-                atleta.categoria || atleta.nivel || ""
-            ).toLowerCase();
+            const categoriaAtleta = this.normalizarTexto(
+                this.obterCategoriaAtleta(atleta)
+            );
 
-            const estadoAtleta = String(
+            const estadoAtleta = this.normalizarTexto(
                 atleta.estado || ""
-            ).toLowerCase();
+            );
 
-            const cidadeAtleta = String(
+            const cidadeAtleta = this.normalizarTexto(
                 atleta.cidade || ""
-            ).toLowerCase();
+            );
 
             const correspondePosicao =
                 !posicao || posicaoAtleta.includes(posicao);
@@ -268,15 +294,16 @@ const enviarOportunidades = {
             atleta.posicao ||
             "Posição não informada";
 
-        const categoria = atleta.categoria ||
-            atleta.nivelAtual ||
+        const categoria = this.obterCategoriaAtleta(atleta) ||
             "Categoria não informada";
 
         const cidade = atleta.cidade || "Cidade não informada";
         const estado = atleta.estado || "";
 
         const idade = atleta.idade ??
-            this.calcularIdade(atleta.dataNascimento || atleta.data_nascimento);
+            this.calcularIdade(
+                atleta.dataNascimento || atleta.data_nascimento
+            );
 
         const altura = atleta.altura
             ? `${atleta.altura} m`
@@ -327,9 +354,11 @@ const enviarOportunidades = {
                     <div class="athlete-info-row">
                         <span class="material-symbols-outlined">cake</span>
                         <span>
-                            ${idade !== null && idade !== undefined
-                                ? `${this.escapeHtml(idade)} anos`
-                                : "Idade não informada"}
+                            ${
+                                idade !== null && idade !== undefined
+                                    ? `${this.escapeHtml(idade)} anos`
+                                    : "Idade não informada"
+                            }
                         </span>
                     </div>
 
@@ -457,7 +486,11 @@ const enviarOportunidades = {
             return;
         }
 
-        const atletaId = document.getElementById("idAtletaSelecionado").value;
+        const campoIdAtleta = document.getElementById("idAtletaSelecionado");
+
+        const atletaId = campoIdAtleta
+            ? campoIdAtleta.value
+            : "";
 
         const titulo = this.valorCampo("tituloOportunidade");
         const descricao = this.valorCampo("descricaoOportunidade");
@@ -470,7 +503,11 @@ const enviarOportunidades = {
         const dataAvaliacao = this.valorCampo("dataAvaliacao");
         const requisitos = this.valorCampo("requisitosOportunidade");
 
-        if (idadeMinima && idadeMaxima && Number(idadeMinima) > Number(idadeMaxima)) {
+        if (
+            idadeMinima &&
+            idadeMaxima &&
+            Number(idadeMinima) > Number(idadeMaxima)
+        ) {
             this.mostrarToast(
                 "A idade mínima não pode ser maior que a idade máxima.",
                 "erro"
@@ -507,15 +544,11 @@ const enviarOportunidades = {
             const resposta = await fetch(API_URL, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                    "Content-Type":
+                        "application/x-www-form-urlencoded;charset=UTF-8"
                 },
                 body: params.toString()
             });
-
-            if (resposta.status === 401) {
-                window.location.href = "login.html";
-                return;
-            }
 
             const dados = await this.lerResposta(resposta);
 
@@ -565,7 +598,7 @@ const enviarOportunidades = {
         if (container) container.innerHTML = "";
     },
 
-    exibirErro() {
+    exibirErro(mensagem) {
         const carregando = document.getElementById("atletasCarregando");
         const vazio = document.getElementById("atletasVazios");
         const erro = document.getElementById("atletasErro");
@@ -575,6 +608,12 @@ const enviarOportunidades = {
         if (vazio) vazio.hidden = true;
         if (erro) erro.hidden = false;
         if (container) container.innerHTML = "";
+
+        const textoErro = erro ? erro.querySelector("p") : null;
+
+        if (textoErro && mensagem) {
+            textoErro.textContent = mensagem;
+        }
     },
 
     mostrarToast(mensagem, tipo = "sucesso") {
@@ -596,7 +635,6 @@ const enviarOportunidades = {
         }
 
         toast.hidden = false;
-
         toast.dataset.tipo = tipo;
 
         clearTimeout(this.toastTimer);
@@ -614,8 +652,12 @@ const enviarOportunidades = {
         try {
             return JSON.parse(texto);
         } catch {
+            const pareceHtml = /^\s*</.test(texto);
+
             return {
-                mensagem: texto
+                mensagem: pareceHtml
+                    ? `O servidor retornou HTTP ${resposta.status}. Verifique a implantação da API.`
+                    : texto
             };
         }
     },

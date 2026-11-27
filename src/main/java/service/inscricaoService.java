@@ -1,6 +1,6 @@
 package service;
 
-import DAO.inscricaoOportunidadeDAO;
+import dao.inscricaoOportunidadeDAO;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
