@@ -1,343 +1,340 @@
 <!doctype html>
 <html lang="pt-BR">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Oportunidades · Club Flow</title>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Oportunidades · Club Flow</title>
 
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/colors.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/oportunidades.css">
-</head>
+        <link rel="stylesheet" href="../css/reset.css">
+        <link rel="stylesheet" href="../css/colors.css">
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/oportunidades.css">
+    </head>
 
-<body>
+    <body>
 
-    <div class="app">
+        <div class="app">
 
-        <aside class="sidebar">
+            <aside class="sidebar">
 
-            <div class="brand">
-                <span class="brand-icon"></span>
-                <span>CLUB <em>FLOW</em></span>
-            </div>
-
-            <div class="area-box">ÁREA DO <b>ATLETA</b></div>
-
-            <p class="menu-title">MENU PRINCIPAL</p>
-
-            <nav class="menu">
-                <a href="dashboard-atleta.html">
-                    <span>⌂</span>Início
-                </a>
-
-                <a href="perfil.html">
-                    <span>◉</span>Meu perfil
-                </a>
-
-                <a href="desempenho.html">
-                    <span>◎</span>Meu desempenho
-                </a>
-
-                <a href="agenda.html">
-                    <span>▣</span>Agenda
-                </a>
-
-                <a href="gamificacao.html">
-                    <span>★</span>Gamificação
-                </a>
-
-                <a class="active" href="oportunidades.html">
-                    <span>☆</span>Oportunidades
-                </a>
-
-                <a href="rede-social.html">
-                    <span>◌</span>Rede social
-                </a>
-            </nav>
-
-            <div class="side-actions">
-                <a href="configuracoes.html">⚙ Configurações</a>
-                <a href="sair.html">↪ Sair</a>
-            </div>
-
-            <a class="help-box" href="suporte.html">
-                <b>Precisa de ajuda?</b>
-                Fale com o suporte
-            </a>
-
-        </aside>
-
-        <main class="main">
-
-            <header class="topbar">
-
-                <div class="breadcrumb">
-                    CLUB FLOW / <b>ATLETA</b>
+                <div class="brand">
+                    <span class="brand-icon"></span>
+                    <span>CLUB <em>FLOW</em></span>
                 </div>
 
-                <div class="account">
-                    <span id="nome">
-                        <small style="display:block;color:var(--text-muted)">
-                            <span id="posicao"></span> ·
-                            <span id="categoria"></span>
-                        </small>
-                    </span>
+                <div class="area-box">ÁREA DO <b>ATLETA</b></div>
 
-                    <span class="avatar" id="perfil"></span>
+                <p class="menu-title">MENU PRINCIPAL</p>
+
+                <nav class="menu">
+                    <a href="dashboard-atleta.html">
+                        <span>⌂</span>Início
+                    </a>
+
+                    <a href="perfil.html">
+                        <span>◉</span>Meu perfil
+                    </a>
+
+                    <a href="desempenho.html">
+                        <span>◎</span>Meu desempenho
+                    </a>
+
+                    <a href="agenda.html">
+                        <span>▣</span>Agenda
+                    </a>
+
+                    <a href="gamificacao.html">
+                        <span>★</span>Gamificação
+                    </a>
+
+                    <a class="active" href="oportunidades.html">
+                        <span>☆</span>Oportunidades
+                    </a>
+
+                    <a href="rede-social.html">
+                        <span>◌</span>Rede social
+                    </a>
+                </nav>
+
+                <div class="side-actions">
+                    <a href="configuracoes.html">⚙ Configurações</a>
+                    <a href="sair.html">↪ Sair</a>
                 </div>
 
-            </header>
+                <a class="help-box" href="suporte.html">
+                    <b>Precisa de ajuda?</b>
+                    Fale com o suporte
+                </a>
 
-            <section class="page">
+            </aside>
 
-                <div class="page-header oportunidades-header">
+            <main class="main">
 
-                    <div>
-                        <p class="eyebrow">ATLETA / OPORTUNIDADES</p>
+                <header class="topbar">
 
-                        <h1>Oportunidades</h1>
-
-                        <p>
-                            Descubra oportunidades e acompanhe os convites
-                            enviados pelos clubes.
-                        </p>
+                    <div class="breadcrumb">
+                        CLUB FLOW / <b>ATLETA</b>
                     </div>
 
-                </div>
+                    <div class="account">
+                        <span id="nome">
+                            <small style="display:block;color:var(--text-muted)">
+                                <span id="posicao"></span> ·
+                                <span id="categoria"></span>
+                            </small>
+                        </span>
 
-                <!-- RESUMO -->
+                        <span class="avatar" id="perfil"></span>
+                    </div>
 
-                <div class="oportunidades-resumo">
+                </header>
 
-                    <article class="resumo-card">
+                <section class="page">
 
-                        <div class="resumo-icone">✉</div>
-
-                        <div>
-                            <span>Propostas recebidas</span>
-                            <strong id="totalPropostas">0</strong>
-                        </div>
-
-                    </article>
-
-                    <article class="resumo-card">
-
-                        <div class="resumo-icone pendente">◷</div>
+                    <div class="page-header oportunidades-header">
 
                         <div>
-                            <span>Aguardando resposta</span>
-                            <strong id="totalPendentes">0</strong>
-                        </div>
+                            <p class="eyebrow">ATLETA / OPORTUNIDADES</p>
 
-                    </article>
-
-                    <article class="resumo-card">
-
-                        <div class="resumo-icone aceita">✓</div>
-
-                        <div>
-                            <span>Propostas aceitas</span>
-                            <strong id="totalAceitas">0</strong>
-                        </div>
-
-                    </article>
-
-                </div>
-
-                <!-- PROPOSTAS RECEBIDAS -->
-
-                <section class="propostas-section">
-
-                    <div class="propostas-titulo">
-
-                        <div>
-                            <h2>Convites de clubes</h2>
+                            <h1>Oportunidades</h1>
 
                             <p>
-                                Clubes que selecionaram seu perfil para uma oportunidade.
+                                Descubra oportunidades e acompanhe os convites
+                                enviados pelos clubes.
                             </p>
                         </div>
 
-                        <button
-                            type="button"
-                            class="btn-atualizar"
-                            id="btnAtualizar">
-                            ↻ Atualizar
-                        </button>
+                    </div>
+
+                    <!-- RESUMO -->
+
+                    <div class="oportunidades-resumo">
+
+                        <article class="resumo-card">
+                            <div class="resumo-icone">✉</div>
+
+                            <div>
+                                <span>Propostas recebidas</span>
+                                <strong id="totalPropostas">0</strong>
+                                <small>Convites enviados para seu perfil</small>
+                            </div>
+                        </article>
+
+                        <article class="resumo-card">
+                            <div class="resumo-icone pendente">◷</div>
+
+                            <div>
+                                <span>Aguardando resposta</span>
+                                <strong id="totalPendentes">0</strong>
+                                <small>Convites que precisam de resposta</small>
+                            </div>
+                        </article>
+
+                        <article class="resumo-card">
+                            <div class="resumo-icone aceita">✓</div>
+
+                            <div>
+                                <span>Propostas aceitas</span>
+                                <strong id="totalAceitas">0</strong>
+                                <small>Oportunidades que você aceitou</small>
+                            </div>
+                        </article>
 
                     </div>
 
-                    <!-- FILTROS -->
+                    <!-- PROPOSTAS RECEBIDAS -->
 
-                    <div class="propostas-filtros">
+                    <section class="propostas-section">
 
-                        <button
-                            class="filtro-proposta ativo"
-                            data-filtro="TODAS"
-                            type="button">
-                            Todas
-                        </button>
+                        <div class="propostas-titulo">
 
-                        <button
-                            class="filtro-proposta"
-                            data-filtro="PENDENTE"
-                            type="button">
-                            Pendentes
-                        </button>
+                            <div>
+                                <h2>Convites de clubes</h2>
 
-                        <button
-                            class="filtro-proposta"
-                            data-filtro="ACEITA"
-                            type="button">
-                            Aceitas
-                        </button>
+                                <p>
+                                    Clubes que selecionaram seu perfil para uma oportunidade.
+                                </p>
+                            </div>
 
-                        <button
-                            class="filtro-proposta"
-                            data-filtro="RECUSADA"
-                            type="button">
-                            Recusadas
-                        </button>
+                            <button
+                                type="button"
+                                class="btn-atualizar"
+                                id="btnAtualizar">
+                                ↻ Atualizar
+                            </button>
 
-                    </div>
+                        </div>
 
-                    <!-- CARREGANDO -->
+                        <!-- FILTROS -->
 
-                    <div id="propostasCarregando" class="estado-propostas">
+                        <div class="propostas-filtros">
 
-                        <div class="loader"></div>
+                            <button
+                                class="filtro-proposta ativo"
+                                data-filtro="TODAS"
+                                type="button">
+                                Todas
+                            </button>
 
-                        <p>Carregando suas propostas...</p>
+                            <button
+                                class="filtro-proposta"
+                                data-filtro="PENDENTE"
+                                type="button">
+                                Pendentes
+                            </button>
 
-                    </div>
+                            <button
+                                class="filtro-proposta"
+                                data-filtro="ACEITA"
+                                type="button">
+                                Aceitas
+                            </button>
 
-                    <!-- ERRO -->
+                            <button
+                                class="filtro-proposta"
+                                data-filtro="RECUSADA"
+                                type="button">
+                                Recusadas
+                            </button>
 
-                    <div
-                        id="propostasErro"
-                        class="estado-propostas erro"
-                        hidden>
+                        </div>
 
-                        <div class="estado-icone">!</div>
+                        <!-- CARREGANDO -->
 
-                        <h3>Não foi possível carregar as propostas</h3>
+                        <div id="propostasCarregando" class="estado-propostas">
 
-                        <p id="mensagemErroPropostas">
-                            Verifique sua conexão e tente novamente.
-                        </p>
+                            <div class="loader"></div>
 
-                        <button
-                            type="button"
-                            id="btnTentarNovamente"
-                            class="btn-retry">
-                            Tentar novamente
-                        </button>
+                            <p>Carregando suas propostas...</p>
 
-                    </div>
+                        </div>
 
-                    <!-- VAZIO -->
+                        <!-- ERRO -->
 
-                    <div
-                        id="propostasVazias"
-                        class="estado-propostas"
-                        hidden>
+                        <div
+                            id="propostasErro"
+                            class="estado-propostas erro"
+                            hidden>
 
-                        <div class="estado-icone">✉</div>
+                            <div class="estado-icone">!</div>
 
-                        <h3 id="tituloVazio">
-                            Você ainda não recebeu propostas
-                        </h3>
+                            <h3>Não foi possível carregar as propostas</h3>
 
-                        <p id="textoVazio">
-                            Continue atualizando seu perfil e compartilhando
-                            seu desempenho. Quando um clube enviar um convite,
-                            ele aparecerá aqui.
-                        </p>
+                            <p id="mensagemErroPropostas">
+                                Verifique sua conexão e tente novamente.
+                            </p>
 
-                    </div>
+                            <button
+                                type="button"
+                                id="btnTentarNovamente"
+                                class="btn-retry">
+                                Tentar novamente
+                            </button>
 
-                    <!-- LISTA -->
+                        </div>
 
-                    <div
-                        id="listaPropostas"
-                        class="lista-propostas"
-                        hidden>
-                    </div>
+                        <!-- VAZIO -->
+
+                        <div
+                            id="propostasVazias"
+                            class="estado-propostas"
+                            hidden>
+
+                            <div class="estado-icone">✉</div>
+
+                            <h3 id="tituloVazio">
+                                Você ainda não recebeu propostas
+                            </h3>
+
+                            <p id="textoVazio">
+                                Continue atualizando seu perfil e compartilhando
+                                seu desempenho. Quando um clube enviar um convite,
+                                ele aparecerá aqui.
+                            </p>
+
+                        </div>
+
+                        <!-- LISTA -->
+
+                        <div
+                            id="listaPropostas"
+                            class="lista-propostas"
+                            hidden>
+                        </div>
+
+                    </section>
 
                 </section>
 
-            </section>
+            </main>
 
-        </main>
+        </div>
 
-    </div>
-
-    <!-- MODAL DE CONFIRMAÇÃO -->
-
-    <div
-        class="modal-overlay"
-        id="modalProposta"
-        hidden>
+        <!-- MODAL DE CONFIRMAÇÃO -->
 
         <div
-            class="modal-proposta"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modalTitulo">
+            class="modal-overlay"
+            id="modalProposta"
+            hidden>
 
-            <button
-                type="button"
-                class="modal-fechar"
-                id="fecharModal"
-                aria-label="Fechar">
-                ×
-            </button>
-
-            <div class="modal-icone" id="modalIcone">✓</div>
-
-            <h2 id="modalTitulo">Confirmar ação</h2>
-
-            <p id="modalMensagem">
-                Deseja realmente continuar?
-            </p>
-
-            <div class="modal-acoes">
+            <div
+                class="modal-proposta"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modalTitulo">
 
                 <button
                     type="button"
-                    class="btn-cancelar"
-                    id="btnCancelarModal">
-                    Cancelar
+                    class="modal-fechar"
+                    id="fecharModal"
+                    aria-label="Fechar">
+                    ×
                 </button>
 
-                <button
-                    type="button"
-                    class="btn-confirmar"
-                    id="btnConfirmarModal">
-                    Confirmar
-                </button>
+                <div class="modal-icone" id="modalIcone">✓</div>
+
+                <h2 id="modalTitulo">Confirmar ação</h2>
+
+                <p id="modalMensagem">
+                    Deseja realmente continuar?
+                </p>
+
+                <div class="modal-acoes">
+
+                    <button
+                        type="button"
+                        class="btn-cancelar"
+                        id="btnCancelarModal">
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn-confirmar"
+                        id="btnConfirmarModal">
+                        Confirmar
+                    </button>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+        <!-- NOTIFICAÇÃO -->
 
-    <!-- NOTIFICAÇÃO -->
+        <div
+            class="toast"
+            id="toast"
+            role="status"
+            aria-live="polite"
+            hidden>
+        </div>
 
-    <div
-        class="toast"
-        id="toast"
-        role="status"
-        aria-live="polite"
-        hidden>
-    </div>
+        <script src="../js/account-atleta.js"></script>
+        <script src="../js/oportunidades.js"></script>
 
-    <script src="../js/account-atleta.js"></script>
-    <script src="../js/oportunidades.js"></script>
-
-</body>
+    </body>
 
 </html>

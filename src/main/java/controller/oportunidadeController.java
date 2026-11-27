@@ -22,11 +22,13 @@ import java.util.Map;
 import models.inscricaoModel;
 import models.oportunidadeModel;
 import service.oportunidadeService;
+import service.inscricaoService;
 
 @WebServlet(name = "oportunidadeController", urlPatterns = {"/api/oportunidades"})
 public class oportunidadeController extends HttpServlet {
 
     private final oportunidadeService oportunidadeService = new oportunidadeService();
+    private final inscricaoService inscricaoService = new inscricaoService();
     private final atletaDAO atletaDAO = new atletaDAO();
     private final clubeDAO clubeDAO = new clubeDAO();
 
@@ -63,6 +65,11 @@ public class oportunidadeController extends HttpServlet {
             }
 
             switch (acao.toLowerCase()) {
+                case "propostasrecebidas" -> {
+                    List<Map<String, Object>> propostas =
+                            inscricaoService.listarPropostasRecebidas(atletaId);
+                    escreverJson(resp, propostas);
+                }
                 case "listar" -> {
                     String posicao = req.getParameter("posicao");
                     Integer idade = parseInt(req.getParameter("idade"));
@@ -119,6 +126,47 @@ public class oportunidadeController extends HttpServlet {
         String acao = parametro(req, "acao", "inscrever");
 
         try {
+            if ("responderProposta".equalsIgnoreCase(acao)) {
+                Long atletaId = obterAtletaId(req.getSession(false));
+                if (atletaId == null) {
+                    resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    escreverJson(resp, erro("Atleta não identificado para responder à proposta."));
+                    return;
+                }
+
+                Long inscricaoId = parseLong(req.getParameter("inscricaoId"));
+                String resposta = parametro(req, "resposta", "").toUpperCase();
+
+                if (inscricaoId == null || inscricaoId <= 0) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    escreverJson(resp, erro("Proposta inválida."));
+                    return;
+                }
+
+                if (!"ACEITA".equals(resposta) && !"RECUSADA".equals(resposta)) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    escreverJson(resp, erro("Resposta inválida. Escolha aceitar ou recusar."));
+                    return;
+                }
+
+                boolean atualizado = "ACEITA".equals(resposta)
+                        ? inscricaoService.aceitarProposta(inscricaoId, atletaId)
+                        : inscricaoService.recusarProposta(inscricaoId, atletaId);
+
+                if (!atualizado) {
+                    resp.setStatus(HttpServletResponse.SC_CONFLICT);
+                    escreverJson(resp, erro("Esta proposta não está mais pendente ou não pertence à sua conta."));
+                    return;
+                }
+
+                Map<String, Object> respostaJson = new HashMap<>();
+                respostaJson.put("sucesso", true);
+                respostaJson.put("statusResposta", resposta);
+                respostaJson.put("mensagem", "Proposta " + ("ACEITA".equals(resposta) ? "aceita" : "recusada") + " com sucesso.");
+                escreverJson(resp, respostaJson);
+                return;
+            }
+
             if ("enviarProposta".equalsIgnoreCase(acao)) {
                 Long clubeId = obterClubeId(req.getSession(false));
                 if (clubeId == null) {

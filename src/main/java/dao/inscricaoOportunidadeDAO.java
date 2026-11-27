@@ -138,10 +138,13 @@ public class inscricaoOportunidadeDAO {
 
                     proposta.put("posicoesProcuradas",
                             rs.getString("posicoes_procuradas"));
+                    int idadeMinima = rs.getInt("idade_minima");
                     proposta.put("idadeMinima",
-                            rs.getInt("idade_minima"));
+                            rs.wasNull() ? null : idadeMinima);
+
+                    int idadeMaxima = rs.getInt("idade_maxima");
                     proposta.put("idadeMaxima",
-                            rs.getInt("idade_maxima"));
+                            rs.wasNull() ? null : idadeMaxima);
 
                     proposta.put("localRealizacao",
                             rs.getString("local_realizacao"));
